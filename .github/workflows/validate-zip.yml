@@ -1,0 +1,27 @@
+name: Validate ZIP Files
+
+on:
+  push:
+    paths:
+      - 'uploads/**'
+      - 'validate_zip.py'
+  pull_request:
+    paths:
+      - 'uploads/**'
+      - 'validate_zip.py'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate ZIP file contents
+        run: python validate_zip.py
