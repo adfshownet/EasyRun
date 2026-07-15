@@ -7,12 +7,18 @@ or with code 1 if any file fails validation.
 import sys
 import zipfile
 from pathlib import Path
+from typing import NamedTuple
 
 UPLOADS_DIR = Path(__file__).parent / "uploads"
 
 
-def validate_zip(path: Path) -> tuple[list[str], list[str]]:
-    """Return (errors, members) for the given file.
+class ValidationResult(NamedTuple):
+    errors: list[str]
+    members: list[str]
+
+
+def validate_zip(path: Path) -> ValidationResult:
+    """Return a ValidationResult for the given file.
 
     errors is empty and members is populated when the file is a valid ZIP archive.
     """
@@ -21,7 +27,7 @@ def validate_zip(path: Path) -> tuple[list[str], list[str]]:
 
     if not zipfile.is_zipfile(path):
         errors.append(f"  ✗ {path.name}: not a valid ZIP archive")
-        return errors, members
+        return ValidationResult(errors, members)
 
     try:
         with zipfile.ZipFile(path) as zf:
@@ -35,7 +41,7 @@ def validate_zip(path: Path) -> tuple[list[str], list[str]]:
     except zipfile.BadZipFile as exc:
         errors.append(f"  ✗ {path.name}: bad ZIP file – {exc}")
 
-    return errors, members
+    return ValidationResult(errors, members)
 
 
 def main() -> int:
@@ -52,11 +58,13 @@ def main() -> int:
     all_errors: list[str] = []
 
     for zpath in zip_files:
-        errors, members = validate_zip(zpath)
-        if errors:
-            all_errors.extend(errors)
+        result = validate_zip(zpath)
+        if result.errors:
+            all_errors.extend(result.errors)
         else:
-            print(f"  ✓ {zpath.name}: valid ZIP archive ({len(members)} file(s))")
+            count = len(result.members)
+            label = "file" if count == 1 else "files"
+            print(f"  ✓ {zpath.name}: valid ZIP archive ({count} {label})")
 
     if all_errors:
         print("\nValidation FAILED:")
