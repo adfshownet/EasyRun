@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="utf-8">
+  <title>EasyRun — Squad Agêntica AIOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; background: #0B0F14; }
+    * { box-sizing: border-box; }
+    a { color: #4DD8E6; text-decoration: none; }
+    a:hover { color: #7CE7F1; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: #1E2833; border-radius: 6px; border: 2px solid #0B0F14; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    @keyframes er-pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    @keyframes er-entrar { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes er-girar { to { transform: rotate(360deg); } }
+    input::placeholder { color: #5C6B7A; }
+  </style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; height: 100vh; min-width: 0; background: #0B0F14; color: #E8EEF4; font-family: 'Space Grotesk', sans-serif; overflow: hidden;">
+
+  <!-- ============ HEADER ============ -->
+  <header style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; background: #10151C; border-bottom: 1px solid #1E2833; flex-shrink: 0; min-width: 0; overflow: hidden;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #3DDC84, #4DD8E6); display: grid; place-items: center; font-weight: 700; color: #06110B; font-size: 15px;">E</div>
+      <div style="display: flex; flex-direction: column; line-height: 1.1;">
+        <span style="font-weight: 700; font-size: 16px; letter-spacing: .02em;">EasyRun</span>
+        <span style="font-size: 10px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; letter-spacing: .08em;">SQUAD AGÊNTICA · AIOPS</span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: {{ incFundo }}; border: 1px solid {{ incBorda }}; min-width: 0;">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ incCor }}; animation: {{ incAnim }}; flex-shrink: 0;"></span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ incCor }}; flex-shrink: 0;">ANM-2047</span>
+      <span style="font-size: 12px; color: #93A1B0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ incTexto }}</span>
+    </div>
+
+    <div style="flex: 1;"></div>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+      <button onClick="{{ iniciarPausar }}" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; background: {{ btnSimFundo }}; color: {{ btnSimCor }}; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px;" style-hover="filter: brightness(1.12);">{{ btnSimRotulo }}</button>
+      <button onClick="{{ reiniciar }}" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #1E2833; cursor: pointer; background: transparent; color: #93A1B0; font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 13px;" style-hover="border-color: #3DDC84; color: #E8EEF4;">↺ Reiniciar</button>
+    </div>
+
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5C6B7A; min-width: 70px; text-align: right;">{{ relogio }}</div>
+  </header>
+
+  <div style="display: flex; flex: 1; min-height: 0; min-width: 0; overflow: hidden;">
+
+    <!-- ============ NAV ============ -->
+    <nav style="width: 184px; flex-shrink: 0; background: #10151C; border-right: 1px solid #1E2833; padding: 14px 10px; display: flex; flex-direction: column; gap: 4px;">
+      <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="6">
+        <div onClick="{{ nv.aoClicar }}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; background: {{ nv.fundo }}; color: {{ nv.cor }}; font-size: 13.5px; font-weight: {{ nv.peso }}; transition: background .15s;" style-hover="background: #182028;">
+          <span style="font-size: 15px; width: 20px; text-align: center;">{{ nv.icone }}</span>
+          <span style="flex: 1;">{{ nv.rotulo }}</span>
+          <sc-if value="{{ nv.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #FFC24B; color: #1A1200; font-size: 11px; font-weight: 700; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace;">{{ nv.badge }}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+
+      <div style="flex: 1;"></div>
+
+      <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833;">
+        <div style="font-size: 10px; color: #5C6B7A; letter-spacing: .1em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 8px;">STATUS DA SQUAD</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ squadCor }}; animation: {{ squadAnim }};"></span>
+          <span style="font-size: 12.5px; color: #93A1B0;">{{ squadStatus }}</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ CONSOLE DE ORQUESTRAÇÃO ============ -->
+    <sc-if value="{{ vConsole }}" hint-placeholder-val="{{ true }}">
+      <main data-screen-label="Console de orquestração" style="flex: 1; display: grid; grid-template-columns: minmax(180px, 240px) minmax(320px, 1fr) minmax(200px, 268px); min-height: 0; min-width: 0; overflow: hidden;">
+
+        <!-- Agentes -->
+        <section style="border-right: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">AGENTES · {{ numAgentes }}</div>
+          <sc-for list="{{ agentesLista }}" as="ag" hint-placeholder-count="6">
+            <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid {{ ag.borda }}; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ag.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ag.icone }}</div>
+                <div style="display: flex; flex-direction: column; line-height: 1.2; flex: 1; min-width: 0;">
+                  <span style="font-weight: 600; font-size: 13.5px;">{{ ag.nome }}</span>
+                  <span style="font-size: 11px; color: #5C6B7A;">{{ ag.papel }}</span>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ ag.statusCor }}; animation: {{ ag.statusAnim }};"></span>
+                <span style="font-size: 11.5px; color: {{ ag.statusCor }}; font-family: 'IBM Plex Mono', monospace;">{{ ag.status }}</span>
+              </div>
+              <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                <sc-for list="{{ ag.aws }}" as="svc" hint-placeholder-count="2">
+                  <span style="font-size: 10px; padding: 2px 7px; border-radius: 5px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ svc }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+
+        <!-- Fluxo -->
+        <section style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+          <div style="padding: 16px 20px 10px; display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid #1E2833;">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Fluxo de orquestração</h2>
+            <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ numEventos }} eventos</span>
+          </div>
+          <div ref="{{ logRef }}" style="flex: 1; overflow-y: auto; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px;">
+            <sc-if value="{{ logVazio }}" hint-placeholder-val="{{ false }}">
+              <div style="margin: auto; text-align: center; color: #5C6B7A; display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 40px 0;">
+                <div style="font-size: 32px;">🛰️</div>
+                <div style="font-size: 14px; max-width: 320px; line-height: 1.5;">A squad está em vigília. Clique em <strong style="color: #3DDC84;">▶ Iniciar simulação</strong> para injetar uma anomalia de latência e acompanhar os agentes trabalhando.</div>
+              </div>
+            </sc-if>
+            <sc-for list="{{ eventos }}" as="ev" hint-placeholder-count="0">
+              <div style="display: flex; gap: 12px; animation: er-entrar .3s ease;">
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5C6B7A; padding-top: 3px; width: 56px; flex-shrink: 0;">{{ ev.hora }}</div>
+                <div style="width: 3px; border-radius: 2px; background: {{ ev.cor }}; flex-shrink: 0;"></div>
+                <div style="display: flex; flex-direction: column; gap: 5px; padding: 2px 0 4px; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-weight: 600; font-size: 12.5px; color: {{ ev.cor }};">{{ ev.agente }}</span>
+                    <span style="font-size: 10px; padding: 1px 7px; border-radius: 5px; background: #131A22; border: 1px solid #1E2833; color: #93A1B0;">{{ ev.pilar }}</span>
+                    <sc-if value="{{ ev.aws }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size: 10px; padding: 1px 7px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">AWS · {{ ev.aws }}</span>
+                    </sc-if>
+                  </div>
+                  <div style="font-size: 13px; color: #C7D2DC; line-height: 1.45;">{{ ev.texto }}</div>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ aguardandoHitl }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; background: #1A1408; border: 1px dashed #FFC24B; animation: er-entrar .3s ease;">
+                <span style="font-size: 16px;">✋</span>
+                <span style="font-size: 13px; color: #FFC24B;">Execução pausada — aguardando decisão humana na <a href="#" onClick="{{ irParaHitl }}" style="color: #FFC24B; text-decoration: underline;">fila de aprovação</a>.</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ executando }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0 0 68px;">
+                <span style="width: 12px; height: 12px; border: 2px solid #1E2833; border-top-color: #3DDC84; border-radius: 50%; animation: er-girar .8s linear infinite;"></span>
+                <span style="font-size: 12px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">processando…</span>
+              </div>
+            </sc-if>
+          </div>
+        </section>
+
+        <!-- Plano + contexto -->
+        <section style="border-left: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🎯 PLANO DE AÇÃO</div>
+            <sc-if value="{{ planoVazio }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size: 12.5px; color: #5C6B7A; padding: 14px; border: 1px dashed #1E2833; border-radius: 10px; line-height: 1.5;">Nenhum plano ativo. O agente Diagnosta gera o plano após a análise de causa raiz.</div>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ planoPassos }}" as="pp" hint-placeholder-count="0">
+                <div style="display: flex; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; align-items: flex-start;">
+                  <span style="font-size: 13px; padding-top: 1px;">{{ pp.icone }}</span>
+                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                    <span style="font-size: 12.5px; font-weight: 500; color: {{ pp.cor }}; line-height: 1.35;">{{ pp.titulo }}</span>
+                    <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ pp.status }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🧠 CONTEXTO & 📚 MEMÓRIA</div>
+            <sc-if value="{{ memoriaVazia }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size: 12.5px; color: #5C6B7A; padding: 14px; border: 1px dashed #1E2833; border-radius: 10px; line-height: 1.5;">O agente Contexto recupera runbooks e incidentes similares quando uma anomalia é aberta.</div>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ memorias }}" as="mm" hint-placeholder-count="0">
+                <div style="padding: 10px 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5BA8FF;">{{ mm.ref }}</span>
+                    <span style="font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0;">{{ mm.tipo }}</span>
+                  </div>
+                  <div style="font-size: 12px; color: #C7D2DC; line-height: 1.4;">{{ mm.texto }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🛡️ GUARDRAILS ATIVOS</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Rollback exige aprovação humana</div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Máx. 3 ações de escrita por execução</div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Somente ambiente sob escopo da squad</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </sc-if>
+
+    <!-- ============ CHAT ============ -->
+    <sc-if value="{{ vChat }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Chat com a squad" style="flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0;">
+        <div style="padding: 16px 24px 10px; border-bottom: 1px solid #1E2833;">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Conversar com a squad</h2>
+          <span style="font-size: 12px; color: #5C6B7A;">Pergunte sobre status, causa raiz, plano ou memória do incidente.</span>
+        </div>
+        <div ref="{{ chatRef }}" style="flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px;">
+          <sc-for list="{{ chatMsgs }}" as="cm" hint-placeholder-count="1">
+            <div style="display: flex; flex-direction: {{ cm.direcao }}; gap: 10px; align-items: flex-end;">
+              <div style="width: 30px; height: 30px; border-radius: 8px; background: {{ cm.avatarFundo }}; display: grid; place-items: center; font-size: 14px; flex-shrink: 0;">{{ cm.avatar }}</div>
+              <div style="max-width: 620px; padding: 11px 14px; border-radius: 12px; background: {{ cm.fundo }}; border: 1px solid {{ cm.borda }}; font-size: 13.5px; line-height: 1.55; color: #E8EEF4; white-space: pre-wrap; animation: er-entrar .25s ease;">{{ cm.texto }}</div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ digitando }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <div style="width: 30px; height: 30px; border-radius: 8px; background: #14251B; display: grid; place-items: center; font-size: 14px;">🎼</div>
+              <div style="padding: 12px 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; color: #5C6B7A; font-size: 13px; animation: er-pulse 1.2s infinite;">Maestro está digitando…</div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="padding: 14px 24px 18px; border-top: 1px solid #1E2833; display: flex; gap: 10px;">
+          <input value="{{ chatInput }}" onChange="{{ aoDigitarChat }}" onKeyDown="{{ aoTeclaChat }}" placeholder="Ex.: qual a causa raiz? · qual o status? · mostre o plano" style="flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid #1E2833; background: #131A22; color: #E8EEF4; font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; outline: none;" style-focus="border-color: #3DDC84;">
+          <button onClick="{{ enviarChat }}" style="padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13.5px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">Enviar</button>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ HITL ============ -->
+    <sc-if value="{{ vHitl }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Fila de aprovação HITL" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">✋ Fila de aprovação humana</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador.</p>
+
+        <sc-if value="{{ hitlVazia }}" hint-placeholder-val="{{ true }}">
+          <div style="padding: 32px; border: 1px dashed #1E2833; border-radius: 12px; text-align: center; color: #5C6B7A; font-size: 13.5px;">Nenhuma aprovação pendente. Quando um guardrail interceptar uma ação crítica, ela aparecerá aqui.</div>
+        </sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 760px;">
+          <sc-for list="{{ hitlPendentes }}" as="hp" hint-placeholder-count="0">
+            <div style="border-radius: 12px; background: #131A22; border: 1px solid #3A2E12; overflow: hidden; animation: er-entrar .3s ease;">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #1A1408; border-bottom: 1px solid #3A2E12;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #FFC24B; animation: er-pulse 1.4s infinite;"></span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #FFC24B;">{{ hp.id }}</span>
+                <span style="font-weight: 600; font-size: 14px;">{{ hp.titulo }}</span>
+                <span style="flex: 1;"></span>
+                <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hp.hora }}</span>
+              </div>
+              <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="font-size: 13.5px; color: #C7D2DC; line-height: 1.55;">{{ hp.descricao }}</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #241014; border: 1px solid #4A1E26; color: #FF6B6B;">Risco: {{ hp.risco }}</span>
+                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0;">Guardrail: {{ hp.guardrail }}</span>
+                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ hp.aws }}</span>
+                </div>
+                <div style="padding: 12px 14px; border-radius: 8px; background: #0B0F14; border: 1px solid #1E2833; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #93A1B0; line-height: 1.7; white-space: pre-wrap;">{{ hp.detalhe }}</div>
+                <div style="display: flex; gap: 10px;">
+                  <button onClick="{{ hp.aprovar }}" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">✓ Aprovar</button>
+                  <button onClick="{{ hp.rejeitar }}" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #4A1E26; cursor: pointer; background: transparent; color: #FF6B6B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="background: #241014;">✕ Rejeitar</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ temHistorico }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 26px; max-width: 760px;">
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">HISTÓRICO DE DECISÕES</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{ hitlHistorico }}" as="hh" hint-placeholder-count="0">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833;">
+                  <span style="font-size: 14px;">{{ hh.icone }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C6B7A;">{{ hh.id }}</span>
+                  <span style="font-size: 13px; flex: 1;">{{ hh.titulo }}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: {{ hh.cor }};">{{ hh.decisao }}</span>
+                  <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hh.hora }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </main>
+    </sc-if>
+
+    <!-- ============ AVALIAÇÃO ============ -->
+    <sc-if value="{{ vAval }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Avaliação e métricas" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">📊 Avaliação da squad</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Métricas de eficácia dos agentes nos últimos 7 dias · fonte: CloudWatch + pós-mortems em S3.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <sc-for list="{{ metricas }}" as="mt" hint-placeholder-count="5">
+            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11px; color: #5C6B7A; letter-spacing: .06em;">{{ mt.rotulo }}</span>
+              <span style="font-size: 24px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; color: {{ mt.cor }};">{{ mt.valor }}</span>
+              <span style="font-size: 11.5px; color: {{ mt.deltaCor }};">{{ mt.delta }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+          <div style="padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Anomalias resolvidas por dia</div>
+            <div style="display: flex; gap: 14px; font-size: 11px; color: #5C6B7A; margin-bottom: 16px;">
+              <span><span style="color: #3DDC84;">■</span> autônomas</span>
+              <span><span style="color: #FFC24B;">■</span> com intervenção humana</span>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 14px; height: 160px;">
+              <sc-for list="{{ barras }}" as="br" hint-placeholder-count="7">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: stretch; gap: 6px; height: 100%; justify-content: flex-end;">
+                  <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; flex: 1;">
+                    <div style="height: {{ br.hHumano }}; background: #FFC24B; border-radius: 3px 3px 0 0; opacity: .9;"></div>
+                    <div style="height: {{ br.hAuto }}; background: #3DDC84; border-radius: 0 0 3px 3px;"></div>
+                  </div>
+                  <span style="text-align: center; font-size: 10.5px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ br.dia }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 14px;">Qualidade por agente (score de avaliação)</div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <sc-for list="{{ scores }}" as="sc" hint-placeholder-count="6">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 13px; width: 20px;">{{ sc.icone }}</span>
+                  <span style="font-size: 12.5px; width: 90px; color: #C7D2DC;">{{ sc.nome }}</span>
+                  <div style="flex: 1; height: 8px; border-radius: 4px; background: #0B0F14; overflow: hidden;">
+                    <div style="height: 100%; width: {{ sc.largura }}; background: {{ sc.cor }}; border-radius: 4px;"></div>
+                  </div>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ sc.cor }}; width: 34px; text-align: right;">{{ sc.valor }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Últimas anomalias</div>
+          <div style="display: grid; grid-template-columns: 100px 1fr 130px 90px 110px; gap: 0; font-size: 12.5px;">
+            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">ID</div>
+            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">DESCRIÇÃO</div>
+            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">RESOLUÇÃO</div>
+            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">MTTR</div>
+            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">SCORE</div>
+            <sc-for list="{{ historicoAnm }}" as="ha" hint-placeholder-count="4">
+              <div style="display: contents;">
+                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #5BA8FF; border-bottom: 1px solid #161D26;">{{ ha.id }}</div>
+                <div style="padding: 10px; color: #C7D2DC; border-bottom: 1px solid #161D26;">{{ ha.desc }}</div>
+                <div style="padding: 10px; color: {{ ha.resCor }}; border-bottom: 1px solid #161D26;">{{ ha.res }}</div>
+                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #93A1B0; border-bottom: 1px solid #161D26;">{{ ha.mttr }}</div>
+                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #3DDC84; border-bottom: 1px solid #161D26;">{{ ha.score }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ CONFIGURAÇÃO ============ -->
+    <sc-if value="{{ vConfig }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Configuração" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">⚙️ Configuração da squad</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Agentes, skills, guardrails e gatilhos que governam o comportamento autônomo.</p>
+
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📦 AGENTES & SKILLS</div>
+            <sc-for list="{{ agentesConfig }}" as="ac" hint-placeholder-count="6">
+              <div style="padding: 14px 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ac.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ac.icone }}</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 13.5px;">{{ ac.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ ac.papel }} · {{ ac.modelo }}</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <sc-for list="{{ ac.skills }}" as="sk" hint-placeholder-count="3">
+                    <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: {{ ac.corSkill }};">{{ sk }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🛡️ GUARDRAILS</div>
+              <sc-for list="{{ guardrailsLista }}" as="gr" hint-placeholder-count="4">
+                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 13px; font-weight: 500;">{{ gr.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A; line-height: 1.4;">{{ gr.desc }}</div>
+                  </div>
+                  <div onClick="{{ gr.alternar }}" style="width: 38px; height: 21px; border-radius: 11px; background: {{ gr.trilha }}; cursor: pointer; position: relative; transition: background .2s; flex-shrink: 0;">
+                    <div style="width: 15px; height: 15px; border-radius: 50%; background: #E8EEF4; position: absolute; top: 3px; left: {{ gr.bolinha }}; transition: left .2s;"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">⚡ TRIGGERS</div>
+              <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="3">
+                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 15px;">{{ tg.icone }}</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: 13px; font-weight: 500;">{{ tg.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ tg.desc }}</div>
+                  </div>
+                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ tg.aws }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ ARQUITETURA ============ -->
+    <sc-if value="{{ vArq }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Arquitetura — 11 pilares" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🏗️ Arquitetura de referência — 11 pilares</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Cada pilar da squad agêntica mapeado para o serviço AWS que o sustenta e para onde ele vive neste protótipo.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <sc-for list="{{ pilares }}" as="pl" hint-placeholder-count="11">
+            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;" style-hover="border-color: #3DDC84;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">{{ pl.icone }}</span>
+                <span style="font-weight: 600; font-size: 13.5px;">{{ pl.nome }}</span>
+              </div>
+              <div style="font-size: 12px; color: #93A1B0; line-height: 1.5; flex: 1;">{{ pl.desc }}</div>
+              <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                <sc-for list="{{ pl.aws }}" as="pa" hint-placeholder-count="2">
+                  <span style="font-size: 10px; padding: 2px 7px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ pa }}</span>
+                </sc-for>
+              </div>
+              <div style="font-size: 11px; color: #5BA8FF;">→ {{ pl.onde }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Stack alvo de implementação</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">BACKEND · PYTHON</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Agentes como agregados; casos de uso por porta/adaptador (SOLID).</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">FRONTEND · ANGULAR</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Angular 18 standalone components + Signals. Um módulo por visão deste protótipo (console, HITL, avaliação, configuração), estado via store dedicado.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">INFRA · AWS</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Bedrock (agentes), Step Functions (orquestração), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), CloudWatch (avaliação).</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;velocidade&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0.5, &quot;max&quot;: 3, &quot;step&quot;: 0.5, &quot;unit&quot;: &quot;x&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Simulação&quot; },
+  &quot;autoAprovar&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Simulação&quot; }
+}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.logRef = React.createRef();
+    this.chatRef = React.createRef();
+    this.timer = null;
+    this.state = this.estadoInicial();
+  }
+
+  estadoInicial() {
+    return {
+      view: 'console',
+      rodando: false,
+      concluido: false,
+      i: 0,
+      relogio: 50531, // 14:02:11
+      eventos: [],
+      agStatus: { maestro: 'ocioso', sentinela: 'vigiando', contexto: 'ocioso', diagnosta: 'ocioso', executor: 'ocioso', auditor: 'ocioso' },
+      plano: [],
+      memorias: [],
+      hitl: [],
+      rejeitado: false,
+      aguardandoHitl: false,
+      chat: [{ de: 'squad', texto: 'Olá! Sou o Maestro, orquestrador da squad EasyRun. Posso responder sobre o status da anomalia, a causa raiz, o plano de ação ou a memória de incidentes. Como posso ajudar?' }],
+      chatInput: '',
+      digitando: false,
+      guardrails: { g1: true, g2: true, g3: true, g4: false },
+    };
+  }
+
+  // ---------- dados estáticos ----------
+  agentesDef() {
+    return [
+      { id: 'maestro', icone: '🎼', nome: 'Maestro', papel: 'Orquestrador', cor: '#B48CFF', aws: ['Step Functions'], modelo: 'Bedrock · Claude Sonnet', skills: ['decompor-tarefas', 'rotear-agentes', 'consolidar-resultado'] },
+      { id: 'sentinela', icone: '🛰️', nome: 'Sentinela', papel: 'Detecção & triggers', cor: '#4DD8E6', aws: ['CloudWatch', 'EventBridge'], modelo: 'Regras + Bedrock Haiku', skills: ['detectar-anomalia', 'classificar-severidade', 'monitorar-recuperacao'] },
+      { id: 'contexto', icone: '🧠', nome: 'Contexto', papel: 'Contexto & memória', cor: '#5BA8FF', aws: ['OpenSearch', 'DynamoDB'], modelo: 'Bedrock · Titan Embeddings', skills: ['buscar-runbooks', 'recuperar-incidentes', 'gravar-aprendizado'] },
+      { id: 'diagnosta', icone: '🔬', nome: 'Diagnosta', papel: 'Causa raiz & plano', cor: '#FFC24B', aws: ['Bedrock'], modelo: 'Bedrock · Claude Sonnet', skills: ['correlacionar-sinais', 'hipoteses-causa-raiz', 'gerar-plano'] },
+      { id: 'executor', icone: '⚡', nome: 'Executor', papel: 'Ações & ferramentas', cor: '#3DDC84', aws: ['Lambda', 'SSM'], modelo: 'Determinístico', skills: ['rollback-deploy', 'escalar-recursos', 'executar-runbook'] },
+      { id: 'auditor', icone: '🛡️', nome: 'Auditor', papel: 'Guardrails & avaliação', cor: '#FF8FAB', aws: ['S3', 'CloudWatch'], modelo: 'Bedrock · Claude Haiku', skills: ['validar-guardrails', 'avaliar-execucao', 'pos-mortem'] },
+    ];
+  }
+
+  passos() {
+    const self = this;
+    return [
+      { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: latência p99 do checkout-api em 2.840ms (limiar: 650ms). Anomalia ANM-2047 aberta com severidade ALTA.', fx: { agStatus: { sentinela: 'detectando' } } },
+      { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
+      { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+      { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: 3 runbooks e 2 incidentes similares recuperados (INC-1893, INC-1544).', fx: { agStatus: { contexto: 'buscando' }, memorias: [{ ref: 'RB-041', tipo: 'runbook', texto: 'Runbook "Degradação de latência em APIs de checkout" — 7 execuções anteriores.' }] } },
+      { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).', fx: { agStatus: { contexto: 'concluído' }, memorias: 'add:INC' } },
+      { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
+      { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.', fx: { agStatus: { diagnosta: 'concluído' } } },
+      { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { plano: 'criar' } },
+      { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-02 interceptou o passo 2: "rollback em produção" excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', gate: true, fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } } },
+      { ag: 'executor', pilar: '⚡ Action', aws: 'Lambda', dinamico: 'passoAcao', fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, plano: 'p2' } },
+      { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Escalando pool de conexões RDS: max_connections 50 → 120 via Parameter Store + restart gracioso.', fx: { plano: 'p3' } },
+      { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Latência p99 caindo: 2.840ms → 610ms (−78%). Erros 5xx zerados. Janela de validação de 10 min iniciada.', fx: { plano: 'p4' } },
+      { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memorias: 'add:APR' } },
+      { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2047 resolvida ✅ MTTR: 4m 32s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+    ];
+  }
+
+  // ---------- motor da simulação ----------
+  duracao() { return 1900 / (this.props.velocidade ?? 1); }
+
+  iniciarPausar = () => {
+    if (this.state.concluido) { this.reiniciar(); setTimeout(() => this.iniciarPausar(), 50); return; }
+    if (this.state.rodando) {
+      clearTimeout(this.timer);
+      this.setState({ rodando: false });
+    } else {
+      this.setState({ rodando: true });
+      if (!this.state.aguardandoHitl) this.agendar();
+    }
+  };
+
+  reiniciar = () => {
+    clearTimeout(this.timer);
+    const s = this.estadoInicial();
+    s.view = this.state.view;
+    s.chat = this.state.chat;
+    s.guardrails = this.state.guardrails;
+    this.setState(s);
+  };
+
+  agendar() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.tique(), this.duracao());
+  }
+
+  tique() {
+    const passos = this.passos();
+    const p = passos[this.state.i];
+    if (!p) return;
+    const hora = this.fmtHora(this.state.relogio);
+    let txt = p.txt;
+    if (p.dinamico === 'passoAcao') {
+      txt = this.state.rejeitado
+        ? 'Rollback rejeitado pelo operador. Executando mitigação conservadora: reciclando instâncias do pool sem reverter o deploy.'
+        : 'Aprovação recebida. Executando rollback: checkout-api v2.14.3 → v2.14.2 via Lambda de deploy.';
+    }
+    const ag = this.agentesDef().find(a => a.id === p.ag);
+    const evento = { hora, agente: ag.nome, cor: ag.cor, pilar: p.pilar, aws: p.aws, texto: txt };
+
+    this.setState(s => {
+      const patch = {
+        eventos: [...s.eventos, evento],
+        i: s.i + 1,
+        relogio: s.relogio + 12 + Math.floor(Math.random() * 30),
+      };
+      if (p.fx) {
+        if (p.fx.agStatus) patch.agStatus = { ...s.agStatus, ...p.fx.agStatus };
+        if (p.fx.plano === 'criar') patch.plano = [
+          { id: 1, titulo: 'Congelar novos deploys do checkout-api', st: 'ok' },
+          { id: 2, titulo: 'Rollback do deploy v2.14.3 → v2.14.2', st: 'hitl' },
+          { id: 3, titulo: 'Escalar pool de conexões RDS (50 → 120)', st: 'pendente' },
+          { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
+        ];
+        if (p.fx.plano === 'p2') patch.plano = s.plano.map(x => x.id === 2 ? { ...x, st: this.state.rejeitado ? 'rejeitado' : 'ok' } : x);
+        if (p.fx.plano === 'p3') patch.plano = s.plano.map(x => x.id === 3 ? { ...x, st: 'ok' } : x);
+        if (p.fx.plano === 'p4') patch.plano = s.plano.map(x => x.id === 4 ? { ...x, st: 'ok' } : x);
+        if (p.fx.memorias === 'add:INC') patch.memorias = [...s.memorias, { ref: 'INC-1893', tipo: 'episódio', texto: 'Mesma assinatura pós-deploy. Rollback resolveu em 6 min. Eficácia 96%.' }];
+        else if (p.fx.memorias === 'add:APR') patch.memorias = [...s.memorias, { ref: 'APR-2047', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pool RDS + deploy recente" → rollback prioritário.' }];
+        else if (Array.isArray(p.fx.memorias)) patch.memorias = [...s.memorias, ...p.fx.memorias];
+      }
+      if (p.gate) {
+        patch.aguardandoHitl = true;
+        patch.hitl = [...s.hitl, {
+          id: 'APR-01', titulo: 'Rollback de deploy em produção', hora,
+          descricao: 'O plano da squad propõe reverter o checkout-api de v2.14.3 para v2.14.2. Ação classificada como crítica pelo guardrail G-02 (mudança em produção).',
+          risco: 'médio', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
+          detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api \\\n    --de v2.14.3 --para v2.14.2 \\\n    --estrategia blue-green\n\nJustificativa do Diagnosta: vazamento de conexões\nintroduzido em v2.14.3 (confiança 92%).\nMemória: INC-1893 resolvido com a mesma ação.',
+          status: 'pendente',
+        }];
+      }
+      if (p.fim) { patch.concluido = true; patch.rodando = false; }
+      return patch;
+    }, () => {
+      const p2 = passos[this.state.i - 1];
+      if (p2 && p2.gate) {
+        if (this.props.autoAprovar) setTimeout(() => this.decidir('APR-01', true, true), this.duracao());
+      } else if (!this.state.concluido && this.state.rodando) {
+        this.agendar();
+      }
+    });
+  }
+
+  decidir = (id, aprovado, automatico) => {
+    if (!this.state.aguardandoHitl) return;
+    const hora = this.fmtHora(this.state.relogio);
+    this.setState(s => ({
+      aguardandoHitl: false,
+      rejeitado: !aprovado,
+      hitl: s.hitl.map(h => h.id === id ? { ...h, status: aprovado ? 'aprovado' : 'rejeitado', horaDecisao: hora } : h),
+      eventos: [...s.eventos, {
+        hora, agente: automatico ? 'Auto-aprovação' : 'Operador humano', cor: '#E8EEF4', pilar: '🤝 Multi-Agent', aws: '',
+        texto: aprovado
+          ? (automatico ? 'Aprovação automática habilitada nos ajustes — rollback liberado.' : 'Decisão humana: rollback APROVADO. Executor liberado para agir.')
+          : 'Decisão humana: rollback REJEITADO. Maestro replaneja com mitigação conservadora.',
+      }],
+      relogio: s.relogio + 8,
+    }), () => { if (this.state.rodando) this.agendar(); });
+  };
+
+  // ---------- chat ----------
+  responderChat(texto) {
+    const t = texto.toLowerCase();
+    const temIncidente = this.state.eventos.length > 0;
+    if (t.includes('causa')) return temIncidente
+      ? 'O Diagnosta apontou como causa provável o esgotamento do pool de conexões RDS, causado por um vazamento de conexões introduzido no deploy v2.14.3 do checkout-api (confiança: 92%). A correlação temporal com o deploy e o episódio INC-1893 sustentam a hipótese.'
+      : 'Ainda não há anomalia em análise. Inicie a simulação no console para que a squad detecte e diagnostique um incidente.';
+    if (t.includes('status') || t.includes('situa')) {
+      if (this.state.concluido) return 'ANM-2047 foi resolvida ✅ MTTR de 4m 32s. A latência p99 voltou a 610ms e o pós-mortem já está salvo no S3.';
+      if (this.state.aguardandoHitl) return 'A execução está pausada aguardando decisão humana: o rollback em produção precisa de aprovação na fila HITL. Assim que houver decisão, o Executor prossegue.';
+      if (temIncidente) return 'A squad está trabalhando na ANM-2047 (latência elevada no checkout-api). Você pode acompanhar cada passo no Console de orquestração.';
+      return 'Tudo tranquilo por aqui — a Sentinela está em vigília e nenhuma anomalia foi detectada. Inicie a simulação para ver a squad em ação.';
+    }
+    if (t.includes('plano')) return temIncidente
+      ? 'O plano tem 4 passos: 1) congelar deploys do checkout-api; 2) rollback v2.14.3 → v2.14.2 (este passo exige aprovação humana pelo guardrail G-02); 3) escalar o pool de conexões RDS de 50 para 120; 4) validar métricas por 10 minutos.'
+      : 'Ainda não há plano ativo. O Diagnosta gera o plano de remediação após identificar a causa raiz.';
+    if (t.includes('memó') || t.includes('memo') || t.includes('hist')) return 'A memória da squad tem duas camadas: episódica (DynamoDB), com incidentes anteriores como o INC-1893, e semântica (OpenSearch), com runbooks vetorizados. Cada resolução gera um novo aprendizado gravado pelo Auditor.';
+    if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 6 agentes: eu (Maestro, orquestração), Sentinela (detecção), Contexto (memória), Diagnosta (causa raiz e plano), Executor (ações via Lambda/SSM) e Auditor (guardrails e avaliação).';
+    if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige aprovação humana (G-02), máximo de 3 ações de escrita por execução, e escopo restrito aos ambientes da squad. Você gerencia tudo na aba Configuração.';
+    if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% das anomalias resolvidas de forma autônoma e precisão de diagnóstico de 91%. Detalhes na aba Avaliação.';
+    return 'Posso ajudar com: status da anomalia, causa raiz, plano de ação, memória da squad, guardrails ou métricas. Sobre o que quer saber?';
+  }
+
+  enviarChat = () => {
+    const texto = this.state.chatInput.trim();
+    if (!texto || this.state.digitando) return;
+    this.setState(s => ({ chat: [...s.chat, { de: 'humano', texto }], chatInput: '', digitando: true }));
+    setTimeout(() => {
+      this.setState(s => ({ chat: [...s.chat, { de: 'squad', texto: this.responderChat(texto) }], digitando: false }));
+    }, 900);
+  };
+
+  // ---------- utilitários ----------
+  fmtHora(seg) {
+    const h = Math.floor(seg / 3600), m = Math.floor((seg % 3600) / 60), s2 = seg % 60;
+    const p = n => String(n).padStart(2, '0');
+    return p(h) + ':' + p(m) + ':' + p(s2);
+  }
+
+  componentDidUpdate(pp, ps) {
+    if (ps.eventos !== this.state.eventos && this.logRef.current) this.logRef.current.scrollTop = this.logRef.current.scrollHeight;
+    if ((ps.chat !== this.state.chat || ps.digitando !== this.state.digitando) && this.chatRef.current) this.chatRef.current.scrollTop = this.chatRef.current.scrollHeight;
+  }
+
+  componentWillUnmount() { clearTimeout(this.timer); }
+
+  statusInfo(st) {
+    const mapa = {
+      'ocioso': ['#5C6B7A', 'none'], 'vigiando': ['#4DD8E6', 'er-pulse 2s infinite'],
+      'detectando': ['#FFC24B', 'er-pulse 1.2s infinite'], 'orquestrando': ['#B48CFF', 'er-pulse 1.2s infinite'],
+      'buscando': ['#5BA8FF', 'er-pulse 1.2s infinite'], 'analisando': ['#FFC24B', 'er-pulse 1.2s infinite'],
+      'executando': ['#3DDC84', 'er-pulse 1.2s infinite'], 'monitorando': ['#FF8FAB', 'er-pulse 2s infinite'],
+      'aguardando': ['#FFC24B', 'er-pulse 1.6s infinite'], 'concluído': ['#3DDC84', 'none'],
+    };
+    return mapa[st] || mapa['ocioso'];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const defs = this.agentesDef();
+    const nav = [
+      { id: 'console', icone: '🎼', rotulo: 'Console' },
+      { id: 'chat', icone: '💬', rotulo: 'Chat da squad' },
+      { id: 'hitl', icone: '✋', rotulo: 'Aprovações HITL' },
+      { id: 'aval', icone: '📊', rotulo: 'Avaliação' },
+      { id: 'config', icone: '⚙️', rotulo: 'Configuração' },
+      { id: 'arq', icone: '🏗️', rotulo: 'Arquitetura' },
+    ];
+    const pendentes = s.hitl.filter(h => h.status === 'pendente');
+
+    const agentesLista = defs.map(a => {
+      const st = s.agStatus[a.id];
+      const [cor, anim] = this.statusInfo(st);
+      const ativo = anim !== 'none';
+      return {
+        ...a, status: st, statusCor: cor, statusAnim: anim,
+        borda: ativo ? cor + '55' : '#1E2833',
+        fundoIcone: a.cor + '22',
+      };
+    });
+
+    const planoIcones = { 'ok': ['✅', '#3DDC84', 'concluído'], 'hitl': ['✋', '#FFC24B', 'aguardando aprovação'], 'pendente': ['⏳', '#93A1B0', 'pendente'], 'rejeitado': ['🚫', '#FF6B6B', 'rejeitado — mitigação alternativa'] };
+    const planoPassos = s.plano.map(p => {
+      const [icone, cor, status] = planoIcones[p.st];
+      return { ...p, icone, cor, status };
+    });
+
+    let incTexto = 'Sistemas nominais', incCor = '#3DDC84', incAnim = 'none';
+    if (s.concluido) { incTexto = 'Resolvida · MTTR 4m 32s'; }
+    else if (s.aguardandoHitl) { incTexto = 'Aguardando humano'; incCor = '#FFC24B'; incAnim = 'er-pulse 1.4s infinite'; }
+    else if (s.eventos.length > 0) { incTexto = 'Latência p99 checkout-api +340%'; incCor = '#FF6B6B'; incAnim = 'er-pulse 1.2s infinite'; }
+
+    let squadStatus = 'Em vigília', squadCor = '#4DD8E6', squadAnim = 'er-pulse 2.4s infinite';
+    if (s.concluido) { squadStatus = 'Missão concluída'; squadCor = '#3DDC84'; squadAnim = 'none'; }
+    else if (s.aguardandoHitl) { squadStatus = 'Aguardando humano'; squadCor = '#FFC24B'; squadAnim = 'er-pulse 1.4s infinite'; }
+    else if (s.rodando) { squadStatus = 'Executando missão'; squadCor = '#3DDC84'; squadAnim = 'er-pulse 1.2s infinite'; }
+
+    const grDefs = [
+      { k: 'g1', nome: 'Aprovação humana p/ rollback', desc: 'Toda reversão de deploy em produção passa pela fila HITL.' },
+      { k: 'g2', nome: 'Limite de ações de escrita', desc: 'Máximo de 3 mutações de infraestrutura por execução.' },
+      { k: 'g3', nome: 'Escopo de ambiente', desc: 'Agentes só atuam nos serviços sob domínio da squad.' },
+      { k: 'g4', nome: 'Modo somente-leitura noturno', desc: 'Entre 0h e 6h, ações de escrita são bloqueadas.' },
+    ];
+
+    const barrasDados = [
+      { dia: 'seg', auto: 6, humano: 2 }, { dia: 'ter', auto: 4, humano: 1 }, { dia: 'qua', auto: 8, humano: 2 },
+      { dia: 'qui', auto: 5, humano: 3 }, { dia: 'sex', auto: 9, humano: 1 }, { dia: 'sáb', auto: 3, humano: 0 }, { dia: 'dom', auto: 2, humano: 1 },
+    ];
+
+    return {
+      logRef: this.logRef, chatRef: this.chatRef,
+      relogio: this.fmtHora(s.relogio),
+      numAgentes: defs.length,
+
+      vConsole: s.view === 'console', vChat: s.view === 'chat', vHitl: s.view === 'hitl',
+      vAval: s.view === 'aval', vConfig: s.view === 'config', vArq: s.view === 'arq',
+
+      navItens: nav.map(n => ({
+        ...n,
+        aoClicar: () => this.setState({ view: n.id }),
+        fundo: s.view === n.id ? '#182028' : 'transparent',
+        cor: s.view === n.id ? '#E8EEF4' : '#93A1B0',
+        peso: s.view === n.id ? 600 : 400,
+        badge: n.id === 'hitl' && pendentes.length > 0 ? pendentes.length : false,
+      })),
+
+      incTexto, incCor, incAnim,
+      incFundo: incCor === '#3DDC84' ? '#0E1A13' : (incCor === '#FFC24B' ? '#1A1408' : '#241014'),
+      incBorda: incCor === '#3DDC84' ? '#1C3A28' : (incCor === '#FFC24B' ? '#3A2E12' : '#4A1E26'),
+
+      btnSimRotulo: s.concluido ? '▶ Nova simulação' : (s.rodando ? '⏸ Pausar' : '▶ Iniciar simulação'),
+      btnSimFundo: s.rodando ? '#1A1408' : '#3DDC84',
+      btnSimCor: s.rodando ? '#FFC24B' : '#06110B',
+      iniciarPausar: this.iniciarPausar,
+      reiniciar: this.reiniciar,
+
+      squadStatus, squadCor, squadAnim,
+
+      agentesLista,
+      eventos: s.eventos,
+      numEventos: s.eventos.length,
+      logVazio: s.eventos.length === 0,
+      executando: s.rodando && !s.aguardandoHitl && !s.concluido && s.eventos.length > 0,
+      aguardandoHitl: s.aguardandoHitl,
+      irParaHitl: (e) => { e.preventDefault(); this.setState({ view: 'hitl' }); },
+
+      planoPassos, planoVazio: s.plano.length === 0,
+      memorias: s.memorias, memoriaVazia: s.memorias.length === 0,
+
+      chatMsgs: s.chat.map(m => m.de === 'humano'
+        ? { texto: m.texto, direcao: 'row-reverse', avatar: '👤', avatarFundo: '#1E2833', fundo: '#182430', borda: '#24384A' }
+        : { texto: m.texto, direcao: 'row', avatar: '🎼', avatarFundo: '#221A33', fundo: '#131A22', borda: '#1E2833' }),
+      digitando: s.digitando,
+      chatInput: s.chatInput,
+      aoDigitarChat: (e) => this.setState({ chatInput: e.target.value }),
+      aoTeclaChat: (e) => { if (e.key === 'Enter') this.enviarChat(); },
+      enviarChat: this.enviarChat,
+
+      hitlPendentes: pendentes.map(h => ({
+        ...h,
+        aprovar: () => this.decidir(h.id, true),
+        rejeitar: () => this.decidir(h.id, false),
+      })),
+      hitlVazia: pendentes.length === 0,
+      hitlHistorico: s.hitl.filter(h => h.status !== 'pendente').map(h => ({
+        ...h, hora: h.horaDecisao,
+        icone: h.status === 'aprovado' ? '✅' : '🚫',
+        decisao: h.status === 'aprovado' ? 'Aprovado' : 'Rejeitado',
+        cor: h.status === 'aprovado' ? '#3DDC84' : '#FF6B6B',
+      })),
+      temHistorico: s.hitl.some(h => h.status !== 'pendente'),
+
+      metricas: [
+        { rotulo: 'MTTR médio', valor: '6m 12s', cor: '#3DDC84', delta: '−71% vs. manual', deltaCor: '#3DDC84' },
+        { rotulo: 'Resolução autônoma', valor: '84%', cor: '#3DDC84', delta: '+9 pts na semana', deltaCor: '#3DDC84' },
+        { rotulo: 'Precisão do diagnóstico', valor: '91%', cor: '#5BA8FF', delta: '37 de 41 corretos', deltaCor: '#93A1B0' },
+        { rotulo: 'Intervenções HITL', valor: '12', cor: '#FFC24B', delta: '−4 vs. semana anterior', deltaCor: '#3DDC84' },
+        { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'Bedrock · 118k tokens', deltaCor: '#93A1B0' },
+      ],
+      barras: barrasDados.map(b => ({
+        dia: b.dia,
+        hAuto: Math.round((b.auto / 10) * 130) + 'px',
+        hHumano: Math.round((b.humano / 10) * 130) + 'px',
+      })),
+      scores: defs.map(a => {
+        const v = { maestro: 94, sentinela: 97, contexto: 89, diagnosta: 91, executor: 99, auditor: 95 }[a.id];
+        return { icone: a.icone, nome: a.nome, valor: v, largura: v + '%', cor: a.cor };
+      }),
+      historicoAnm: [
+        { id: 'ANM-2046', desc: 'Fila SQS de pedidos acima de 12k mensagens', res: 'Autônoma', resCor: '#3DDC84', mttr: '3m 58s', score: '0,96' },
+        { id: 'ANM-2045', desc: 'Erros 5xx no serviço de pagamentos (+8%)', res: 'Com humano', resCor: '#FFC24B', mttr: '11m 04s', score: '0,88' },
+        { id: 'ANM-2044', desc: 'CPU do cluster OpenSearch acima de 92%', res: 'Autônoma', resCor: '#3DDC84', mttr: '5m 21s', score: '0,93' },
+        { id: 'ANM-2043', desc: 'Lambda de notificação com throttling', res: 'Autônoma', resCor: '#3DDC84', mttr: '2m 47s', score: '0,97' },
+      ],
+
+      agentesConfig: defs.map(a => ({ ...a, fundoIcone: a.cor + '22', corSkill: a.cor })),
+      guardrailsLista: grDefs.map(g => ({
+        ...g,
+        trilha: s.guardrails[g.k] ? '#3DDC84' : '#1E2833',
+        bolinha: s.guardrails[g.k] ? '20px' : '3px',
+        alternar: () => this.setState(st => ({ guardrails: { ...st.guardrails, [g.k]: !st.guardrails[g.k] } })),
+      })),
+      triggersLista: [
+        { icone: '🚨', nome: 'Alarme de anomalia', desc: 'Detecção por ML de desvios em latência, erros e saturação.', aws: 'CloudWatch' },
+        { icone: '📡', nome: 'Evento de deploy', desc: 'Todo deploy em produção coloca a squad em observação ativa.', aws: 'EventBridge' },
+        { icone: '⏰', nome: 'Varredura agendada', desc: 'Auditoria de saúde a cada 15 minutos em todos os serviços.', aws: 'EventBridge' },
+        { icone: '💬', nome: 'Solicitação humana', desc: 'Operador pode acionar a squad diretamente pelo chat.', aws: 'API Gateway' },
+      ],
+
+      pilares: [
+        { icone: '🧠', nome: 'Context', desc: 'Montagem do contexto do incidente: métricas, logs, deploys e topologia do serviço.', aws: ['OpenSearch', 'Bedrock KB'], onde: 'Painel "Contexto & Memória"' },
+        { icone: '📚', nome: 'Memory', desc: 'Memória episódica (incidentes) e semântica (runbooks vetorizados) com aprendizado contínuo.', aws: ['DynamoDB', 'OpenSearch'], onde: 'Cards INC / APR no console' },
+        { icone: '🎯', nome: 'Planning', desc: 'Diagnóstico de causa raiz e geração de plano de remediação em passos verificáveis.', aws: ['Bedrock'], onde: 'Painel "Plano de ação"' },
+        { icone: '⚡', nome: 'Action', desc: 'Execução das mutações de infraestrutura de forma idempotente e auditável.', aws: ['Lambda'], onde: 'Agente Executor' },
+        { icone: '🔧', nome: 'Tools & APIs', desc: 'Ferramentas tipadas expostas aos agentes: rollback, escala, runbooks, consultas.', aws: ['SSM', 'API Gateway'], onde: 'Skills por agente (Configuração)' },
+        { icone: '🤝', nome: 'Multi-Agent', desc: 'Seis agentes especializados colaborando com papéis e contratos explícitos.', aws: ['Bedrock Agents'], onde: 'Coluna "Agentes" do console' },
+        { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita e aprovação humana.', aws: ['Bedrock Guardrails', 'IAM'], onde: 'Configuração + evento G-02' },
+        { icone: '📦', nome: 'Skills', desc: 'Capacidades versionadas e testáveis atribuídas a cada agente da squad.', aws: ['Lambda Layers'], onde: 'Chips de skills (Configuração)' },
+        { icone: '⚡', nome: 'Triggers', desc: 'Gatilhos que acionam a squad: alarmes, deploys, agenda e pedidos humanos.', aws: ['EventBridge', 'CloudWatch'], onde: 'Lista de triggers (Configuração)' },
+        { icone: '🎼', nome: 'Orchestration', desc: 'Máquina de estados que coordena o fluxo entre agentes, com pausa para HITL.', aws: ['Step Functions'], onde: 'Fluxo central do console' },
+        { icone: '📊', nome: 'Evaluation', desc: 'Avaliação contínua: MTTR, precisão, scores por agente e pós-mortems automáticos.', aws: ['CloudWatch', 'S3'], onde: 'Aba "Avaliação"' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
