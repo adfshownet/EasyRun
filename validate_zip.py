@@ -11,16 +11,17 @@ from pathlib import Path
 UPLOADS_DIR = Path(__file__).parent / "uploads"
 
 
-def validate_zip(path: Path) -> list[str]:
-    """Return a list of error messages for the given file.
+def validate_zip(path: Path) -> tuple[list[str], list[str]]:
+    """Return (errors, members) for the given file.
 
-    An empty list means the file is a valid ZIP archive.
+    errors is empty and members is populated when the file is a valid ZIP archive.
     """
     errors: list[str] = []
+    members: list[str] = []
 
     if not zipfile.is_zipfile(path):
         errors.append(f"  ✗ {path.name}: not a valid ZIP archive")
-        return errors
+        return errors, members
 
     try:
         with zipfile.ZipFile(path) as zf:
@@ -34,7 +35,7 @@ def validate_zip(path: Path) -> list[str]:
     except zipfile.BadZipFile as exc:
         errors.append(f"  ✗ {path.name}: bad ZIP file – {exc}")
 
-    return errors
+    return errors, members
 
 
 def main() -> int:
@@ -51,12 +52,10 @@ def main() -> int:
     all_errors: list[str] = []
 
     for zpath in zip_files:
-        errors = validate_zip(zpath)
+        errors, members = validate_zip(zpath)
         if errors:
             all_errors.extend(errors)
         else:
-            with zipfile.ZipFile(zpath) as zf:
-                members = zf.namelist()
             print(f"  ✓ {zpath.name}: valid ZIP archive ({len(members)} file(s))")
 
     if all_errors:
