@@ -15,3 +15,28 @@ class DetectionAlgorithm(str, Enum):
     BASIC = "basic"
     AGILE = "agile"
     ROBUST = "robust"
+
+
+class AnomalyOrigin(str, Enum):
+    """Where the stimulus that opened the anomaly came from.
+
+    The squad is not only metric-driven: an incident typed into ServiceNow by a
+    human is as valid an entry point as a Datadog monitor firing.
+    """
+
+    DATADOG = "datadog"
+    SERVICENOW = "servicenow"
+    AGENDADO = "agendado"
+    HUMANO = "humano"
+
+
+class IncidentNature(str, Enum):
+    """Whether the incident is a technical failure or a business outcome failure.
+
+    A business incident (invoices not reconciled, orders not shipped) can happen
+    with every infrastructure metric perfectly green — which is exactly why
+    detection cannot rely on telemetry alone.
+    """
+
+    SISTEMICO = "sistemico"
+    NEGOCIO = "negocio"
