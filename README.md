@@ -1,10 +1,21 @@
 # Squad Agentica em Python
 
 Projeto Python (estrutura `src/` + testes com `pytest`). O pacote `squad_agentica`
-tem um subpacote `aiops/` com os tipos/stubs (TypedDict `AgentState`, papéis
-Planner/Explainer/Validator/Coach, mapa de remediação, governança de modelos) que
-espelham a especificação de arquitetura AIOps — ainda sem lógica real de
-LLM/LangGraph, só o contrato estrutural.
+tem um subpacote `aiops/` com os tipos/stubs (TypedDict `AgentState` com rastreabilidade
+corporativa, papéis Planner/Explainer/Validator/Coach, nós adaptadores para ServiceNow /
+IUClick / Devin / GitHub, natureza da remediação, avaliação e governança de modelos) que
+espelham a especificação de arquitetura AIOps — ainda sem lógica real de LLM/LangGraph, só
+o contrato estrutural.
+
+## Documentação
+
+A documentação completa está em [`docs/`](docs/README.md) — cada componente, cada termo
+técnico e o processo end-to-end, sem pressupor conhecimento prévio de Python ou AIOps.
+
+- **Vou apresentar o projeto:** [visão geral](docs/01-visao-geral.md) → [ecossistema da empresa](docs/10-ecossistema-da-empresa.md) → [processo end-to-end](docs/05-processo-end-to-end.md)
+- **Vou mexer no código:** [ambiente e ferramentas](docs/02-ambiente-e-ferramentas.md) → [arquitetura do código](docs/03-arquitetura-do-codigo.md) → [lacunas e riscos](docs/09-lacunas-e-riscos.md)
+- **Quero as integrações:** [ServiceNow, Datadog, IUClick, Devin, GitHub](docs/10-ecossistema-da-empresa.md) e a [observabilidade da esteira](docs/11-mlops-llmops.md)
+- **Não entendi um termo:** [glossário](docs/08-glossario.md)
 
 ## Estrutura
 
@@ -15,6 +26,7 @@ LLM/LangGraph, só o contrato estrutural.
 │   └── aiops/               # tipos/stubs espelhando a especificação AIOps
 ├── tests/                    # testes (pytest)
 ├── prototype/                 # mockup estático de UI (HTML/JS), não integrado ao backend
+├── docs/                       # documentação completa (ver seção acima)
 ├── pyproject.toml
 └── .gitignore
 ```
@@ -22,7 +34,8 @@ LLM/LangGraph, só o contrato estrutural.
 ### `prototype/`
 
 Contém um dashboard estático chamado "EasyRun — Squad Agêntica AIOps" (HTML/JS,
-sem lógica Python), simulando 4 cenários de incidente com 6 agentes. Não é usado
+sem lógica Python), simulando 7 cenários de incidente com 8 agentes, integrado (na
+encenação) a ServiceNow, Datadog, IUClick, Devin e GitHub. Não é usado
 pelo pacote `squad_agentica` — é só o mockup visual. Pontos a saber:
 
 - `EasyRun.dc.html` é a fonte canônica. Carrega `support.js` (runtime gerado, com

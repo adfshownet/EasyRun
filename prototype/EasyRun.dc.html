@@ -59,7 +59,7 @@
 
     <!-- ============ NAV ============ -->
     <nav style="width: 184px; flex-shrink: 0; background: #10151C; border-right: 1px solid #1E2833; padding: 14px 10px; display: flex; flex-direction: column; gap: 4px;">
-      <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="7">
+      <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="9">
         <div onClick="{{ nv.aoClicar }}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; background: {{ nv.fundo }}; color: {{ nv.cor }}; font-size: 13.5px; font-weight: {{ nv.peso }}; transition: background .15s;" style-hover="background: #182028;">
           <span style="font-size: 15px; width: 20px; text-align: center;">{{ nv.icone }}</span>
           <span style="flex: 1;">{{ nv.rotulo }}</span>
@@ -87,13 +87,16 @@
         <!-- Agentes -->
         <section style="border-right: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
           <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">CENÁRIO</div>
-          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="4">
+          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="7">
             <div onClick="{{ cn.aoClicar }}" style="padding: 10px 12px; border-radius: 10px; background: {{ cn.fundo }}; border: 1px solid {{ cn.borda }}; cursor: {{ cn.cursor }}; opacity: {{ cn.opacidade }}; display: flex; flex-direction: column; gap: 4px;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 14px;">{{ cn.icone }}</span>
                 <span style="font-size: 12px; font-weight: 500; line-height: 1.3;">{{ cn.titulo }}</span>
               </div>
-              <span style="font-size: 10.5px; font-family: 'IBM Plex Mono', monospace; color: {{ cn.corSeveridade }};">{{ cn.tagSeveridade }}</span>
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span style="font-size: 10.5px; font-family: 'IBM Plex Mono', monospace; color: {{ cn.corSeveridade }};">{{ cn.tagSeveridade }}</span>
+                <span style="font-size: 9.5px; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ cn.origem }}</span>
+              </div>
             </div>
           </sc-for>
           <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">AGENTES · {{ numAgentes }}</div>
@@ -202,11 +205,37 @@
           </div>
 
           <div>
+            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🧭 NATUREZA DA REMEDIAÇÃO</div>
+            <div style="padding: 12px; border-radius: 10px; background: {{ naturezaFundo }}; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; font-family: 'IBM Plex Mono', monospace; color: {{ naturezaCor }};">{{ naturezaRotulo }}</span>
+              <span style="font-size: 11.5px; color: #93A1B0; line-height: 1.5;">{{ naturezaDesc }}</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; gap: 8px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🔗 RASTREABILIDADE</div>
+              <span style="font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: #5C6B7A;">{{ rastreioResumo }}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+              <sc-for list="{{ rastreioLinhas }}" as="rs" hint-placeholder-count="9">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; background: #0B0F14; border: 1px solid #161D26;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ rs.marcaCor }}; flex-shrink: 0;"></span>
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 11px; color: {{ rs.cor }}; font-family: 'IBM Plex Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ rs.valor }}</div>
+                    <div style="font-size: 9.5px; color: #5C6B7A;">{{ rs.rotulo }} · {{ rs.plat }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div>
             <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🛡️ GUARDRAILS ATIVOS</div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Rollback exige aprovação humana</div>
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Máx. 3 ações de escrita por execução</div>
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #93A1B0;"><span style="color: #3DDC84;">●</span> Somente ambiente sob escopo da squad</div>
+              <sc-for list="{{ guardrailsLista }}" as="gc" hint-placeholder-count="5">
+                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #93A1B0; line-height: 1.4;"><span style="color: {{ gc.trilha }};">●</span> {{ gc.nome }}</div>
+              </sc-for>
             </div>
           </div>
         </section>
@@ -245,7 +274,7 @@
     <sc-if value="{{ vHitl }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="Fila de aprovação HITL" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">✋ Fila de aprovação humana</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador. Há três tipos de gate — ação de infraestrutura, pull request e GMUD —, e cada um mostra o que aquela decisão específica exige.</p>
 
         <sc-if value="{{ hitlVazia }}" hint-placeholder-val="{{ true }}">
           <div style="padding: 32px; border: 1px dashed #1E2833; border-radius: 12px; text-align: center; color: #5C6B7A; font-size: 13.5px;">Nenhuma aprovação pendente. Quando um guardrail interceptar uma ação crítica, ela aparecerá aqui.</div>
@@ -257,6 +286,7 @@
               <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #1A1408; border-bottom: 1px solid #3A2E12;">
                 <span style="width: 8px; height: 8px; border-radius: 50%; background: #FFC24B; animation: er-pulse 1.4s infinite;"></span>
                 <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #FFC24B;">{{ hp.id }}</span>
+                <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; padding: 2px 7px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: {{ hp.tipoCor }}; font-family: 'IBM Plex Mono', monospace;">{{ hp.tipoRotulo }}</span>
                 <span style="font-weight: 600; font-size: 14px;">{{ hp.titulo }}</span>
                 <span style="flex: 1;"></span>
                 <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hp.hora }}</span>
@@ -268,9 +298,28 @@
                   <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0;">Guardrail: {{ hp.guardrail }}</span>
                   <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ hp.aws }}</span>
                 </div>
+
+                <sc-if value="{{ hp.tipoPr }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: grid; grid-template-columns: 118px 1fr; gap: 6px 14px; padding: 12px 14px; border-radius: 8px; background: #1E1610; border: 1px solid #3A2B1E; font-size: 12.5px;">
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Repositório</span><span style="color: #E8A87C; font-family: 'IBM Plex Mono', monospace;">{{ hp.repositorio }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Branch</span><span style="color: #C7D2DC; font-family: 'IBM Plex Mono', monospace;">{{ hp.branch }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Alterações</span><span style="color: #C7D2DC;">{{ hp.arquivos }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Checks</span><span style="color: #3DDC84;">{{ hp.checks }}</span>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ hp.tipoGmud }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: grid; grid-template-columns: 118px 1fr; gap: 6px 14px; padding: 12px 14px; border-radius: 8px; background: #101A26; border: 1px solid #1E2E42; font-size: 12.5px;">
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Mudança</span><span style="color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">{{ hp.gmud }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">CI afetado</span><span style="color: #C7D2DC; font-family: 'IBM Plex Mono', monospace;">{{ hp.ci }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Janela</span><span style="color: #C7D2DC;">{{ hp.janela }}</span>
+                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Rollback</span><span style="color: #C7D2DC;">{{ hp.rollback }}</span>
+                  </div>
+                </sc-if>
+
                 <div style="padding: 12px 14px; border-radius: 8px; background: #0B0F14; border: 1px solid #1E2833; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #93A1B0; line-height: 1.7; white-space: pre-wrap;">{{ hp.detalhe }}</div>
                 <div style="display: flex; gap: 10px;">
-                  <button onClick="{{ hp.aprovar }}" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">✓ Aprovar</button>
+                  <button onClick="{{ hp.aprovar }}" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">{{ hp.rotuloAprovar }}</button>
                   <button onClick="{{ hp.rejeitar }}" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #4A1E26; cursor: pointer; background: transparent; color: #FF6B6B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="background: #241014;">✕ Rejeitar</button>
                 </div>
               </div>
@@ -286,6 +335,7 @@
                 <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833;">
                   <span style="font-size: 14px;">{{ hh.icone }}</span>
                   <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C6B7A;">{{ hh.id }}</span>
+                  <span style="font-size: 9.5px; letter-spacing: .08em; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hh.tipoRotulo }}</span>
                   <span style="font-size: 13px; flex: 1;">{{ hh.titulo }}</span>
                   <span style="font-size: 12px; font-weight: 600; color: {{ hh.cor }};">{{ hh.decisao }}</span>
                   <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hh.hora }}</span>
@@ -301,10 +351,10 @@
     <sc-if value="{{ vAval }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="Avaliação e métricas" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">📊 Avaliação da squad</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Métricas de eficácia dos agentes nos últimos 7 dias · fonte: CloudWatch + pós-mortems em S3.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Métricas de eficácia dos agentes nos últimos 7 dias · fonte: Datadog, ServiceNow e pós-mortems em S3.</p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
-          <sc-for list="{{ metricas }}" as="mt" hint-placeholder-count="5">
+          <sc-for list="{{ metricas }}" as="mt" hint-placeholder-count="6">
             <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 11px; color: #5C6B7A; letter-spacing: .06em;">{{ mt.rotulo }}</span>
               <span style="font-size: 24px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; color: {{ mt.cor }};">{{ mt.valor }}</span>
@@ -351,6 +401,24 @@
         </div>
 
         <div style="margin-top: 16px; padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Distribuição por natureza da remediação</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 14px;">48 incidentes nos últimos 7 dias. Dois terços se resolvem em runtime — mas é o quinto que vira código que costuma consumir dias de engenharia no processo manual.</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{ naturezaResumo }}" as="nr" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 76px; font-size: 11px; font-weight: 700; letter-spacing: .08em; font-family: 'IBM Plex Mono', monospace; color: {{ nr.cor }};">{{ nr.rotulo }}</span>
+                <div style="flex: 1; height: 8px; border-radius: 4px; background: #0B0F14; overflow: hidden;">
+                  <div style="height: 100%; width: {{ nr.larg }}; background: {{ nr.cor }}; border-radius: 4px;"></div>
+                </div>
+                <span style="width: 34px; text-align: right; font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: #E8EEF4;">{{ nr.qtd }}</span>
+                <span style="width: 40px; text-align: right; font-size: 11.5px; font-family: 'IBM Plex Mono', monospace; color: #5C6B7A;">{{ nr.pct }}</span>
+                <span style="width: 168px; font-size: 11.5px; color: #5C6B7A;">{{ nr.obs }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Últimas anomalias</div>
           <div style="display: grid; grid-template-columns: 100px 1fr 130px 90px 110px; gap: 0; font-size: 12.5px;">
             <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">ID</div>
@@ -376,7 +444,7 @@
     <sc-if value="{{ vConfig }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="Configuração" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">⚙️ Configuração da squad</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Agentes, skills, guardrails e gatilhos que governam o comportamento autônomo.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Agentes, skills, guardrails, gatilhos e a política de código que governam o comportamento autônomo da squad.</p>
 
         <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start;">
           <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -445,7 +513,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📡 FONTES DE TELEMETRIA</div>
-              <sc-for list="{{ telemetriaLista }}" as="tl" hint-placeholder-count="4">
+              <sc-for list="{{ telemetriaLista }}" as="tl" hint-placeholder-count="5">
                 <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
                   <span style="font-size: 15px;">{{ tl.icone }}</span>
                   <div style="flex: 1;">
@@ -456,7 +524,88 @@
                 </div>
               </sc-for>
             </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🔐 POLÍTICA DE CÓDIGO</div>
+              <div style="font-size: 11.5px; color: #5C6B7A; line-height: 1.5; margin-top: -4px;">O que protege o repositório da empresa quando a correção é delegada a um agente externo.</div>
+              <sc-for list="{{ politicaCodigo }}" as="pc" hint-placeholder-count="5">
+                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 15px;">{{ pc.icone }}</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: 13px; font-weight: 500;">{{ pc.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ pc.desc }}</div>
+                  </div>
+                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #0E1A13; border: 1px solid #1C3A28; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">{{ pc.aws }}</span>
+                </div>
+              </sc-for>
+            </div>
           </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ INTEGRAÇÕES ============ -->
+    <sc-if value="{{ vIntegra }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Integrações — ecossistema da empresa" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🔌 Integrações do ecossistema</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 760px;">O EasyRun não substitui as plataformas que a empresa já usa — ele se encaixa entre elas. Cada linha abaixo mostra o que a squad lê, o que escreve, e onde a decisão continua sendo humana.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 980px;">
+          <sc-for list="{{ integracoesLista }}" as="ig" hint-placeholder-count="6">
+            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px; animation: er-entrar .3s ease;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 15px; background: #0B0F14; border: 1px solid #1E2833;">{{ ig.icone }}</span>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: 13.5px; font-weight: 600; color: {{ ig.cor }};">{{ ig.nome }}</div>
+                  <div style="font-size: 11.5px; color: #5C6B7A;">{{ ig.papel }}</div>
+                </div>
+                <span style="font-size: 10.5px; padding: 3px 9px; border-radius: 5px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ ig.modo }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 74px 1fr; gap: 6px 12px; font-size: 12.5px; color: #C7D2DC; line-height: 1.5;">
+                <span style="color: #4DD8E6; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">← LÊ</span><span>{{ ig.le }}</span>
+                <span style="color: #3DDC84; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">→ ESCREVE</span><span>{{ ig.escreve }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">O fio único</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Um mesmo identificador de correlação atravessa todas as plataformas. É o que permite sair de "por que a squad mexeu nisso?" e chegar à chamada de modelo exata que decidiu.</div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">
+            <sc-for list="{{ rastreioLinhas }}" as="rf" hint-placeholder-count="9">
+              <span style="padding: 4px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid {{ rf.marcaCor }}; color: {{ rf.cor }};">{{ rf.rotulo }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ LLMOPS ============ -->
+    <sc-if value="{{ vLlmops }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="LLMOps — observabilidade da squad" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🔭 LLMOps — observabilidade da própria squad</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 760px;">Há duas observabilidades neste sistema, e confundi-las é o erro mais comum. O Datadog observa os <strong style="color: #93A1B0;">sistemas monitorados</strong> — isso é a entrada da squad. Esta tela é sobre observar <strong style="color: #93A1B0;">a squad</strong>: qual prompt rodou, quanto custou, se o diagnóstico estava certo.</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
+          <sc-for list="{{ llmopsStack }}" as="ls" hint-placeholder-count="5">
+            <div style="padding: 10px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 2px; min-width: 190px; flex: 1;">
+              <span style="font-size: 12.5px; font-weight: 600; color: {{ ls.cor }};">{{ ls.nome }}</span>
+              <span style="font-size: 11px; color: #5C6B7A; line-height: 1.45;">{{ ls.papel }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+          <sc-for list="{{ llmopsCards }}" as="lo" hint-placeholder-count="9">
+            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;" style-hover="border-color: #3DDC84;">
+              <div style="display: flex; align-items: center; gap: 9px;">
+                <span style="font-size: 16px;">{{ lo.icone }}</span>
+                <span style="font-size: 13.5px; font-weight: 600;">{{ lo.titulo }}</span>
+              </div>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">{{ lo.desc }}</span>
+            </div>
+          </sc-for>
         </div>
       </main>
     </sc-if>
@@ -465,7 +614,7 @@
     <sc-if value="{{ vFinops }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="FinOps — Governança de Modelos" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">💰 FinOps &amp; Governança de Modelos</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade avaliada para camadas de LLM auto-hospedadas — complemento ao Bedrock que hoje sustenta os agentes da squad EasyRun.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade para as camadas de LLM: o cenário auto-hospedado (Ollama) avaliado como alternativa ao Bedrock, que hoje sustenta os agentes da squad.</p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
           <sc-for list="{{ finopsCards }}" as="fc" hint-placeholder-count="5">
@@ -485,7 +634,7 @@
     <sc-if value="{{ vArq }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="Arquitetura — 13 pilares" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🏗️ Arquitetura de referência — 13 pilares</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Cada pilar da squad agêntica mapeado para o serviço AWS que o sustenta e para onde ele vive neste protótipo.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Cada pilar da squad agêntica mapeado para a plataforma que o sustenta — AWS ou corporativa — e para onde ele vive neste protótipo.</p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 20px;">
           <sc-for list="{{ pilares }}" as="pl" hint-placeholder-count="13">
@@ -510,15 +659,38 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">BACKEND · PYTHON</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração dos 4 papéis (Planner/Explainer/Validator/Coach) como grafo de estados LangGraph, com contrato tipado AgentState (TypedDict) e pausas via interrupt() para HITL. Checkpoints em PostgreSQL permitem retomar a remediação do ponto exato de interrupção.</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração em LangGraph com roteamento condicional por natureza da remediação, contrato tipado AgentState (TypedDict, schema versionado) e pausas via interrupt() para HITL — duas no ramo de código. LangChain para ferramentas e retrievers; checkpoints em PostgreSQL permitem retomar do ponto exato de interrupção.</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">FRONTEND · ANGULAR</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Angular 18 standalone components + Signals. Um módulo por visão deste protótipo (console, HITL, avaliação, configuração), estado via store dedicado.</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Angular 18 standalone components + Signals. Um módulo por visão deste protótipo (console, HITL, avaliação, configuração, integrações, LLMOps), estado via store dedicado. Servido na AWS como ambiente web da squad de Run.</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">INFRA · AWS</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Bedrock (agentes), Step Functions (orquestração), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), CloudWatch (avaliação).</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Bedrock (agentes), Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔌 Arquitetura de integração</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 14px;">O EasyRun roda na AWS, mas trata sistemas que nem sempre estão nela. As plataformas corporativas entram como adaptadores na borda — o domínio não conhece nenhum SDK.</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #4DD8E6; font-family: 'IBM Plex Mono', monospace;">ENTRADA</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Webhooks do Datadog e do ServiceNow chegam por API Gateway, são normalizados em evento de anomalia e publicados no EventBridge. Um só formato de entrada, independentemente da origem.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #7FD4A8; font-family: 'IBM Plex Mono', monospace;">RASTREABILIDADE</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Adaptadores de ServiceNow (incidente, CMDB, GMUD) e IUClick (bug, kanban) atrás de portas tipadas. Trocar de ferramenta é trocar de adaptador, não reescrever o domínio.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #E8A87C; font-family: 'IBM Plex Mono', monospace;">CÓDIGO</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">GitHub App com escopo por repositório para clonar e abrir PR; Devin acionado por sessão. Redação de segredos e allowlist de repositórios rodam antes de qualquer saída — não é opcional no contrato.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">EXECUÇÃO</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Ações de infra via Lambda e SSM na AWS; sistemas fora dela (ERP on-premises, SaaS de terceiro) por API própria, através de conectividade privada. O Executor não presume nuvem.</span>
             </div>
           </div>
         </div>
@@ -537,9 +709,9 @@
 
         <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔗 Squad EasyRun × papéis LangGraph</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 6 agentes desta squad mapeiam para os 4 papéis do grafo de estados da especificação.</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="4">
+            <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="6">
               <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;">
                 <span style="color: #93A1B0; min-width: 160px;">{{ lg.agentes }}</span>
                 <span style="color: #5C6B7A;">→</span>
@@ -575,17 +747,46 @@ class Component extends DCLogic {
       i: 0,
       relogio: 50531, // 14:02:11
       eventos: [],
-      agStatus: { maestro: 'ocioso', sentinela: 'vigiando', contexto: 'ocioso', diagnosta: 'ocioso', executor: 'ocioso', auditor: 'ocioso' },
+      agStatus: { maestro: 'ocioso', sentinela: 'vigiando', elo: 'ocioso', contexto: 'ocioso', diagnosta: 'ocioso', artifice: 'ocioso', executor: 'ocioso', auditor: 'ocioso' },
       plano: [],
       memorias: [],
       hitl: [],
       rejeitado: false,
       aguardandoHitl: false,
+      escalado: false,
+      natureza: null,
+      rastreio: {},
       cenarioAtivo: cenarioId || this.cenarios()[0].id,
-      chat: [{ de: 'squad', texto: 'Olá! Sou o Maestro, orquestrador da squad EasyRun. Posso responder sobre o status da anomalia, a causa raiz, o plano de ação ou a memória de incidentes. Como posso ajudar?' }],
+      chat: [{ de: 'squad', texto: 'Olá! Sou o Maestro, orquestrador da squad EasyRun. Posso responder sobre o status da anomalia, a causa raiz, a natureza da remediação, o plano de ação, a rastreabilidade (ServiceNow, IUClick, Devin) ou a memória de incidentes. Como posso ajudar?' }],
       chatInput: '',
       digitando: false,
-      guardrails: { g1: true, g2: true, g3: true, g4: false },
+      guardrails: { g1: true, g2: true, g3: true, g4: false, g5: true },
+    };
+  }
+
+  // Cadeia de rastreabilidade corporativa — "o fio único" que liga todos os
+  // registros que o processo da empresa exige. Cada passo do cenário preenche
+  // um elo via fx.rastreioSet.
+  rastreioDef() {
+    return [
+      { k: 'anm',   rotulo: 'Anomalia',          plat: 'EasyRun' },
+      { k: 'inc',   rotulo: 'Incidente',         plat: 'ServiceNow' },
+      { k: 'ci',    rotulo: 'Item de config.',   plat: 'ServiceNow CMDB' },
+      { k: 'bug',   rotulo: 'Card de bug',       plat: 'IUClick' },
+      { k: 'repo',  rotulo: 'Repositório',       plat: 'GitHub org' },
+      { k: 'devin', rotulo: 'Sessão de código',  plat: 'Devin' },
+      { k: 'pr',    rotulo: 'Pull request',      plat: 'GitHub org' },
+      { k: 'gmud',  rotulo: 'GMUD',              plat: 'ServiceNow' },
+      { k: 'trace', rotulo: 'Trace da execução', plat: 'Datadog · Langfuse' },
+    ];
+  }
+
+  naturezaDef() {
+    return {
+      infra:   { rotulo: 'INFRA',   cor: '#3DDC84', desc: 'Ação em runtime na infraestrutura — o Executor age direto.' },
+      codigo:  { rotulo: 'CÓDIGO',  cor: '#E8A87C', desc: 'Exige mudança de software — Artífice delega ao Devin e abre PR.' },
+      config:  { rotulo: 'CONFIG',  cor: '#5BA8FF', desc: 'Parâmetro ou dado de configuração — desfecho sob GMUD.' },
+      externo: { rotulo: 'EXTERNO', cor: '#FFC24B', desc: 'Fora do escopo da squad — escalonamento para o time dono.' },
     };
   }
 
@@ -596,21 +797,23 @@ class Component extends DCLogic {
   // ---------- dados estáticos ----------
   agentesDef() {
     return [
-      { id: 'maestro', icone: '🎼', nome: 'Maestro', papel: 'Orquestrador', cor: '#B48CFF', aws: ['Step Functions'], modelo: 'Bedrock · Claude Sonnet', skills: ['decompor-tarefas', 'rotear-agentes', 'consolidar-resultado'] },
-      { id: 'sentinela', icone: '🛰️', nome: 'Sentinela', papel: 'Detecção & triggers', cor: '#4DD8E6', aws: ['CloudWatch', 'EventBridge'], modelo: 'Regras + Bedrock Haiku', skills: ['detectar-anomalia', 'classificar-severidade', 'monitorar-recuperacao'] },
+      { id: 'maestro', icone: '🎼', nome: 'Maestro', papel: 'Orquestrador', cor: '#B48CFF', aws: ['Step Functions', 'LangGraph'], modelo: 'Bedrock · Claude Sonnet', skills: ['decompor-tarefas', 'rotear-por-natureza', 'consolidar-resultado'] },
+      { id: 'sentinela', icone: '🛰️', nome: 'Sentinela', papel: 'Detecção & triggers', cor: '#4DD8E6', aws: ['Datadog', 'ServiceNow', 'EventBridge'], modelo: 'Regras + Bedrock Haiku', skills: ['detectar-anomalia', 'classificar-severidade', 'monitorar-recuperacao'] },
+      { id: 'elo', icone: '🔗', nome: 'Elo', papel: 'Rastreabilidade corporativa', cor: '#7FD4A8', aws: ['ServiceNow', 'IUClick'], modelo: 'Determinístico + Haiku', skills: ['consultar-cmdb', 'abrir-bug', 'iniciar-gmud', 'mover-kanban', 'escalar-time'] },
       { id: 'contexto', icone: '🧠', nome: 'Contexto', papel: 'Contexto & memória', cor: '#5BA8FF', aws: ['OpenSearch', 'DynamoDB'], modelo: 'Bedrock · Titan Embeddings', skills: ['buscar-runbooks', 'recuperar-incidentes', 'gravar-aprendizado'] },
-      { id: 'diagnosta', icone: '🔬', nome: 'Diagnosta', papel: 'Causa raiz & plano', cor: '#FFC24B', aws: ['Bedrock'], modelo: 'Bedrock · Claude Sonnet', skills: ['correlacionar-sinais', 'hipoteses-causa-raiz', 'gerar-plano'] },
-      { id: 'executor', icone: '⚡', nome: 'Executor', papel: 'Ações & ferramentas', cor: '#3DDC84', aws: ['Lambda', 'SSM'], modelo: 'Determinístico', skills: ['rollback-deploy', 'escalar-recursos', 'executar-runbook'] },
-      { id: 'auditor', icone: '🛡️', nome: 'Auditor', papel: 'Guardrails & avaliação', cor: '#FF8FAB', aws: ['S3', 'CloudWatch'], modelo: 'Bedrock · Claude Haiku', skills: ['validar-guardrails', 'avaliar-execucao', 'pos-mortem'] },
+      { id: 'diagnosta', icone: '🔬', nome: 'Diagnosta', papel: 'Causa raiz & natureza', cor: '#FFC24B', aws: ['Bedrock', 'Datadog'], modelo: 'Bedrock · Claude Sonnet', skills: ['correlacionar-sinais', 'hipoteses-causa-raiz', 'classificar-natureza'] },
+      { id: 'artifice', icone: '🛠️', nome: 'Artífice', papel: 'Código · Devin · PR', cor: '#E8A87C', aws: ['Devin', 'GitHub org'], modelo: 'Devin + Bedrock Sonnet', skills: ['clonar-repositorio', 'analisar-codigo', 'delegar-devin', 'abrir-pr'] },
+      { id: 'executor', icone: '⚡', nome: 'Executor', papel: 'Ações de infra', cor: '#3DDC84', aws: ['Lambda', 'SSM'], modelo: 'Determinístico', skills: ['rollback-deploy', 'escalar-recursos', 'executar-runbook'] },
+      { id: 'auditor', icone: '🛡️', nome: 'Auditor', papel: 'Guardrails & avaliação', cor: '#FF8FAB', aws: ['S3', 'Langfuse', 'Datadog'], modelo: 'Bedrock · Claude Haiku', skills: ['validar-guardrails', 'avaliar-execucao', 'pos-mortem'] },
     ];
   }
 
   cenarios() {
     return [
-      // ---------- Cenário 1 (padrão) — Crítico · Robust ----------
+      // ---------- Cenário 1 — Latência checkout-api · Crítico · Robust · INFRA ----------
       {
         id: 'anm2047', titulo: 'ANM-2047 · Latência checkout-api', idIncidente: 'ANM-2047',
-        severidade: 'Crítico', algoritmo: 'Robust', icone: '🐢',
+        severidade: 'Crítico', algoritmo: 'Robust', icone: '🐢', origem: 'Datadog',
         textoProblema: 'Latência p99 checkout-api +340%',
         textoConcluido: 'Resolvida · MTTR 4m 32s',
         chat: {
@@ -618,16 +821,18 @@ class Component extends DCLogic {
           plano: 'O plano tem 4 passos: 1) congelar deploys do checkout-api; 2) rollback v2.14.3 → v2.14.2 (este passo exige aprovação humana pelo guardrail G-02); 3) escalar o pool de conexões RDS de 50 para 120; 4) validar métricas por 10 minutos.',
           statusAtivo: 'A squad está trabalhando na ANM-2047 (latência elevada no checkout-api). Você pode acompanhar cada passo no Console de orquestração.',
           statusAguardando: 'A execução está pausada aguardando decisão humana: o rollback em produção precisa de aprovação na fila HITL. Assim que houver decisão, o Executor prossegue.',
-          statusConcluido: 'ANM-2047 foi resolvida ✅ MTTR de 4m 32s. A latência p99 voltou a 610ms e o pós-mortem já está salvo no S3.',
+          statusConcluido: 'ANM-2047 foi resolvida ✅ MTTR de 4m 32s. A latência p99 voltou a 610ms, o card BUG-4471 está em Concluído no IUClick e o INC-0098431 foi encerrado no ServiceNow.',
         },
         passos: [
-          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: latência p99 do checkout-api em 2.840ms (limiar: 650ms). Anomalia ANM-2047 aberta com severidade ALTA.', fx: { agStatus: { sentinela: 'detectando' } } },
-          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
-          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Monitor do Datadog disparou: latência p99 do checkout-api em 2.840ms (limiar: 650ms). Anomalia ANM-2047 aberta · severidade CRÍTICO · algoritmo Robust (série estável, desvio real).', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'ANM-2047', trace: 'dd-9f2c4a1e' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento com o trace dd-9f2c4a1e. Squad EasyRun acionada.' },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0098431 correlacionado no ServiceNow. Consulta à CMDB: item de configuração svc-checkout-api, ambiente produção, time dono Squad Pagamentos.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0098431', ci: 'svc-checkout-api' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4471 criado no board da squad (coluna "A fazer") e vinculado ao INC-0098431 — rastreabilidade ágil aberta sem ninguém preencher formulário.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4471' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada no grafo LangGraph. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: 3 runbooks e 2 incidentes similares recuperados (INC-1893, INC-1544).', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-041', tipo: 'runbook', texto: 'Runbook "Degradação de latência em APIs de checkout" — 7 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1893', tipo: 'episódio', texto: 'Mesma assinatura pós-deploy. Rollback resolveu em 6 min. Eficácia 96%.' } } },
-          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando métricas APM, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%. Natureza da remediação: INFRA — resolve em runtime, sem alterar código.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
             { id: 1, titulo: 'Congelar novos deploys do checkout-api', st: 'ok' },
             { id: 2, titulo: 'Rollback do deploy v2.14.3 → v2.14.2', st: 'hitl' },
@@ -635,9 +840,10 @@ class Component extends DCLogic {
             { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
           ] } },
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-02 interceptou o passo 2: "rollback em produção" excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
-            id: 'APR-01', titulo: 'Rollback de deploy em produção',
+            id: 'APR-01', tipo: 'acao', titulo: 'Rollback de deploy em produção',
             descricao: 'O plano da squad propõe reverter o checkout-api de v2.14.3 para v2.14.2. Ação classificada como crítica pelo guardrail G-02 (mudança em produção).',
             risco: 'médio', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
+            pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
             detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api \\\n    --de v2.14.3 --para v2.14.2 \\\n    --estrategia blue-green\n\nJustificativa do Diagnosta: vazamento de conexões\nintroduzido em v2.14.3 (confiança 92%).\nMemória: INC-1893 resolvido com a mesma ação.',
             mensagemAprovado: 'Decisão humana: rollback APROVADO. Executor liberado para agir.',
             mensagemRejeitado: 'Decisão humana: rollback REJEITADO. Maestro replaneja com mitigação conservadora.',
@@ -648,16 +854,17 @@ class Component extends DCLogic {
             rejeitado: 'Rollback rejeitado pelo operador. Executando mitigação conservadora: reciclando instâncias do pool sem reverter o deploy.',
           }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
           { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Escalando pool de conexões RDS: max_connections 50 → 120 via Parameter Store + restart gracioso.', fx: { planoOk: 3 } },
-          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Latência p99 caindo: 2.840ms → 610ms (−78%). Erros 5xx zerados. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
-          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2047', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pool RDS + deploy recente" → rollback prioritário.' } } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'Latência p99 caindo no Datadog: 2.840ms → 610ms (−78%). Erros 5xx zerados. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', txt: 'BUG-4471 movido para "Concluído" no IUClick. INC-0098431 encerrado no ServiceNow com a nota de resolução e o link do trace.', fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem automático gerado e salvo. Trace completo da execução disponível no Langfuse. Aprendizado gravado na memória de longo prazo.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2047', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pool RDS + deploy recente" → rollback prioritário.' } } },
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2047 resolvida ✅ MTTR: 4m 32s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
 
-      // ---------- Cenário 2 — CPU Spike sazonal · Alerta · Agile ----------
+      // ---------- Cenário 2 — CPU Spike sazonal · Alerta · Agile · INFRA ----------
       {
         id: 'anm2091', titulo: 'ANM-2091 · CPU Spike — catalog-svc', idIncidente: 'ANM-2091',
-        severidade: 'Alerta', algoritmo: 'Agile', icone: '📈',
+        severidade: 'Alerta', algoritmo: 'Agile', icone: '📈', origem: 'Datadog',
         textoProblema: 'CPU catalog-svc em 92% · campanha ativa',
         textoConcluido: 'Resolvida · MTTR 6m 05s',
         chat: {
@@ -665,26 +872,29 @@ class Component extends DCLogic {
           plano: 'O plano tem 4 passos: 1) confirmar ausência de regressão de deploy; 2) escalar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias (exige aprovação humana por exceder o orçamento aprovado); 3) ajustar o cooldown de health-check; 4) validar métricas por 10 minutos.',
           statusAtivo: 'A squad está trabalhando na ANM-2091 (CPU acima de 92% no catalog-svc, durante campanha de tráfego). Acompanhe no Console de orquestração.',
           statusAguardando: 'A execução está pausada aguardando decisão humana: o escalonamento acima do orçamento de instâncias aprovado precisa de aprovação na fila HITL.',
-          statusConcluido: 'ANM-2091 foi resolvida ✅ MTTR de 6m 05s. A CPU do catalog-svc voltou a 58% e o pós-mortem já está salvo no S3.',
+          statusConcluido: 'ANM-2091 foi resolvida ✅ MTTR de 6m 05s. A CPU do catalog-svc voltou a 58% e o INC-0098510 foi encerrado no ServiceNow.',
         },
         passos: [
-          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: CPU do ASG catalog-svc sustentada acima de 92% por 5 minutos. Severidade: ALERTA · Algoritmo: Agile (SARIMA) — desvio de baseline sazonal detectado (campanha de tráfego ativa).', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Monitor do Datadog: CPU do ASG catalog-svc sustentada acima de 92% por 5 minutos. Severidade: ALERTA · Algoritmo: Agile (SARIMA) — desvio de baseline sazonal, campanha de tráfego ativa.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'ANM-2091', trace: 'dd-4b81c027' } } },
           { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
-          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0098510 aberto no ServiceNow. CMDB: item de configuração svc-catalog, ambiente produção, time dono Squad Catálogo.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0098510', ci: 'svc-catalog' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4488 criado no IUClick e vinculado ao incidente.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4488' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Escalonamento horizontal sob pico sazonal" e 1 incidente similar recuperados.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-118', tipo: 'runbook', texto: 'Runbook "Escalonamento horizontal sob pico sazonal" — 3 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: pico de Black Friday anterior teve assinatura semelhante — resolvido com escalonamento horizontal (eficácia 98%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1777', tipo: 'episódio', texto: 'Pico sazonal (Black Friday) resolvido com ASG. Eficácia 98%.' } } },
-          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas de CPU com o início da campanha de marketing "Semana Relâmpago" (tráfego +410%) e o histórico de deploys (nenhum deploy recente)…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: saturação legítima por tráfego, não é vazamento ou regressão. Confiança: 95%. Recomendação (mapa de remediação): CPU Spike → escalonamento horizontal via ASG.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando métricas de CPU com o início da campanha "Semana Relâmpago" (tráfego +410%) e o histórico de deploys (nenhum deploy recente)…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: saturação legítima por tráfego, não é vazamento nem regressão. Confiança: 95%. Natureza: INFRA — capacidade, via mapa de remediação (CPU Spike → ASG).', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar ausência de regressão de deploy', st: 'ok' },
             { id: 2, titulo: 'Escalar ASG catalog-svc (6 → 14 instâncias)', st: 'hitl' },
             { id: 3, titulo: 'Ajustar cooldown de health-check', st: 'pendente' },
             { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
           ] } },
-          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail interceptou o passo 2: escalonamento acima do orçamento de instâncias aprovado excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
-            id: 'APR-02', titulo: 'Escalonamento acima do orçamento aprovado',
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-01 interceptou o passo 2: escalonamento acima do orçamento de instâncias aprovado excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-02', tipo: 'acao', titulo: 'Escalonamento acima do orçamento aprovado',
             descricao: 'O plano da squad propõe elevar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias, acima do teto de 10 aprovado no orçamento de infraestrutura.',
             risco: 'baixo', guardrail: 'G-01 · escalonamento acima do orçamento exige humano', aws: 'EC2 Auto Scaling',
+            pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
             detalhe: '$ easyrun escalar catalog-svc \\\n    --de 6 --para 14 \\\n    --motivo "campanha Semana Relâmpago"\n\nJustificativa do Diagnosta: saturação legítima por\ntráfego (+410%), confiança 95%.\nMemória: INC-1777 resolvido com a mesma ação.',
             mensagemAprovado: 'Decisão humana: escalonamento APROVADO. Executor liberado para agir.',
             mensagemRejeitado: 'Decisão humana: escalonamento REJEITADO. Maestro replaneja com escalonamento parcial dentro do orçamento.',
@@ -694,17 +904,18 @@ class Component extends DCLogic {
             aprovado: 'Aprovação recebida. Escalando ASG catalog-svc: capacidade desejada 6 → 14 instâncias.',
             rejeitado: 'Escalonamento rejeitado pelo operador. Executando mitigação conservadora: capacidade desejada 6 → 10 instâncias (dentro do orçamento).',
           }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
-          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'CloudWatch', txt: 'Ajustando grace period de health-check para absorver o tempo de warm-up das novas instâncias.', fx: { planoOk: 3 } },
-          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'CPU caindo: 92% → 58%. Latência estável, sem erros. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
-          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2091', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pico sazonal + campanha ativa" → escalonamento horizontal prioritário.' } } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Ajustando grace period de health-check para absorver o tempo de warm-up das novas instâncias.', fx: { planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'CPU caindo: 92% → 58%. Latência estável, sem erros. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', txt: 'BUG-4488 movido para "Concluído" no IUClick. INC-0098510 encerrado no ServiceNow.', fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2091', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pico sazonal + campanha ativa" → escalonamento horizontal prioritário.' } } },
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2091 resolvida ✅ MTTR: 6m 05s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
 
-      // ---------- Cenário 3 — DNS Timeout · Crítico · Basic (sem HITL) ----------
+      // ---------- Cenário 3 — DNS Timeout · Crítico · Basic · INFRA · autônomo ----------
       {
         id: 'anm2118', titulo: 'ANM-2118 · DNS Timeout — endpoint novo', idIncidente: 'ANM-2118',
-        severidade: 'Crítico', algoritmo: 'Basic', icone: '🌐',
+        severidade: 'Crítico', algoritmo: 'Basic', icone: '🌐', origem: 'Datadog',
         textoProblema: 'Timeouts de DNS · endpoint sa-east-2',
         textoConcluido: 'Resolvida · MTTR 2m 18s (autônoma)',
         chat: {
@@ -712,17 +923,19 @@ class Component extends DCLogic {
           plano: 'Plano autônomo de 4 passos (sem aprovação humana, por ser ação reversível e de baixo risco): 1) confirmar saúde do registro backup; 2) promover failover de rota para a região secundária via Route 53; 3) monitorar propagação/TTL; 4) validar e encerrar.',
           statusAtivo: 'A squad está trabalhando na ANM-2118 (timeouts de DNS num endpoint recém-lançado). Acompanhe no Console de orquestração.',
           statusAguardando: 'A execução está pausada aguardando decisão humana.',
-          statusConcluido: 'ANM-2118 foi resolvida ✅ MTTR de 2m 18s, 100% autônoma. A resolução DNS voltou ao normal e o pós-mortem já está salvo no S3.',
+          statusConcluido: 'ANM-2118 foi resolvida ✅ MTTR de 2m 18s, 100% autônoma. A resolução DNS voltou ao normal e o INC-0098544 foi encerrado no ServiceNow.',
         },
         passos: [
-          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Route 53', txt: 'Alarme disparado: timeouts de resolução DNS num endpoint lançado há poucos dias (sa-east-2). Severidade: CRÍTICO · Algoritmo: Basic — sem histórico suficiente para baseline; monitoramento por janelas de quantil (rolling quantile).', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Monitor sintético do Datadog: timeouts de resolução DNS num endpoint lançado há poucos dias (sa-east-2). Severidade: CRÍTICO · Algoritmo: Basic — sem histórico para baseline; janelas de quantil móvel.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'ANM-2118', trace: 'dd-77e0a3d5' } } },
           { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
-          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0098544 aberto no ServiceNow. CMDB: item de configuração dns-endpoint-sa-east-2, time dono Squad Plataforma.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0098544', ci: 'dns-endpoint-sa-east-2' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4501 criado no IUClick e vinculado ao incidente.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4501' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook genérico "Failover de rota Route 53" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-077', tipo: 'runbook', texto: 'Runbook "Failover de rota Route 53" — genérico, sem histórico específico deste endpoint.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: nenhum episódio similar encontrado — endpoint novo, sem incidentes anteriores registrados.', fx: { agStatus: { contexto: 'concluído' } } },
-          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando falhas de health check por região: degradação concentrada em sa-east-2, registro backup saudável na região secundária…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: degradação regional do resolver/target, não é erro de aplicação. Confiança: 89%. Recomendação (mapa de remediação): DNS Timeout → failover de rota via Route 53.', fx: { agStatus: { diagnosta: 'concluído' } } },
-          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação autônomo gerado com 4 passos — ação reversível e de baixo risco, sem gate de aprovação humana.', fx: { planoCriar: [
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando falhas de health check por região: degradação concentrada em sa-east-2, registro backup saudável na região secundária…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: degradação regional do resolver, não é erro de aplicação. Confiança: 89%. Natureza: INFRA — failover de rota, ação reversível.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano autônomo gerado com 4 passos — ação reversível e de baixo risco, sem gate de aprovação humana.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar saúde do registro backup', st: 'ok' },
             { id: 2, titulo: 'Promover failover de rota para região secundária', st: 'pendente' },
             { id: 3, titulo: 'Monitorar propagação/TTL', st: 'pendente' },
@@ -730,16 +943,17 @@ class Component extends DCLogic {
           ] } },
           { ag: 'executor', pilar: '⚡ Action', aws: 'Route 53', txt: 'Promovendo registro de failover para a região secundária — execução imediata, sem espera humana (severidade crítica + ação reversível).', fx: { agStatus: { executor: 'executando' }, planoOk: 2 } },
           { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'Route 53', txt: 'Monitorando propagação do novo registro e TTL de cache dos resolvers.', fx: { planoOk: 3 } },
-          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Timeouts de DNS zerados. Resolução normalizada em todas as regiões monitoradas.', fx: { planoOk: 4 } },
-          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Novo baseline estabelecido para este endpoint na memória de longo prazo.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2118', tipo: 'aprendizado', texto: 'Novo episódio gravado: endpoint sa-east-2 agora com baseline e runbook específico de failover.' } } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'Timeouts de DNS zerados. Resolução normalizada em todas as regiões monitoradas.', fx: { planoOk: 4 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', txt: 'BUG-4501 movido para "Concluído" no IUClick. INC-0098544 encerrado no ServiceNow, resolução 100% autônoma registrada.', fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem automático gerado e salvo. Novo baseline estabelecido para este endpoint na memória de longo prazo.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2118', tipo: 'aprendizado', texto: 'Novo episódio gravado: endpoint sa-east-2 agora com baseline e runbook específico de failover.' } } },
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2118 resolvida ✅ MTTR: 2m 18s — 100% autônoma (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
 
-      // ---------- Cenário 4 — Previsão de exaustão de disco · Preditivo (sem HITL) ----------
+      // ---------- Cenário 4 — Previsão de exaustão de disco · Preditivo · INFRA · autônomo ----------
       {
         id: 'prd2144', titulo: 'PRD-2144 · Previsão de exaustão de disco', idIncidente: 'PRD-2144',
-        severidade: 'Preditivo', algoritmo: 'Robust', icone: '🔮',
+        severidade: 'Preditivo', algoritmo: 'Robust', icone: '🔮', origem: 'Agendado',
         textoProblema: 'Disco orders-db-fleet projetado para 100% em ~2h',
         textoConcluido: 'Ação preventiva concluída · 3m 40s',
         chat: {
@@ -750,13 +964,15 @@ class Component extends DCLogic {
           statusConcluido: 'PRD-2144 foi tratada preventivamente ✅ Nenhum impacto ocorreu. Tempo de execução: 3m 40s.',
         },
         passos: [
-          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Job de forecasting projeta uso do volume EBS da frota orders-db-fleet atingindo 100% em ~2h (atual: 81%, tendência estável). Severidade: PREDITIVO · Algoritmo: Robust — deriva sistêmica de longo prazo confirmada, ruído de curto prazo ignorado; sem urgência imediata.', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Forecast do Datadog projeta uso do volume EBS da frota orders-db-fleet atingindo 100% em ~2h (atual: 81%). Severidade: PREDITIVO · Algoritmo: Robust — deriva sistêmica confirmada, sem urgência imediata.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'PRD-2144', trace: 'dd-1c93be40' } } },
           { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado pela varredura agendada (auditoria de saúde a cada 15 min).' },
-          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada com prioridade baixa. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente preventivo INC-0098590 aberto no ServiceNow com prioridade baixa. CMDB: orders-db-fleet, time dono Squad Dados.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0098590', ci: 'orders-db-fleet' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4523 criado no IUClick como tarefa preventiva.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4523' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada com prioridade baixa. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Expansão preventiva de volume EBS" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-093', tipo: 'runbook', texto: 'Runbook "Expansão preventiva de volume EBS" — 2 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: 2 expansões preventivas anteriores concluídas sem downtime, eficácia 100%.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1622', tipo: 'episódio', texto: 'Expansão preventiva de EBS anterior — zero downtime, eficácia 100%.' } } },
-          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Projetando ponto de saturação (ETA ~2h10min) e confirmando tendência linear estável de crescimento…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Confiança: 93% na projeção. Recomendação: expansão proativa de volume antes que o limiar crítico seja atingido.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Projetando ponto de saturação (ETA ~2h10min) e confirmando tendência linear estável de crescimento…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Confiança: 93% na projeção. Natureza: INFRA — expansão proativa de volume antes que o limiar crítico seja atingido.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano preventivo agendado para janela de baixo tráfego — ação reversível e não-destrutiva, sem gate de aprovação humana.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar tendência de crescimento', st: 'ok' },
             { id: 2, titulo: 'Expandir volume EBS em +40% (gp3)', st: 'pendente' },
@@ -765,9 +981,208 @@ class Component extends DCLogic {
           ] } },
           { ag: 'executor', pilar: '⚡ Action', aws: 'EC2 (EBS)', txt: 'Disparando modify-volume: +40% de capacidade no volume gp3 da frota orders-db-fleet.', fx: { agStatus: { executor: 'executando' }, planoOk: 2 } },
           { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Aguardando conclusão da otimização de volume (optimizing → completed).', fx: { planoOk: 3 } },
-          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Uso projetado do volume cai para ~54%. Forecast sem risco de exaustão nas próximas 24h.', fx: { planoOk: 4 } },
-          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem leve gerado e salvo. Aprendizado gravado: ação preventiva concluída com zero downtime.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2144', tipo: 'aprendizado', texto: 'Novo episódio gravado: previsão de exaustão de disco tratada preventivamente antes de qualquer impacto.' } } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'Uso projetado do volume cai para ~54%. Forecast sem risco de exaustão nas próximas 24h.', fx: { planoOk: 4 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', txt: 'BUG-4523 movido para "Concluído" no IUClick. INC-0098590 encerrado como ação preventiva bem-sucedida.', fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem leve gerado e salvo. Aprendizado gravado: ação preventiva concluída com zero downtime.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2144', tipo: 'aprendizado', texto: 'Novo episódio gravado: previsão de exaustão de disco tratada preventivamente antes de qualquer impacto.' } } },
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'PRD-2144 tratada preventivamente ✅ Ação concluída antes de qualquer impacto. Tempo de execução: 3m 40s. Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 5 — Defeito de código · CÓDIGO · Devin → PR · duplo HITL ----------
+      {
+        id: 'inc3312', titulo: 'INC-3312 · Erro no cálculo de frete', idIncidente: 'INC-3312',
+        severidade: 'Crítico', algoritmo: 'Robust', icone: '🧬', origem: 'Datadog + ServiceNow',
+        textoProblema: 'NullPointer em frete-service · checkout travando',
+        textoConcluido: 'Resolvida via PR #217 · MTTR 18m 40s',
+        chat: {
+          causa: 'O Diagnosta rastreou 1.284 ocorrências de NullPointerException no frete-service até o commit a3f19c7 (deploy de ontem), que introduziu o cálculo de faixa de CEP sem tratar a faixa nova 88000-000. Confiança: 94%. Natureza: CÓDIGO — não há ação de runtime que corrija isso, o software precisa mudar.',
+          plano: 'O plano tem 5 passos: 1) congelar deploys do frete-service; 2) correção de código via agente (Artífice clona o repositório, delega ao Devin e abre o PR); 3) abrir a GMUD no ServiceNow; 4) aprovar o PR e a GMUD (dois gates humanos distintos); 5) merge, deploy e validação no Datadog.',
+          statusAtivo: 'A squad está trabalhando no INC-3312 (erro no cálculo de frete). A natureza é CÓDIGO, então o caminho passa pelo Artífice e pelo Devin. Acompanhe no Console.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana. Este cenário tem dois gates: a aprovação do pull request e a aprovação da GMUD — autoridades diferentes, decisões diferentes.',
+          statusConcluido: 'INC-3312 foi resolvido ✅ MTTR de 18m 40s, com PR #217 mergeado na org do GitHub, GMUD CHG-0044120 aprovada e BUG-4512 em Concluído no IUClick.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Error Tracking do Datadog agrupou 1.284 ocorrências de NullPointerException no frete-service nos últimos 12 min, todas na rota POST /frete/cotacao.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'INC-3312', trace: 'dd-3a55f9c1' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'ServiceNow', txt: 'Correlação cruzada: 3 chamados de usuários abertos no ServiceNow com o mesmo sintoma ("não consigo fechar o pedido"). Sinal técnico e sinal de negócio apontam para o mesmo serviço.' },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0099102 aberto e os 3 chamados vinculados como filhos. CMDB: item de configuração svc-frete, time dono Squad Logística, repositório acme-corp/frete-service.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0099102', ci: 'svc-frete' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4512 criado no IUClick (coluna "A fazer"), tipo Bug, vinculado ao INC-0099102 e ao trace do Datadog.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4512' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada no grafo LangGraph. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica: nenhum runbook cobre esta assinatura. Defeito novo — não há procedimento pronto, o que já indica que a resposta não é operacional.', fx: { agStatus: { contexto: 'buscando' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: nenhum episódio com esta assinatura. Recuperados 2 episódios de "regressão pós-deploy" para orientar a hipótese.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-2044', tipo: 'episódio', texto: 'Regressão pós-deploy anterior — resolvida com correção de código e PR, não com rollback.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Analisando stack traces agrupados e correlacionando com o histórico de deploys: todas as ocorrências surgem após o deploy de ontem, 18h42.', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: o commit a3f19c7 introduziu cálculo por faixa de CEP sem tratar a faixa 88000-000, recém-criada pelos Correios. Confiança: 94%. Natureza: CÓDIGO — nenhuma ação de runtime corrige isto; o software precisa mudar.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'codigo' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza CÓDIGO detectada — roteando para o Artífice em vez do Executor. Plano de remediação gerado com 5 passos.', fx: { planoCriar: [
+            { id: 1, titulo: 'Congelar deploys do frete-service', st: 'ok' },
+            { id: 2, titulo: 'Correção de código via Devin + Pull Request', st: 'pendente' },
+            { id: 3, titulo: 'Abrir GMUD no ServiceNow', st: 'pendente' },
+            { id: 4, titulo: 'Aprovar PR e GMUD (2 gates humanos)', st: 'hitl' },
+            { id: 5, titulo: 'Merge, deploy e validação no Datadog', st: 'pendente' },
+          ] } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-05 aplicado antes da saída: repositório acme-corp/frete-service confirmado na allowlist; variáveis de ambiente, tokens e dados pessoais removidos do contexto que será enviado ao agente externo.', fx: { agStatus: { auditor: 'monitorando' } } },
+          { ag: 'artifice', pilar: '🔧 Tools & APIs', aws: 'GitHub org', txt: 'Clonando acme-corp/frete-service na ref do deploy afetado. Localizado o trecho: FaixaCepResolver.resolver() retorna null para faixas não mapeadas.', fx: { agStatus: { artifice: 'clonando' }, rastreioSet: { repo: 'acme-corp/frete-service' }, planoOk: 1 } },
+          { ag: 'artifice', pilar: '🎯 Planning', aws: 'Devin', txt: 'Sessão devin-8842 aberta com o diagnóstico, o stack trace agrupado e o trecho relevante. Instrução: tratar faixa não mapeada com fallback para a tabela nacional e cobrir com teste de regressão.', fx: { agStatus: { artifice: 'delegando' }, rastreioSet: { devin: 'devin-8842' } } },
+          { ag: 'artifice', pilar: '⚡ Action', aws: 'GitHub org', txt: 'Devin devolveu o patch. Pull request #217 aberto em acme-corp/frete-service (branch fix/faixa-cep-88000): 2 arquivos alterados, 1 teste novo. Checks de CI verdes.', fx: { agStatus: { artifice: 'concluído' }, rastreioSet: { pr: 'PR #217' }, planoOk: 2 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'GMUD CHG-0044120 aberta automaticamente no ServiceNow, vinculada ao PR #217 e ao CI svc-frete. Abertura é automática; a aprovação continua sendo humana.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { gmud: 'CHG-0044120' }, planoOk: 3 } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'GitHub org', txt: 'Guardrail G-06 interceptou: nenhum código gerado por agente entra em produção sem revisão humana. PR #217 encaminhado para aprovação (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-03', tipo: 'pr', titulo: 'Aprovar pull request gerado pelo Devin',
+            descricao: 'O Artífice delegou a correção ao Devin e o patch está pronto. Nenhum código gerado por agente é mergeado sem revisão de uma pessoa.',
+            risco: 'médio', guardrail: 'G-06 · código de agente exige revisão humana', aws: 'Devin · GitHub org',
+            pilarDecisao: '🔧 Tools & APIs', plataforma: 'GitHub org',
+            repositorio: 'acme-corp/frete-service', branch: 'fix/faixa-cep-88000', pr: 'PR #217',
+            arquivos: '2 arquivos · +38 −4 · 1 teste novo', checks: 'CI verde · cobertura 84% (+1pt)',
+            detalhe: '# FaixaCepResolver.java\n- return faixas.get(cep);\n+ return faixas.getOrDefault(cep,\n+     TabelaNacional.FALLBACK);\n\n# FaixaCepResolverTest.java\n+ @Test faixaNaoMapeada_usaFallbackNacional()\n\nSessão Devin: devin-8842\nDiagnóstico: commit a3f19c7 (confiança 94%)',
+            mensagemAprovado: 'Decisão humana: PR #217 APROVADO. Aguardando a aprovação da GMUD para liberar o merge.',
+            mensagemRejeitado: 'Decisão humana: PR #217 REJEITADO com comentário de revisão. GMUD cancelada; Maestro aciona mitigação temporária por feature flag.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — PR #217 liberado.',
+          } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'ServiceNow', pularSeRejeitado: true, txt: 'Segundo gate: a GMUD CHG-0044120 precisa de aprovação da gestão de mudança. Aprovar código e aprovar janela de produção são autoridades distintas.', gate: {
+            id: 'APR-04', tipo: 'gmud', titulo: 'Aprovar GMUD CHG-0044120',
+            descricao: 'Mudança em produção no serviço svc-frete decorrente do PR #217. A GMUD foi aberta automaticamente pela squad; a aprovação é sempre humana.',
+            risco: 'médio', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow',
+            pilarDecisao: '🔗 Interoperabilidade', plataforma: 'ServiceNow',
+            gmud: 'CHG-0044120', ci: 'svc-frete', janela: 'Hoje, 15:30–16:00 (baixo tráfego)',
+            rollback: 'Revert do merge + redeploy da versão anterior (≈4 min)',
+            detalhe: 'GMUD: CHG-0044120\nCI afetado: svc-frete (produção)\nOrigem: INC-0099102 · PR #217\nJanela: hoje, 15:30–16:00\nRisco: médio · impacto restrito ao cálculo de frete\n\nPlano de rollback:\n  revert do merge + redeploy da versão anterior',
+            mensagemAprovado: 'Decisão humana: GMUD CHG-0044120 APROVADA. Executor liberado para merge e deploy.',
+            mensagemRejeitado: 'Decisão humana: GMUD REJEITADA. Merge suspenso; mudança reagendada para a próxima janela.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — GMUD liberada.',
+          } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'GitHub Actions', pularSeRejeitado: true, txt: 'Merge do PR #217 na main e deploy do frete-service v3.8.1 pela esteira da org. Deploys descongelados após a validação.', fx: { agStatus: { executor: 'executando', auditor: 'monitorando' } } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'SSM', dinamico: {
+            aprovado: 'Deploy concluído. Congelamento de deploys do frete-service liberado.',
+            rejeitado: 'Aplicando mitigação temporária: feature flag frete.calculo.v2 desligada, roteando as cotações para o cálculo anterior enquanto a correção é revisada.',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 4, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', dinamico: {
+            aprovado: 'Error Tracking do Datadog: ocorrências de NullPointerException zeradas. Taxa de conversão do checkout normalizada. Janela de validação de 15 min iniciada.',
+            rejeitado: 'Error Tracking do Datadog: ocorrências zeradas pela mitigação temporária. O defeito segue no código — o PR permanece aberto aguardando correção.',
+          }, fx: { planoUpdate: { id: 5, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', dinamico: {
+            aprovado: 'BUG-4512 movido para "Concluído" no IUClick com o link do PR #217. INC-0099102 e os 3 chamados filhos encerrados no ServiceNow. GMUD CHG-0044120 fechada como bem-sucedida.',
+            rejeitado: 'BUG-4512 movido para "Em revisão" no IUClick. INC-0099102 mantido aberto com a mitigação registrada; GMUD CHG-0044120 cancelada.',
+          }, fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem gerado. Trace completo no Langfuse: 8 nós, 47k tokens, US$ 1,12. Aprendizado gravado — assinatura "faixa de CEP não mapeada" agora tem runbook e caso no golden set.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-3312', tipo: 'aprendizado', texto: 'Defeito de faixa de CEP → correção via Devin. Caso adicionado ao golden set de avaliação.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', dinamico: {
+            aprovado: 'INC-3312 resolvido ✅ MTTR: 18m 40s, com correção de código em produção (média humana para defeito de código: 2 a 5 dias). Execução encerrada.',
+            rejeitado: 'INC-3312 mitigado ⚠️ Impacto contido em 9m 12s por feature flag. O PR #217 segue aberto para revisão do time dono. Execução encerrada.',
+          }, fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído', artifice: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 6 — Incidente de negócio · CONFIG · sistema fora da AWS ----------
+      {
+        id: 'inc3350', titulo: 'INC-3350 · Faturamento não conciliado', idIncidente: 'INC-3350',
+        severidade: 'Crítico', algoritmo: 'Agile', icone: '💼', origem: 'ServiceNow',
+        textoProblema: '1.847 notas sem conciliação · sistema on-premises',
+        textoConcluido: 'Resolvida sob GMUD · MTTR 22m 05s',
+        chat: {
+          causa: 'Não houve falha técnica: nenhuma métrica de infraestrutura saiu do normal. O Diagnosta correlacionou o volume de chamados com uma alteração de parâmetro no ERP on-premises — a conta contábil de destino foi apontada para um centro de custo desativado na virada do mês. Confiança: 91%. Natureza: CONFIG.',
+          plano: 'O plano tem 4 passos: 1) confirmar a divergência contra o baseline aprovado de configuração; 2) abrir a GMUD (parâmetro de sistema financeiro exige mudança formal); 3) restaurar o parâmetro para o centro de custo vigente; 4) reprocessar o lote e conciliar.',
+          statusAtivo: 'A squad está trabalhando no INC-3350 (faturamento não conciliado). O sistema afetado é on-premises, fora da AWS — a ação final é uma mudança de configuração sob GMUD, não um comando de nuvem.',
+          statusAguardando: 'A execução está pausada aguardando aprovação da GMUD: alterar parâmetro de sistema financeiro em produção exige gestão de mudança formal.',
+          statusConcluido: 'INC-3350 foi resolvido ✅ MTTR de 22m 05s. As 1.847 notas foram reprocessadas e conciliadas, e a GMUD CHG-0044188 foi fechada como bem-sucedida.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'ServiceNow', txt: 'Gatilho de negócio: 14 chamados abertos em 40 min pela área financeira com o mesmo sintoma — notas emitidas sem conciliação contábil. Nenhum alarme técnico disparou.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'INC-3350', trace: 'dd-6e02d7ba' } } },
+          { ag: 'sentinela', pilar: '🔎 Detecção & Severidade', aws: 'Datadog', txt: 'Métricas de infraestrutura do ERP normais: CPU, memória e latência dentro do baseline. Confirmado: incidente de NEGÓCIO, não sistêmico. Severidade CRÍTICO pelo impacto financeiro.' },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente-mãe INC-0099340 aberto com os 14 chamados vinculados. CMDB: item de configuração erp-faturamento (on-premises, datacenter próprio), time dono Squad Financeiro.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0099340', ci: 'erp-faturamento' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4560 criado no IUClick, marcado como impacto financeiro para priorização no board.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4560' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Sistema afetado está fora da AWS — o Executor atuará por API do ERP e não por serviço de nuvem.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica: runbook "Divergência de conciliação contábil" recuperado, com o baseline aprovado dos parâmetros de integração.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-205', tipo: 'runbook', texto: 'Runbook "Divergência de conciliação contábil" — inclui baseline aprovado dos parâmetros.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1409 teve sintoma idêntico após virada de mês — causa foi centro de custo desativado sem atualizar a integração.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1409', tipo: 'episódio', texto: 'Virada de mês desativou centro de custo; integração ficou apontando para conta inexistente.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Comparando a configuração vigente do ERP contra o baseline aprovado no runbook RB-205…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: parâmetro CONTA_DESTINO_CONCILIACAO aponta para o centro de custo 4420, desativado na virada do mês. Confiança: 91%. Natureza: CONFIG — parâmetro, não código nem infraestrutura.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'config' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza CONFIG em sistema financeiro: toda alteração de parâmetro aqui exige GMUD. Plano gerado com 4 passos.', fx: { planoCriar: [
+            { id: 1, titulo: 'Confirmar divergência contra o baseline aprovado', st: 'ok' },
+            { id: 2, titulo: 'Abrir GMUD para alteração de parâmetro', st: 'pendente' },
+            { id: 3, titulo: 'Restaurar CONTA_DESTINO_CONCILIACAO', st: 'hitl' },
+            { id: 4, titulo: 'Reprocessar lote de 1.847 notas e conciliar', st: 'pendente' },
+          ] } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'GMUD CHG-0044188 aberta automaticamente, categoria "alteração de parâmetro em sistema financeiro", com o diff de configuração anexado.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { gmud: 'CHG-0044188' }, planoOk: 2 } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'ServiceNow', txt: 'Guardrail G-07 interceptou: mudança em sistema financeiro de produção exige GMUD aprovada por humano. Encaminhado para a fila HITL.', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-05', tipo: 'gmud', titulo: 'Aprovar GMUD CHG-0044188',
+            descricao: 'Restaurar o parâmetro CONTA_DESTINO_CONCILIACAO no ERP de faturamento, do centro de custo 4420 (desativado) para o 4451 (vigente).',
+            risco: 'baixo', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow · ERP on-premises',
+            pilarDecisao: '🔗 Interoperabilidade', plataforma: 'ServiceNow',
+            gmud: 'CHG-0044188', ci: 'erp-faturamento (on-premises)', janela: 'Imediata — impacto financeiro em curso',
+            rollback: 'Restaurar o valor anterior do parâmetro (≈30 s, reversível)',
+            detalhe: 'GMUD: CHG-0044188\nCI afetado: erp-faturamento (datacenter próprio)\nOrigem: INC-0099340 · 14 chamados vinculados\n\nParâmetro: CONTA_DESTINO_CONCILIACAO\n  atual:    4420  (centro de custo desativado)\n  proposto: 4451  (vigente, conforme RB-205)\n\nImpacto: 1.847 notas aguardando reprocessamento\nRollback: restaurar valor anterior (~30s)',
+            mensagemAprovado: 'Decisão humana: GMUD CHG-0044188 APROVADA. Executor liberado para restaurar o parâmetro.',
+            mensagemRejeitado: 'Decisão humana: GMUD REJEITADA. Elo escala o INC-0099340 para a Squad Financeiro com o diagnóstico anexado.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — GMUD liberada.',
+          } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'ERP (API on-premises)', dinamico: {
+            aprovado: 'Restaurando CONTA_DESTINO_CONCILIACAO de 4420 para 4451 via API do ERP. Nenhum serviço AWS envolvido nesta ação.',
+            rejeitado: 'Alteração não autorizada. Nenhum parâmetro foi tocado — o diagnóstico será entregue ao time dono para execução manual.',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 3, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'ERP (API on-premises)', pularSeRejeitado: true, txt: 'Disparando reprocessamento do lote: 1.847 notas reenviadas para conciliação contábil.' },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', dinamico: {
+            aprovado: 'Monitor de negócio no Datadog: fila de conciliação zerada, 1.847 notas conciliadas. Nenhum chamado novo com o sintoma nos últimos 10 min.',
+            rejeitado: 'Fila de conciliação segue com 1.847 notas pendentes. Impacto financeiro continua até a ação manual do time dono.',
+          }, fx: { planoUpdate: { id: 4, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick · ServiceNow', dinamico: {
+            aprovado: 'BUG-4560 movido para "Concluído" no IUClick. INC-0099340 e os 14 chamados encerrados. GMUD CHG-0044188 fechada como bem-sucedida.',
+            rejeitado: 'BUG-4560 movido para "Impedido" no IUClick. INC-0099340 reatribuído à Squad Financeiro com o diagnóstico e o plano anexados.',
+          }, fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem gerado com a recomendação de automatizar a verificação de baseline na virada de mês — o mesmo defeito já ocorreu no INC-1409.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-3350', tipo: 'aprendizado', texto: 'Segunda ocorrência de divergência na virada de mês → sugerir verificação preventiva de baseline.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', dinamico: {
+            aprovado: 'INC-3350 resolvido ✅ MTTR: 22m 05s, num sistema fora da AWS, com mudança formal registrada. Execução encerrada.',
+            rejeitado: 'INC-3350 escalado ⚠️ Diagnóstico entregue à Squad Financeiro em 9m 30s. A squad não executou a mudança — a decisão foi humana. Execução encerrada.',
+          }, fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 7 — Terceiro degradado · EXTERNO · rejeição e escalonamento ----------
+      {
+        id: 'inc3377', titulo: 'INC-3377 · Gateway de pagamento degradado', idIncidente: 'INC-3377',
+        severidade: 'Alerta', algoritmo: 'Agile', icone: '⛔', origem: 'Datadog',
+        textoProblema: 'Timeouts no gateway do adquirente · fora do nosso perímetro',
+        textoConcluido: 'Escalado ao fornecedor · contido em 7m 12s',
+        chat: {
+          causa: 'O Diagnosta isolou a degradação no gateway do adquirente — serviço de terceiro, fora do perímetro da empresa. Nossa aplicação está saudável: o que falha é a resposta do parceiro. Confiança: 96%. Natureza: EXTERNO — a squad não tem autoridade nem acesso para corrigir.',
+          plano: 'O plano tem 3 passos: 1) confirmar que a falha está fora do nosso perímetro; 2) propor um workaround invasivo (rotear 100% do tráfego para o adquirente secundário, com custo por transação maior) — este passo exige decisão humana; 3) se recusado, escalar formalmente ao fornecedor e ao time dono.',
+          statusAtivo: 'A squad está trabalhando no INC-3377 (gateway de pagamento de terceiro degradado). Este cenário demonstra o caminho de exceção: o que acontece quando a squad não pode resolver sozinha.',
+          statusAguardando: 'A execução está pausada: o workaround proposto tem custo financeiro por transação e sai do desenho aprovado de roteamento. A decisão é humana — e rejeitar é uma resposta legítima.',
+          statusConcluido: 'INC-3377 chegou ao fim do que a squad pode fazer. O caminho de exceção funcionou: impacto contido, fornecedor acionado formalmente e nada foi alterado sem autorização.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Monitor do Datadog: taxa de timeout nas chamadas ao gateway do adquirente subiu de 0,3% para 11% em 6 min. Severidade: ALERTA · Algoritmo: Agile.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'INC-3377', trace: 'dd-b410fe83' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0099412 aberto. CMDB: item de configuração integ-adquirente-a, classificado como SERVIÇO DE TERCEIRO — fornecedor externo, contrato com SLA de 99,9%.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0099412', ci: 'integ-adquirente-a' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4578 criado no IUClick.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4578' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1988 teve a mesma assinatura — degradação do mesmo adquirente, resolvida pelo fornecedor em 40 min. Workaround de roteamento foi usado e gerou custo extra de R$ 18k.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1988', tipo: 'episódio', texto: 'Mesmo adquirente degradado. Workaround de roteamento custou R$ 18k em taxas adicionais.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Comparando latência interna e externa: nossa aplicação responde em 40ms; o tempo é consumido esperando o gateway do parceiro. Traces confirmam o ponto de falha fora do perímetro.', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: degradação no gateway do adquirente A, serviço de terceiro. Confiança: 96%. Natureza: EXTERNO — a squad não tem acesso nem autoridade para corrigir a origem.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'externo' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza EXTERNO. Só existe workaround, não correção. Plano gerado com 3 passos — o passo 2 é uma proposta, não uma decisão da squad.', fx: { planoCriar: [
+            { id: 1, titulo: 'Confirmar falha fora do nosso perímetro', st: 'ok' },
+            { id: 2, titulo: 'Propor roteamento 100% para adquirente B', st: 'hitl' },
+            { id: 3, titulo: 'Escalar formalmente ao fornecedor', st: 'pendente' },
+          ] } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-03 interceptou: o workaround altera roteamento financeiro e gera custo por transação fora do desenho aprovado. Excede a autonomia da squad — decisão humana obrigatória.', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-06', tipo: 'acao', titulo: 'Workaround: rotear 100% para o adquirente B',
+            descricao: 'A squad pode desviar todo o tráfego de pagamento para o adquirente secundário, contornando a degradação. O custo por transação é maior e o desenho aprovado de roteamento seria alterado.',
+            risco: 'alto', guardrail: 'G-03 · escopo de ambiente e impacto financeiro', aws: 'API Gateway · roteamento',
+            pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
+            detalhe: '$ easyrun rotear pagamentos \\\n    --de adquirente-a --para adquirente-b \\\n    --percentual 100\n\nImpacto estimado: +R$ 0,42 por transação\nVolume atual: ~43k transações/h\nMemória: INC-1988 usou este workaround e\n         custou R$ 18k em taxas adicionais.\n\nAlternativa: escalar ao fornecedor e aguardar\n(SLA contratual: 99,9%).',
+            mensagemAprovado: 'Decisão humana: workaround APROVADO. Executor redirecionando o tráfego para o adquirente B.',
+            mensagemRejeitado: 'Decisão humana: workaround REJEITADO — custo não justificado. Coach decide escalar ao fornecedor: é o fim do que a squad pode fazer com segurança.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — workaround liberado.',
+          } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'API Gateway', dinamico: {
+            aprovado: 'Redirecionando 100% do tráfego de pagamento para o adquirente B. Custo adicional sendo contabilizado para o relatório de FinOps.',
+            rejeitado: 'Nenhuma ação de roteamento executada. A squad para aqui por decisão humana — e isso é o comportamento correto.',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Escalonamento formal: INC-0099412 reatribuído ao fornecedor Adquirente A via integração de parceiros, com traces, janela de impacto e cláusula de SLA anexados. Squad Pagamentos notificada como time dono.', fx: { agStatus: { elo: 'escalando' }, escalar: true, planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', dinamico: {
+            aprovado: 'Taxa de timeout no fluxo de pagamento: 11% → 0,2% com o roteamento alternativo. Impacto ao cliente cessou; o gateway do parceiro segue degradado.',
+            rejeitado: 'Taxa de timeout mantida em 11% no adquirente A. Circuit breaker ativo protegendo a aplicação de retry storm; degradação parcial, sem falha total.',
+          } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'BUG-4578 movido para "Aguardando terceiro" no IUClick — coluna que existe justamente para o que não depende da squad. Card permanece visível no board até o fornecedor responder.', fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem gerado. Registro explícito de que a squad identificou o limite da própria autonomia e escalou — comportamento avaliado como correto pelo Validator.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-3377', tipo: 'aprendizado', texto: 'Segunda degradação do adquirente A em 6 meses → sugerir revisão contratual de SLA ao time dono.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', dinamico: {
+            aprovado: 'INC-3377 contido em 7m 12s com workaround autorizado, e escalado ao fornecedor. A causa está fora do nosso alcance — a squad fez o que podia e registrou o resto. Execução encerrada.',
+            rejeitado: 'INC-3377 escalado ⚠️ Sem ação executada, por decisão humana. Impacto contido pelo circuit breaker, fornecedor acionado formalmente em 7m 12s. Saber parar é um resultado. Execução encerrada.',
+          }, fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
     ];
@@ -814,6 +1229,13 @@ class Component extends DCLogic {
     const passos = this.cenarioAtiva().passos;
     const p = passos[this.state.i];
     if (!p) return;
+    // Passo condicional: existe só no caminho de aprovação. Se o humano rejeitou,
+    // não faz sentido pedir GMUD de um PR recusado nem fazer o merge — o passo
+    // é pulado sem entrar no log.
+    if (p.pularSeRejeitado && this.state.rejeitado) {
+      this.setState(s => ({ i: s.i + 1 }), () => { if (this.state.rodando) this.tique(); });
+      return;
+    }
     const hora = this.fmtHora(this.state.relogio);
     let txt = p.txt;
     if (p.dinamico) {
@@ -840,6 +1262,11 @@ class Component extends DCLogic {
           const add = Array.isArray(p.fx.memoriaAdd) ? p.fx.memoriaAdd : [p.fx.memoriaAdd];
           patch.memorias = [...s.memorias, ...add];
         }
+        // preenche um elo da cadeia de rastreabilidade corporativa
+        if (p.fx.rastreioSet) patch.rastreio = { ...s.rastreio, ...p.fx.rastreioSet };
+        // natureza da remediação — é ela que roteia o restante da esteira
+        if (p.fx.naturezaSet) patch.natureza = p.fx.naturezaSet;
+        if (p.fx.escalar) patch.escalado = true;
       }
       if (p.gate) {
         patch.aguardandoHitl = true;
@@ -866,7 +1293,8 @@ class Component extends DCLogic {
       rejeitado: !aprovado,
       hitl: s.hitl.map(h => h.id === id ? { ...h, status: aprovado ? 'aprovado' : 'rejeitado', horaDecisao: hora } : h),
       eventos: [...s.eventos, {
-        hora, agente: automatico ? 'Auto-aprovação' : 'Operador humano', cor: '#E8EEF4', pilar: '🤝 Multi-Agent', aws: '',
+        hora, agente: automatico ? 'Auto-aprovação' : 'Operador humano', cor: '#E8EEF4',
+        pilar: gate.pilarDecisao || '🤝 Multi-Agent', aws: gate.plataforma || '',
         texto: aprovado
           ? (automatico ? gate.mensagemAutoAprovado : gate.mensagemAprovado)
           : gate.mensagemRejeitado,
@@ -892,12 +1320,41 @@ class Component extends DCLogic {
     if (t.includes('plano')) return temIncidente
       ? cen.chat.plano
       : 'Ainda não há plano ativo. O Diagnosta gera o plano de remediação após identificar a causa raiz.';
-    if (t.includes('memó') || t.includes('memo') || t.includes('hist')) return 'A memória da squad tem duas camadas: episódica (DynamoDB), com incidentes anteriores como o INC-1893, e semântica (OpenSearch), com runbooks vetorizados. Cada resolução gera um novo aprendizado gravado pelo Auditor.';
-    if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 6 agentes: eu (Maestro, orquestração), Sentinela (detecção), Contexto (memória), Diagnosta (causa raiz e plano), Executor (ações via Lambda/SSM) e Auditor (guardrails e avaliação).';
-    if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige aprovação humana (G-02), máximo de 3 ações de escrita por execução, e escopo restrito aos ambientes da squad. Você gerencia tudo na aba Configuração.';
-    if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% das anomalias resolvidas de forma autônoma e precisão de diagnóstico de 91%. Detalhes na aba Avaliação.';
-    if (t.includes('cenário') || t.includes('cenario')) return 'Você pode escolher entre 4 cenários simulados no Console (antes de iniciar): latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco — cada um com severidade e algoritmo de detecção diferentes.';
-    return 'Posso ajudar com: status da anomalia, causa raiz, plano de ação, memória da squad, guardrails, cenários ou métricas. Sobre o que quer saber?';
+    if (t.includes('memó') || t.includes('memo') || t.includes('hist')) return 'A memória da squad tem duas camadas: episódica (DynamoDB), com incidentes anteriores como o INC-1893, e semântica (OpenSearch), com runbooks vetorizados. Cada resolução gera um novo aprendizado gravado pelo Auditor — e alimenta o golden set de avaliação.';
+    if (t.includes('natureza') || t.includes('roteam')) {
+      const nd = this.naturezaDef();
+      if (this.state.natureza) return 'A natureza desta remediação é ' + nd[this.state.natureza].rotulo + '. ' + nd[this.state.natureza].desc + ' É essa classificação, feita pelo Diagnosta logo após a causa raiz, que decide o caminho da esteira.';
+      return 'A natureza da remediação pode ser INFRA (ação em runtime), CÓDIGO (vira PR pelo Devin), CONFIG (parâmetro sob GMUD) ou EXTERNO (escalonamento). O Diagnosta classifica logo após identificar a causa raiz, e é isso que roteia o resto do fluxo. Inicie a simulação para ver a classificação acontecer.';
+    }
+    if (t.includes('rastre') || t.includes('correla')) {
+      const r = this.state.rastreio || {};
+      const preenchidos = this.rastreioDef().filter(d => r[d.k]).map(d => d.rotulo + ': ' + r[d.k]);
+      if (!preenchidos.length) return 'A cadeia de rastreabilidade ainda está vazia. Quando a squad é acionada, o Elo preenche cada elo: anomalia, incidente no ServiceNow, item de configuração da CMDB, card no IUClick e — quando o caso é de código — repositório, sessão do Devin, PR e GMUD.';
+      return 'Cadeia de rastreabilidade preenchida até agora — ' + preenchidos.join(' · ') + '. Você vê isso ao vivo no painel Rastreabilidade do Console.';
+    }
+    if (t.includes('pr ') || t.includes('pull') || t.includes('devin') || t.includes('código') || t.includes('codigo')) {
+      const r = this.state.rastreio || {};
+      if (r.pr) return 'O Artífice clonou ' + r.repo + ', abriu a sessão ' + r.devin + ' no Devin com o diagnóstico e o trecho relevante, e o resultado virou o ' + r.pr + '. Nenhum código de agente entra em produção sem revisão humana — é o guardrail G-06.';
+      return 'Quando o Diagnosta classifica a natureza como CÓDIGO, entra o Artífice: ele consulta o repositório do item de configuração na CMDB, clona, delega a correção ao Devin e abre o pull request na organização do GitHub. Antes de qualquer envio, o guardrail G-05 remove segredos e dados pessoais do contexto.';
+    }
+    if (t.includes('gmud') || t.includes('mudan')) {
+      const r = this.state.rastreio || {};
+      if (r.gmud) return 'A GMUD ' + r.gmud + ' foi aberta automaticamente pelo Elo no ServiceNow, vinculada ao incidente e ao item de configuração. A abertura é automática; a aprovação é sempre humana — são coisas diferentes, e essa é a fronteira da autonomia da squad.';
+      return 'A squad abre a GMUD sozinha no ServiceNow assim que uma mudança de produção é proposta, já preenchida com origem, CI afetado, risco e plano de rollback. A aprovação continua sendo humana — automatizamos a burocracia, não a decisão.';
+    }
+    if (t.includes('bug') || t.includes('iuclick') || t.includes('kanban') || t.includes('card')) {
+      const r = this.state.rastreio || {};
+      if (r.bug) return 'O card ' + r.bug + ' foi criado no IUClick pelo Elo na abertura do incidente e vai se movendo no board conforme a esteira avança — até "Concluído", "Em revisão" ou "Aguardando terceiro", conforme o desfecho.';
+      return 'Todo incidente gera um item de Bug no IUClick automaticamente, vinculado ao incidente do ServiceNow e ao trace do Datadog. O card se move no kanban sozinho conforme o incidente evolui — ninguém precisa lembrar de atualizar o board.';
+    }
+    if (t.includes('servicenow') || t.includes('cmdb') || t.includes('incidente')) return 'O ServiceNow é a plataforma de registro: de lá vêm os incidentes (inclusive os de negócio, abertos por pessoas) e a CMDB, que diz qual item de configuração quebrou, qual time é dono e qual repositório sustenta o serviço. Sem esse último dado, a correção por código não seria possível.';
+    if (t.includes('datadog') || t.includes('observab') || t.includes('telemetr')) return 'O Datadog é a nossa observabilidade: métricas, logs, traces, error tracking e forecast. É de lá que vem a maior parte dos gatilhos e é lá que validamos se a remediação funcionou. O trace do incidente também atravessa Langfuse e LangSmith — isso você vê na aba LLMOps.';
+    if (t.includes('escal')) return 'Escalar é um resultado legítimo. Quando a natureza é EXTERNO, ou quando o replanejamento não encontra opção dentro dos guardrails, o Coach decide parar: o Elo reatribui o incidente ao time ou fornecedor dono no ServiceNow, com traces e diagnóstico anexados, e move o card do IUClick para "Aguardando terceiro". Um agente que insiste é mais perigoso do que um que sabe desistir.';
+    if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 8 agentes: eu (Maestro, orquestração), Sentinela (detecção via Datadog e ServiceNow), Elo (rastreabilidade — ServiceNow, CMDB, IUClick e GMUD), Contexto (memória), Diagnosta (causa raiz e natureza), Artífice (código, Devin e PR), Executor (ações de infra) e Auditor (guardrails e avaliação).';
+    if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige humano (G-02), máximo de 3 ações de escrita por execução, escopo restrito aos ambientes da squad, e redação de segredos antes de enviar código a agente externo (G-05). Somam-se a eles o G-06 (todo PR de agente é revisado) e o G-07 (toda mudança em produção exige GMUD aprovada). Você gerencia na aba Configuração.';
+    if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% de resolução autônoma, 96% de acerto na classificação da natureza e 78% dos PRs do Devin aceitos na primeira revisão. A GMUD sai em 48s, contra ~25 min no processo manual. Detalhes na aba Avaliação.';
+    if (t.includes('cenário') || t.includes('cenario')) return 'São 7 cenários no Console (escolha antes de iniciar): quatro de infraestrutura — latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco —, um de defeito de código que termina em PR pelo Devin, um incidente de negócio num sistema fora da AWS, e um de degradação de terceiro que demonstra o caminho de escalonamento.';
+    return 'Posso ajudar com: status da anomalia, causa raiz, natureza da remediação, plano de ação, rastreabilidade (ServiceNow, IUClick, Devin, GMUD), memória da squad, guardrails, cenários ou métricas. Sobre o que quer saber?';
   }
 
   enviarChat = () => {
@@ -931,6 +1388,9 @@ class Component extends DCLogic {
       'buscando': ['#5BA8FF', 'er-pulse 1.2s infinite'], 'analisando': ['#FFC24B', 'er-pulse 1.2s infinite'],
       'executando': ['#3DDC84', 'er-pulse 1.2s infinite'], 'monitorando': ['#FF8FAB', 'er-pulse 2s infinite'],
       'aguardando': ['#FFC24B', 'er-pulse 1.6s infinite'], 'concluído': ['#3DDC84', 'none'],
+      'consultando': ['#7FD4A8', 'er-pulse 1.2s infinite'], 'registrando': ['#7FD4A8', 'er-pulse 1.2s infinite'],
+      'clonando': ['#E8A87C', 'er-pulse 1.2s infinite'], 'delegando': ['#E8A87C', 'er-pulse 1.2s infinite'],
+      'escalando': ['#FFC24B', 'er-pulse 1.2s infinite'],
     };
     return mapa[st] || mapa['ocioso'];
   }
@@ -945,6 +1405,8 @@ class Component extends DCLogic {
       { id: 'hitl', icone: '✋', rotulo: 'Aprovações HITL' },
       { id: 'aval', icone: '📊', rotulo: 'Avaliação' },
       { id: 'config', icone: '⚙️', rotulo: 'Configuração' },
+      { id: 'integra', icone: '🔌', rotulo: 'Integrações' },
+      { id: 'llmops', icone: '🔭', rotulo: 'LLMOps' },
       { id: 'finops', icone: '💰', rotulo: 'FinOps' },
       { id: 'arq', icone: '🏗️', rotulo: 'Arquitetura' },
     ];
@@ -982,7 +1444,22 @@ class Component extends DCLogic {
       { k: 'g2', nome: 'Limite de ações de escrita', desc: 'Máximo de 3 mutações de infraestrutura por execução.' },
       { k: 'g3', nome: 'Escopo de ambiente', desc: 'Agentes só atuam nos serviços sob domínio da squad.' },
       { k: 'g4', nome: 'Modo somente-leitura noturno', desc: 'Entre 0h e 6h, ações de escrita são bloqueadas.' },
+      { k: 'g5', nome: 'Redação antes da saída', desc: 'Segredos e dados pessoais removidos do código antes de ir ao Devin. Só repositórios da allowlist.' },
     ];
+
+    // rastreabilidade corporativa preenchida ao vivo pelos passos do cenário
+    const rastreioLinhas = this.rastreioDef().map(r => {
+      const v = s.rastreio[r.k];
+      return {
+        ...r, valor: v || '—', preenchido: !!v,
+        cor: v ? '#E8EEF4' : '#5C6B7A',
+        marcaCor: v ? '#3DDC84' : '#1E2833',
+      };
+    });
+    const rastreioPreenchidos = rastreioLinhas.filter(r => r.preenchido).length;
+
+    const natDef = this.naturezaDef();
+    const nat = s.natureza ? natDef[s.natureza] : null;
 
     const barrasDados = [
       { dia: 'seg', auto: 6, humano: 2 }, { dia: 'ter', auto: 4, humano: 1 }, { dia: 'qua', auto: 8, humano: 2 },
@@ -998,6 +1475,7 @@ class Component extends DCLogic {
 
       vConsole: s.view === 'console', vChat: s.view === 'chat', vHitl: s.view === 'hitl',
       vAval: s.view === 'aval', vConfig: s.view === 'config', vFinops: s.view === 'finops', vArq: s.view === 'arq',
+      vIntegra: s.view === 'integra', vLlmops: s.view === 'llmops',
 
       navItens: nav.map(n => ({
         ...n,
@@ -1019,6 +1497,7 @@ class Component extends DCLogic {
         icone: c.icone,
         tagSeveridade: c.severidade + ' · ' + c.algoritmo,
         corSeveridade: severidadeCor[c.severidade] || '#93A1B0',
+        origem: c.origem,
         fundo: c.id === s.cenarioAtivo ? '#182028' : 'transparent',
         borda: c.id === s.cenarioAtivo ? '#3DDC84' : '#1E2833',
         opacidade: (!s.rodando || c.id === s.cenarioAtivo) ? '1' : '0.45',
@@ -1045,6 +1524,13 @@ class Component extends DCLogic {
       planoPassos, planoVazio: s.plano.length === 0,
       memorias: s.memorias, memoriaVazia: s.memorias.length === 0,
 
+      rastreioLinhas,
+      rastreioResumo: rastreioPreenchidos + ' de ' + rastreioLinhas.length,
+      naturezaRotulo: nat ? nat.rotulo : 'não classificada',
+      naturezaCor: nat ? nat.cor : '#5C6B7A',
+      naturezaFundo: nat ? nat.cor + '1E' : 'transparent',
+      naturezaDesc: nat ? nat.desc : 'O Diagnosta classifica a natureza logo após identificar a causa raiz — é ela que decide o caminho da esteira.',
+
       chatMsgs: s.chat.map(m => m.de === 'humano'
         ? { texto: m.texto, direcao: 'row-reverse', avatar: '👤', avatarFundo: '#1E2833', fundo: '#182430', borda: '#24384A' }
         : { texto: m.texto, direcao: 'row', avatar: '🎼', avatarFundo: '#221A33', fundo: '#131A22', borda: '#1E2833' }),
@@ -1055,7 +1541,18 @@ class Component extends DCLogic {
       enviarChat: this.enviarChat,
 
       hitlPendentes: pendentes.map(h => ({
+        // campos específicos de cada tipo, com padrão vazio: o template os esconde
+        // por sc-if, mas nenhum gate deve conseguir renderizar "undefined"
+        repositorio: '', branch: '', arquivos: '', checks: '',
+        gmud: '', ci: '', janela: '', rollback: '',
         ...h,
+        // cada tipo de gate mostra os campos que a decisão daquele tipo exige
+        tipoAcao: h.tipo === 'acao',
+        tipoPr: h.tipo === 'pr',
+        tipoGmud: h.tipo === 'gmud',
+        tipoRotulo: h.tipo === 'pr' ? 'PULL REQUEST' : (h.tipo === 'gmud' ? 'GMUD' : 'AÇÃO'),
+        tipoCor: h.tipo === 'pr' ? '#E8A87C' : (h.tipo === 'gmud' ? '#5BA8FF' : '#B48CFF'),
+        rotuloAprovar: h.tipo === 'pr' ? '✓ Aprovar PR' : (h.tipo === 'gmud' ? '✓ Aprovar GMUD' : '✓ Aprovar'),
         aprovar: () => this.decidir(h.id, true),
         rejeitar: () => this.decidir(h.id, false),
       })),
@@ -1065,15 +1562,23 @@ class Component extends DCLogic {
         icone: h.status === 'aprovado' ? '✅' : '🚫',
         decisao: h.status === 'aprovado' ? 'Aprovado' : 'Rejeitado',
         cor: h.status === 'aprovado' ? '#3DDC84' : '#FF6B6B',
+        tipoRotulo: h.tipo === 'pr' ? 'PULL REQUEST' : (h.tipo === 'gmud' ? 'GMUD' : 'AÇÃO'),
       })),
       temHistorico: s.hitl.some(h => h.status !== 'pendente'),
 
       metricas: [
         { rotulo: 'MTTR médio', valor: '6m 12s', cor: '#3DDC84', delta: '−71% vs. manual', deltaCor: '#3DDC84' },
         { rotulo: 'Resolução autônoma', valor: '84%', cor: '#3DDC84', delta: '+9 pts na semana', deltaCor: '#3DDC84' },
-        { rotulo: 'Precisão do diagnóstico', valor: '91%', cor: '#5BA8FF', delta: '37 de 41 corretos', deltaCor: '#93A1B0' },
-        { rotulo: 'Intervenções HITL', valor: '12', cor: '#FFC24B', delta: '−4 vs. semana anterior', deltaCor: '#3DDC84' },
+        { rotulo: 'Acerto da natureza', valor: '96%', cor: '#4DD8E6', delta: '2 roteamentos errados em 48', deltaCor: '#93A1B0' },
+        { rotulo: 'PR aceito na 1ª revisão', valor: '78%', cor: '#E8A87C', delta: '7 de 9 PRs do Devin', deltaCor: '#93A1B0' },
+        { rotulo: 'Tempo até GMUD aberta', valor: '48s', cor: '#5BA8FF', delta: 'manual: ~25 min', deltaCor: '#3DDC84' },
         { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'Bedrock · 118k tokens', deltaCor: '#93A1B0' },
+      ],
+      naturezaResumo: [
+        { rotulo: 'INFRA', cor: '#3DDC84', qtd: '31', pct: '65%', larg: '65%', obs: 'resolvidas em runtime' },
+        { rotulo: 'CÓDIGO', cor: '#E8A87C', qtd: '9', pct: '19%', larg: '19%', obs: 'viraram PR via Devin' },
+        { rotulo: 'CONFIG', cor: '#5BA8FF', qtd: '5', pct: '10%', larg: '10%', obs: 'sob GMUD' },
+        { rotulo: 'EXTERNO', cor: '#FFC24B', qtd: '3', pct: '6%', larg: '6%', obs: 'escaladas ao time dono' },
       ],
       barras: barrasDados.map(b => ({
         dia: b.dia,
@@ -1081,7 +1586,7 @@ class Component extends DCLogic {
         hHumano: Math.round((b.humano / 10) * 130) + 'px',
       })),
       scores: defs.map(a => {
-        const v = { maestro: 94, sentinela: 97, contexto: 89, diagnosta: 91, executor: 99, auditor: 95 }[a.id];
+        const v = { maestro: 94, sentinela: 97, elo: 98, contexto: 89, diagnosta: 91, artifice: 86, executor: 99, auditor: 95 }[a.id];
         return { icone: a.icone, nome: a.nome, valor: v, largura: v + '%', cor: a.cor };
       }),
       historicoAnm: [
@@ -1099,22 +1604,67 @@ class Component extends DCLogic {
         alternar: () => this.setState(st => ({ guardrails: { ...st.guardrails, [g.k]: !st.guardrails[g.k] } })),
       })),
       triggersLista: [
-        { icone: '🚨', nome: 'Alarme de anomalia', desc: 'Detecção por ML de desvios em latência, erros e saturação.', aws: 'CloudWatch' },
+        { icone: '🚨', nome: 'Monitor do Datadog', desc: 'Desvios de latência, erro e saturação; error tracking e monitores sintéticos.', aws: 'Datadog' },
+        { icone: '🎫', nome: 'Incidente no ServiceNow', desc: 'Chamado aberto por pessoa — inclui incidente de negócio sem sintoma técnico.', aws: 'ServiceNow' },
         { icone: '📡', nome: 'Evento de deploy', desc: 'Todo deploy em produção coloca a squad em observação ativa.', aws: 'EventBridge' },
-        { icone: '⏰', nome: 'Varredura agendada', desc: 'Auditoria de saúde a cada 15 minutos em todos os serviços.', aws: 'EventBridge' },
-        { icone: '💬', nome: 'Solicitação humana', desc: 'Operador pode acionar a squad diretamente pelo chat.', aws: 'API Gateway' },
+        { icone: '⏰', nome: 'Varredura agendada', desc: 'Auditoria de saúde e forecast a cada 15 minutos.', aws: 'EventBridge' },
+        { icone: '💬', nome: 'Solicitação humana', desc: 'Operador aciona a squad diretamente pelo chat.', aws: 'API Gateway' },
       ],
 
       remediacaoLista: [
-        { icone: '📈', nome: 'CPU Spike > 90%', desc: 'Escalonamento horizontal de instâncias', aws: 'ASG (Auto Scaling)' },
-        { icone: '⚠️', nome: 'Lambda Error > 5%', desc: 'Rollback ou atualização de configuração', aws: 'AWS Lambda' },
-        { icone: '🌐', nome: 'DNS Timeout', desc: 'Failover de rota para região/registro backup', aws: 'Route 53' },
+        { icone: '📈', nome: 'CPU Spike > 90%', desc: 'Escalonamento horizontal · natureza INFRA', aws: 'ASG (Auto Scaling)' },
+        { icone: '⚠️', nome: 'Lambda Error > 5%', desc: 'Rollback ou update de config · natureza INFRA', aws: 'AWS Lambda' },
+        { icone: '🌐', nome: 'DNS Timeout', desc: 'Failover de rota · natureza INFRA', aws: 'Route 53' },
+        { icone: '💾', nome: 'Projeção de disco < 4h', desc: 'Expansão preventiva de volume · natureza INFRA', aws: 'EC2 (EBS)' },
+        { icone: '🧬', nome: 'Erro rastreado a um commit', desc: 'Correção via agente + PR · natureza CÓDIGO', aws: 'Devin · GitHub org' },
+        { icone: '🎛️', nome: 'Parâmetro fora do baseline', desc: 'Correção sob mudança formal · natureza CONFIG', aws: 'ServiceNow (GMUD)' },
+        { icone: '🤝', nome: 'Degradação de terceiro', desc: 'Escalonamento ao dono · natureza EXTERNO', aws: 'ServiceNow (reatribuição)' },
       ],
       telemetriaLista: [
-        { icone: '🖥️', nome: 'Amazon EC2', desc: 'Métricas de performance — CPU, memória, disco', aws: 'JSON · 1 min' },
-        { icone: 'ƒ', nome: 'AWS Lambda', desc: 'Logs de execução, erros e invocações', aws: 'JSON · eventos' },
-        { icone: '📟', nome: 'Amazon CloudWatch', desc: 'Métricas agregadas e logs de sistema', aws: 'JSON · 1 min' },
-        { icone: '🌐', nome: 'Amazon Route 53', desc: 'Logs de consulta DNS e respostas', aws: 'CSV/JSON · eventos' },
+        { icone: '🐶', nome: 'Datadog APM & Métricas', desc: 'Traces, latência, saturação e monitores dos serviços', aws: 'streaming · 15 s' },
+        { icone: '🧾', nome: 'Datadog Logs & Error Tracking', desc: 'Logs estruturados e agrupamento de exceções por assinatura', aws: 'streaming · eventos' },
+        { icone: '🎫', nome: 'ServiceNow', desc: 'Incidentes, CMDB e histórico de mudanças', aws: 'API · eventos' },
+        { icone: '📟', nome: 'Amazon CloudWatch', desc: 'Métricas de infraestrutura AWS não cobertas pelo Datadog', aws: 'JSON · 1 min' },
+        { icone: '🏢', nome: 'Sistemas on-premises', desc: 'ERP e integrações fora da AWS, via API do próprio sistema', aws: 'API · sob demanda' },
+      ],
+
+      // Política de código — o que protege o repositório da empresa ao delegar a um agente externo
+      politicaCodigo: [
+        { icone: '📋', nome: 'Allowlist de repositórios', desc: 'Só repositórios explicitamente autorizados podem ser enviados ao Devin.', aws: 'obrigatório' },
+        { icone: '🧽', nome: 'Redação antes da saída', desc: 'Segredos, tokens e dados pessoais removidos do contexto antes do envio.', aws: 'obrigatório' },
+        { icone: '🔒', nome: 'Escopo mínimo de clone', desc: 'Clone raso, limitado ao serviço afetado — não à organização inteira.', aws: 'obrigatório' },
+        { icone: '👤', nome: 'Revisão humana do PR', desc: 'Nenhum código gerado por agente é mergeado sem aprovação de uma pessoa.', aws: 'guardrail G-06' },
+        { icone: '📝', nome: 'Autoria rastreável', desc: 'Todo commit identifica o agente, a sessão do Devin e o incidente de origem.', aws: 'auditoria' },
+      ],
+
+      // O que o EasyRun troca com cada plataforma do ecossistema
+      integracoesLista: [
+        { icone: '🎫', nome: 'ServiceNow', papel: 'Registro, CMDB e gestão de mudança', le: 'Incidentes abertos · item de configuração · time dono · repositório do serviço', escreve: 'Anomalia correlacionada · GMUD aberta · incidente encerrado ou reatribuído', modo: 'Automático · GMUD aprovada por humano', cor: '#5BA8FF' },
+        { icone: '🐶', nome: 'Datadog', papel: 'Observabilidade dos sistemas monitorados', le: 'Métricas, logs, traces, error tracking, monitores e forecast', escreve: 'Evento de anomalia · janela de validação pós-remediação', modo: 'Automático', cor: '#B48CFF' },
+        { icone: '📋', nome: 'IUClick', papel: 'Kanban do processo ágil', le: 'Coluna atual do card e histórico de movimentação', escreve: 'Bug criado na abertura · card movido a cada avanço do incidente', modo: 'Automático', cor: '#7FD4A8' },
+        { icone: '🛠️', nome: 'Devin', papel: 'Agente de código', le: 'Sessão, diagnóstico e trecho de código relevante — já redigido', escreve: 'Patch proposto com teste de regressão', modo: 'Automático · saída sempre revisada', cor: '#E8A87C' },
+        { icone: '🐙', nome: 'GitHub (org)', papel: 'Versionamento e entrega', le: 'Repositório do CI afetado · checks de CI · histórico de commits', escreve: 'Branch e pull request — merge só após aprovação humana', modo: 'HITL obrigatório', cor: '#C7D2DC' },
+        { icone: '☁️', nome: 'AWS', papel: 'Execução de ações de infraestrutura', le: 'Estado de ASG, Lambda, Route 53, EBS e parâmetros do SSM', escreve: 'Ação de remediação aplicada em runtime', modo: 'Automático dentro dos guardrails', cor: '#FFC24B' },
+      ],
+
+      // Observabilidade da própria esteira agêntica — o lado LLMOps
+      llmopsCards: [
+        { icone: '🧵', titulo: 'Trace único ponta a ponta', desc: 'O mesmo trace_id atravessa Datadog APM, LangSmith e Langfuse e é gravado no incidente do ServiceNow. Da pergunta "por que a squad reverteu meu deploy às 3h?" até a chamada de modelo exata são dois cliques.' },
+        { icone: '📌', titulo: 'Prompts versionados', desc: 'Prompt é artefato, não literal no código: versionado no Langfuse, promovido por ambiente (dev → staging → prod) e referenciado por id. Sem isso não há como saber, três meses depois, qual prompt produziu uma decisão.' },
+        { icone: '🥇', titulo: 'Golden set de incidentes', desc: 'Incidentes já encerrados no ServiceNow viram casos de avaliação offline. O conjunto cresce sozinho: o que a squad resolve hoje é o teste de regressão de amanhã.' },
+        { icone: '⚖️', titulo: 'LLM-as-judge com portão', desc: 'Um modelo julga a qualidade do diagnóstico a temperatura 0.1. Versão candidata só é promovida se não piorar o acerto — errar a natureza da remediação é o erro mais caro e tem limiar próprio.' },
+        { icone: '👻', titulo: 'Shadow mode e canário', desc: 'A versão nova roda sobre incidentes reais registrando o que faria, sem agir. Só depois de um histórico comparável assume uma fatia do tráfego. É o que torna autonomia aceitável num ambiente avesso a risco.' },
+        { icone: '🔁', titulo: 'Feedback loop do HITL', desc: 'Cada aprovação e cada rejeição — com a justificativa — vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema.' },
+        { icone: '📉', titulo: 'Drift em dois níveis', desc: 'Nos baselines de detecção (o que era anômalo deixou de ser) e na precisão do agente ao longo do tempo. O segundo é o que passa despercebido, porque nada quebra — a qualidade só escorrega.' },
+        { icone: '🧽', titulo: 'Redação antes da saída', desc: 'Código e logs passam por remoção de segredos e dados pessoais antes de ir a um agente externo. Enviar fonte da empresa para fora é a primeira objeção de segurança — e ela precisa de resposta no contrato, não no adaptador.' },
+        { icone: '🎟️', titulo: 'Orçamento por execução', desc: 'Teto de tokens por agente e por incidente, com corte automático. Um agente em laço não vira uma fatura surpresa no fim do mês.' },
+      ],
+      llmopsStack: [
+        { nome: 'LangGraph', papel: 'Orquestração em grafo de estados, interrupt() para HITL e checkpointing', cor: '#B48CFF' },
+        { nome: 'LangChain', papel: 'Abstração de ferramentas, retrievers e integração com os modelos', cor: '#5BA8FF' },
+        { nome: 'Langfuse', papel: 'Traces, gestão de prompts versionados e custo por execução', cor: '#7FD4A8' },
+        { nome: 'LangSmith', papel: 'Datasets, execução de avaliações e comparação entre versões', cor: '#E8A87C' },
+        { nome: 'Datadog LLM Obs.', papel: 'Correlação com o APM dos sistemas monitorados e alertas de qualidade', cor: '#FFC24B' },
       ],
 
       finopsCards: [
@@ -1123,37 +1673,41 @@ class Component extends DCLogic {
         { icone: '🌡️', titulo: 'Política de temperatura', desc: '0.1 para o Quiz/Validator (consistência analítica) · 0.4 para Coach e Explainer (tom mais informativo).' },
         { icone: '💻', titulo: 'Local (Ollama) vs. Nuvem', desc: 'Local exige 24GB de VRAM para modelos 32B (8GB para 7B), com custo previsível; nuvem oferece maior poder de raciocínio e latência previsível, sem hardware dedicado.' },
         { icone: '🎟️', titulo: 'Orçamento de tokens', desc: 'Gateways de inferência com limites estritos de tokens por agente, evitando estouro de custo por execução.' },
+        { icone: '🧭', titulo: 'Custo por natureza', desc: 'INFRA custa US$ 0,31 por incidente; CÓDIGO custa US$ 1,12 (sessão do Devin inclusa) — e ainda assim compara com dias de trabalho humano.' },
       ],
 
       hardeningItens: [
         { texto: 'Versionamento de schema do AgentState — evita falhas quando versões antigas e novas coexistem durante rolling deployments.' },
-        { texto: 'Circuit breakers — evitam "retry storms" contra serviços AWS saturados.' },
-        { texto: 'Logs de auditoria imutáveis — todas as decisões autônomas registradas para conformidade em ambientes regulados.' },
-        { texto: 'Sanitização de entrada/saída — filtros contra injeção de prompt e vazamento de dados sensíveis em logs.' },
-        { texto: 'Testes unitários de contrato de estado + avaliação "LLM-as-judge" via DeepEval para medir fidelidade da remediação.' },
+        { texto: 'Circuit breakers — evitam "retry storms" contra serviços saturados, inclusive os de terceiros.' },
+        { texto: 'Logs de auditoria imutáveis — toda decisão autônoma registrada com o trace, para conformidade em ambientes regulados.' },
+        { texto: 'Sanitização de entrada/saída — filtros contra injeção de prompt e vazamento de segredos, obrigatórios antes de qualquer envio a agente externo.' },
+        { texto: 'Testes unitários de contrato de estado + avaliação "LLM-as-judge" com portão de regressão antes de promover versão de agente.' },
+        { texto: 'Degradação graciosa da CMDB — quando o item de configuração não aponta repositório, a esteira cai para o caminho de escalonamento em vez de falhar.' },
       ],
 
       mapaLangGraph: [
         { agentes: 'Maestro', papel: 'Planner — define o plano de diagnóstico e remediação' },
-        { agentes: 'Diagnosta', papel: 'Explainer — causa raiz via ferramentas MCP' },
+        { agentes: 'Diagnosta', papel: 'Explainer — causa raiz via ferramentas MCP, e classifica a natureza' },
         { agentes: 'Auditor', papel: 'Quiz/Validator — valida a eficácia pós-execução' },
         { agentes: 'Maestro + Auditor', papel: 'Coach — sintetiza aprendizado e decide encerrar/escalonar' },
+        { agentes: 'Elo', papel: 'Nó adaptador — ServiceNow e IUClick como ferramentas, não raciocínio' },
+        { agentes: 'Artífice', papel: 'Nó adaptador — GitHub e Devin como ferramentas, saída sempre revisada' },
       ],
 
       pilares: [
-        { icone: '🧠', nome: 'Context', desc: 'Montagem do contexto do incidente: métricas, logs, deploys e topologia do serviço.', aws: ['OpenSearch', 'Bedrock KB'], onde: 'Painel "Contexto & Memória"' },
-        { icone: '📚', nome: 'Memory', desc: 'Memória episódica (incidentes) e semântica (runbooks vetorizados) com aprendizado contínuo.', aws: ['DynamoDB', 'OpenSearch'], onde: 'Cards INC / APR no console' },
-        { icone: '🎯', nome: 'Planning', desc: 'Diagnóstico de causa raiz e geração de plano de remediação em passos verificáveis.', aws: ['Bedrock'], onde: 'Painel "Plano de ação"' },
-        { icone: '⚡', nome: 'Action', desc: 'Execução das mutações de infraestrutura de forma idempotente e auditável.', aws: ['Lambda'], onde: 'Agente Executor' },
-        { icone: '🔧', nome: 'Tools & APIs', desc: 'Ferramentas tipadas expostas aos agentes: rollback, escala, runbooks, consultas.', aws: ['SSM', 'API Gateway'], onde: 'Skills por agente (Configuração)' },
-        { icone: '🤝', nome: 'Multi-Agent', desc: 'Seis agentes especializados colaborando com papéis e contratos explícitos.', aws: ['Bedrock Agents'], onde: 'Coluna "Agentes" do console' },
-        { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita e aprovação humana.', aws: ['Bedrock Guardrails', 'IAM'], onde: 'Configuração + evento G-02' },
+        { icone: '🧠', nome: 'Context', desc: 'Montagem do contexto do incidente: métricas e traces do Datadog, item de configuração da CMDB, deploys e topologia.', aws: ['Datadog', 'ServiceNow CMDB', 'OpenSearch'], onde: 'Painel "Contexto & Memória"' },
+        { icone: '📚', nome: 'Memory', desc: 'Memória episódica (incidentes) e semântica (runbooks vetorizados) com aprendizado contínuo, alimentando o golden set.', aws: ['DynamoDB', 'OpenSearch'], onde: 'Cards INC / APR no console' },
+        { icone: '🎯', nome: 'Planning', desc: 'Causa raiz, classificação da natureza da remediação e plano em passos verificáveis.', aws: ['Bedrock', 'LangGraph'], onde: 'Painel "Plano de ação" e chip de natureza' },
+        { icone: '⚡', nome: 'Action', desc: 'Execução idempotente e auditável — em runtime na AWS, por API em sistemas fora dela, ou por PR quando a causa é código.', aws: ['Lambda', 'SSM', 'GitHub org'], onde: 'Agentes Executor e Artífice' },
+        { icone: '🔧', nome: 'Tools & APIs', desc: 'Ferramentas tipadas expostas aos agentes: rollback, escala, runbooks, CMDB, kanban, clone e pull request.', aws: ['SSM', 'API Gateway', 'Devin'], onde: 'Skills por agente (Configuração)' },
+        { icone: '🤝', nome: 'Multi-Agent', desc: 'Oito agentes especializados com papéis e contratos explícitos — seis de raciocínio, dois adaptadores de plataforma.', aws: ['Bedrock Agents', 'LangGraph'], onde: 'Coluna "Agentes" do console' },
+        { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita, redação antes da saída, revisão de PR e GMUD aprovada.', aws: ['Bedrock Guardrails', 'IAM'], onde: 'Configuração + gates G-02, G-05, G-06 e G-07' },
         { icone: '📦', nome: 'Skills', desc: 'Capacidades versionadas e testáveis atribuídas a cada agente da squad.', aws: ['Lambda Layers'], onde: 'Chips de skills (Configuração)' },
-        { icone: '⚡', nome: 'Triggers', desc: 'Gatilhos que acionam a squad: alarmes, deploys, agenda e pedidos humanos.', aws: ['EventBridge', 'CloudWatch'], onde: 'Lista de triggers (Configuração)' },
-        { icone: '🎼', nome: 'Orchestration', desc: 'Máquina de estados que coordena o fluxo entre agentes, com pausa para HITL.', aws: ['Step Functions'], onde: 'Fluxo central do console' },
-        { icone: '📊', nome: 'Evaluation', desc: 'Avaliação contínua: MTTR, precisão, scores por agente e pós-mortems automáticos.', aws: ['CloudWatch', 'S3'], onde: 'Aba "Avaliação"' },
-        { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo.', aws: ['CloudWatch', 'Lookout for Metrics'], onde: 'Log da Sentinela, por cenário' },
-        { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso a ferramentas (logs, arquivos, bancos); A2A coordena agentes entre frameworks via Agent Card em .well-known/agent-card.json.', aws: ['Bedrock AgentCore'], onde: 'Acesso a ferramentas do Diagnosta e do Contexto' },
+        { icone: '⚡', nome: 'Triggers', desc: 'Monitores do Datadog, incidentes do ServiceNow (inclusive os de negócio), eventos de deploy, agenda e pedidos humanos.', aws: ['Datadog', 'ServiceNow', 'EventBridge'], onde: 'Lista de triggers (Configuração)' },
+        { icone: '🎼', nome: 'Orchestration', desc: 'Grafo de estados com roteamento condicional por natureza da remediação e pausa via interrupt() para HITL.', aws: ['LangGraph', 'Step Functions'], onde: 'Fluxo central do console' },
+        { icone: '📊', nome: 'Evaluation', desc: 'MTTR, acerto da natureza, taxa de PR aceito, scores por agente, pós-mortems e avaliação por LLM-as-judge com portão de regressão.', aws: ['Langfuse', 'LangSmith', 'S3'], onde: 'Abas "Avaliação" e "LLMOps"' },
+        { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo.', aws: ['Datadog', 'CloudWatch'], onde: 'Log da Sentinela, por cenário' },
+        { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso às ferramentas corporativas (ServiceNow, IUClick, Devin, GitHub); A2A coordena agentes entre frameworks via Agent Card.', aws: ['Bedrock AgentCore', 'MCP'], onde: 'Agente Elo e aba "Integrações"' },
       ],
     };
   }

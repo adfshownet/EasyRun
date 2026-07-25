@@ -1,0 +1,1883 @@
+<title>EasyRun — Documentação técnica</title>
+
+<style>
+  /* ============================================================
+     TOKENS
+     Neutros com viés frio (azul-ardósia), derivados do próprio
+     console do EasyRun. Acento verde do produto; no tema claro
+     ele desce de saturação para permanecer legível.
+     ============================================================ */
+  :root {
+    color-scheme: light;
+
+    --ground:      #EEF2F4;
+    --panel:       #FFFFFF;
+    --panel-sunk:  #E4EAEE;
+    --line:        #CFD9DF;
+    --line-soft:   #E1E8EC;
+
+    --ink:         #0D1720;
+    --ink-2:       #33454F;
+    --ink-3:       #5E717C;
+    --ink-4:       #869AA5;
+
+    --accent:      #0B7A48;
+    --accent-soft: #D9F0E4;
+    --accent-line: #8FD3B2;
+
+    --data:        #07697A;
+    --data-soft:   #D6EEF2;
+
+    /* semânticos — maturidade */
+    --ok:      #0B7A48;  --ok-bg:      #D9F0E4;
+    --warn:    #8A5300;  --warn-bg:    #FCEBCD;
+    --mock:    #7A3E8F;  --mock-bg:    #F0E2F5;
+    --plan:    #55676F;  --plan-bg:    #E2E9ED;
+    --risk:    #A32A22;  --risk-bg:    #FADEDB;
+
+    --font-ui: ui-sans-serif, -apple-system, "Segoe UI Variable Text", "Segoe UI",
+               system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", "Cascadia Code", Consolas,
+                 "SF Mono", "Liberation Mono", Menlo, monospace;
+
+    --rail: 264px;
+    --measure: 70ch;
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --ground:      #0B0F14;
+      --panel:       #10151C;
+      --panel-sunk:  #0D1218;
+      --line:        #1E2833;
+      --line-soft:   #182029;
+
+      --ink:         #E8EEF4;
+      --ink-2:       #C7D2DC;
+      --ink-3:       #93A1B0;
+      --ink-4:       #6B7C8A;
+
+      --accent:      #3DDC84;
+      --accent-soft: #10251A;
+      --accent-line: #1F5738;
+
+      --data:        #4DD8E6;
+      --data-soft:   #0C2429;
+
+      --ok:   #3DDC84;  --ok-bg:   #10251A;
+      --warn: #FFC24B;  --warn-bg: #2A2008;
+      --mock: #C79BE0;  --mock-bg: #221A2C;
+      --plan: #93A1B0;  --plan-bg: #171F27;
+      --risk: #FF8074;  --risk-bg: #2C1310;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground:      #0B0F14;
+    --panel:       #10151C;
+    --panel-sunk:  #0D1218;
+    --line:        #1E2833;
+    --line-soft:   #182029;
+    --ink:         #E8EEF4;
+    --ink-2:       #C7D2DC;
+    --ink-3:       #93A1B0;
+    --ink-4:       #6B7C8A;
+    --accent:      #3DDC84;
+    --accent-soft: #10251A;
+    --accent-line: #1F5738;
+    --data:        #4DD8E6;
+    --data-soft:   #0C2429;
+    --ok:   #3DDC84;  --ok-bg:   #10251A;
+    --warn: #FFC24B;  --warn-bg: #2A2008;
+    --mock: #C79BE0;  --mock-bg: #221A2C;
+    --plan: #93A1B0;  --plan-bg: #171F27;
+    --risk: #FF8074;  --risk-bg: #2C1310;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --ground:      #EEF2F4;
+    --panel:       #FFFFFF;
+    --panel-sunk:  #E4EAEE;
+    --line:        #CFD9DF;
+    --line-soft:   #E1E8EC;
+    --ink:         #0D1720;
+    --ink-2:       #33454F;
+    --ink-3:       #5E717C;
+    --ink-4:       #869AA5;
+    --accent:      #0B7A48;
+    --accent-soft: #D9F0E4;
+    --accent-line: #8FD3B2;
+    --data:        #07697A;
+    --data-soft:   #D6EEF2;
+    --ok:   #0B7A48;  --ok-bg:   #D9F0E4;
+    --warn: #8A5300;  --warn-bg: #FCEBCD;
+    --mock: #7A3E8F;  --mock-bg: #F0E2F5;
+    --plan: #55676F;  --plan-bg: #E2E9ED;
+    --risk: #A32A22;  --risk-bg: #FADEDB;
+  }
+
+  /* ============================================================
+     BASE
+     ============================================================ */
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink-2);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+
+  a { color: var(--data); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: currentColor; }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  code, kbd { font-family: var(--font-mono); font-size: .88em; }
+  code {
+    background: var(--panel-sunk);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: .08em .34em;
+    color: var(--ink);
+  }
+  pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 0;
+    color: var(--ink-2);
+  }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* ============================================================
+     SHELL
+     ============================================================ */
+  .shell { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); }
+
+  .rail {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 22px 18px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand .mark {
+    width: 32px; height: 32px; flex-shrink: 0;
+    border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--accent);
+    color: var(--panel);
+    font-weight: 700; font-size: 15px;
+    font-family: var(--font-mono);
+  }
+  :root[data-theme="dark"] .brand .mark { color: #06110B; }
+  @media (prefers-color-scheme: dark) { .brand .mark { color: #06110B; } }
+  :root[data-theme="light"] .brand .mark { color: #FFFFFF; }
+
+  .brand .name { font-weight: 700; font-size: 16px; color: var(--ink); line-height: 1.15; }
+  .brand .sub {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-4);
+  }
+
+  .rail nav { display: flex; flex-direction: column; gap: 1px; }
+  .rail nav a {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 6px 9px;
+    border-radius: 7px;
+    color: var(--ink-3);
+    font-size: 13.5px;
+    border-bottom: 0;
+  }
+  .rail nav a .num {
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--ink-4); font-variant-numeric: tabular-nums;
+  }
+  .rail nav a:hover { background: var(--panel-sunk); color: var(--ink); }
+  .rail nav a[aria-current="true"] {
+    background: var(--accent-soft); color: var(--ink); font-weight: 600;
+  }
+  .rail nav a[aria-current="true"] .num { color: var(--accent); }
+
+  .rail .rail-note {
+    font-size: 11.5px; line-height: 1.55; color: var(--ink-4);
+    border-top: 1px solid var(--line-soft); padding-top: 14px;
+    margin-top: auto;
+  }
+
+  .main { min-width: 0; padding: 0 clamp(20px, 5vw, 64px) 120px; }
+  .band { max-width: var(--measure); margin: 0 auto; }
+  .band-wide { max-width: 1080px; margin: 0 auto; }
+
+  /* ============================================================
+     TIPOGRAFIA
+     ============================================================ */
+  h1, h2, h3, h4 { color: var(--ink); text-wrap: balance; margin: 0; line-height: 1.2; }
+  h1 { font-size: clamp(30px, 4.2vw, 42px); font-weight: 700; letter-spacing: -.022em; }
+  h2 { font-size: clamp(22px, 2.6vw, 27px); font-weight: 650; letter-spacing: -.014em; }
+  h3 { font-size: 17px; font-weight: 650; letter-spacing: -.005em; }
+  h4 { font-size: 14px; font-weight: 650; }
+  p  { margin: 0; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--ink-4);
+  }
+  .lede { font-size: 18px; line-height: 1.6; color: var(--ink-2); }
+  .fine { font-size: 13px; color: var(--ink-3); line-height: 1.6; }
+
+  section { padding-top: 76px; scroll-margin-top: 24px; }
+  .stack   { display: flex; flex-direction: column; gap: 18px; }
+  .stack-s { display: flex; flex-direction: column; gap: 10px; }
+  .stack-l { display: flex; flex-direction: column; gap: 30px; }
+
+  .sec-head {
+    display: flex; flex-direction: column; gap: 8px;
+    border-top: 2px solid var(--ink); padding-top: 14px; margin-bottom: 26px;
+  }
+  .sec-head .rowline { display: flex; align-items: baseline; gap: 12px; }
+  .sec-head .idx {
+    font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+    font-variant-numeric: tabular-nums; font-weight: 600;
+  }
+
+  /* ============================================================
+     COMPONENTES
+     ============================================================ */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 5px; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .b-ok   { color: var(--ok);   background: var(--ok-bg); }
+  .b-stub { color: var(--warn); background: var(--warn-bg); }
+  .b-mock { color: var(--mock); background: var(--mock-bg); }
+  .b-plan { color: var(--plan); background: var(--plan-bg); }
+  .b-risk { color: var(--risk); background: var(--risk-bg); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .card h3 { margin-bottom: 6px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+
+  .callout {
+    border-left: 3px solid var(--warn);
+    background: var(--warn-bg);
+    color: var(--ink);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    font-size: 14.5px; line-height: 1.6;
+  }
+  .callout.risk { border-left-color: var(--risk); background: var(--risk-bg); }
+  .callout strong { color: var(--ink); }
+
+  .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  thead th {
+    text-align: left; font-weight: 600; color: var(--ink);
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    font-family: var(--font-mono);
+    padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+    background: var(--panel-sunk);
+  }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; color: var(--ink-2); }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody td:first-child { color: var(--ink); font-weight: 550; }
+  td.num, th.num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+
+  .tree {
+    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.85;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px 18px; overflow-x: auto;
+    color: var(--ink-2);
+  }
+  .tree .c { color: var(--ink-4); }
+  .tree .n { color: var(--ink); }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: grid; grid-template-columns: 46px 1fr; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid var(--line-soft);
+  }
+  .step:last-child { border-bottom: 0; }
+  .step .n {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    color: var(--accent); font-variant-numeric: tabular-nums; padding-top: 2px;
+  }
+  .step .who {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--ink-4); margin-top: 3px;
+  }
+  .step h4 { margin-bottom: 2px; }
+  .step p { font-size: 14px; margin-top: 5px; }
+
+  .quote {
+    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6;
+    color: var(--ink-3); border-left: 2px solid var(--line);
+    padding-left: 12px; margin-top: 7px;
+  }
+
+  .mermaid {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px; overflow-x: auto;
+    text-align: center;
+  }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13.5px; }
+  .kv dt { font-family: var(--font-mono); font-size: 12px; color: var(--ink-4); white-space: nowrap; }
+  .kv dd { margin: 0; color: var(--ink-2); }
+
+  /* glossário */
+  .gl-search {
+    width: 100%; padding: 10px 13px;
+    background: var(--panel); color: var(--ink);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    font-family: var(--font-ui); font-size: 14px;
+  }
+  .gl-search::placeholder { color: var(--ink-4); }
+  .gl-list { display: flex; flex-direction: column; gap: 0; }
+  .gl-item {
+    padding: 11px 0; border-bottom: 1px solid var(--line-soft);
+    font-size: 14px; line-height: 1.55;
+  }
+  .gl-item[hidden] { display: none; }
+  .gl-item .term { color: var(--ink); font-weight: 650; }
+  .gl-empty { padding: 18px 0; color: var(--ink-3); font-size: 14px; }
+
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 5px; }
+  ul.plain li::marker { color: var(--ink-4); }
+
+  .toplink {
+    display: inline-block; margin-top: 6px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink-4); border-bottom: 0;
+  }
+  .toplink:hover { color: var(--accent); border-bottom: 0; }
+
+  /* ============================================================
+     RESPONSIVO
+     ============================================================ */
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .rail {
+      position: static; height: auto; border-right: 0;
+      border-bottom: 1px solid var(--line);
+      flex-direction: column; gap: 16px; padding: 16px 20px 20px;
+    }
+    .rail nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+    .rail nav a { padding: 5px 9px; font-size: 12.5px; }
+    .rail .rail-note { display: none; }
+    .main { padding: 0 20px 80px; }
+    section { padding-top: 54px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+  html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+
+  <!-- ============================ RAIL ============================ -->
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">E</div>
+      <div>
+        <div class="name">EasyRun</div>
+        <div class="sub">Documentação técnica</div>
+      </div>
+    </div>
+
+    <nav id="nav" aria-label="Seções">
+      <a href="#visao"><span class="num">01</span><span>Visão geral</span></a>
+      <a href="#ambiente"><span class="num">02</span><span>Ambiente e ferramentas</span></a>
+      <a href="#codigo"><span class="num">03</span><span>Arquitetura do código</span></a>
+      <a href="#prototipo"><span class="num">04</span><span>Frontend / protótipo</span></a>
+      <a href="#processo"><span class="num">05</span><span>Processo end-to-end</span></a>
+      <a href="#alvo"><span class="num">06</span><span>Arquitetura-alvo</span></a>
+      <a href="#cicd"><span class="num">07</span><span>CI/CD e Git</span></a>
+      <a href="#glossario"><span class="num">08</span><span>Glossário</span></a>
+      <a href="#lacunas"><span class="num">09</span><span>Lacunas e riscos</span></a>
+      <a href="#ecossistema"><span class="num">10</span><span>Ecossistema da empresa</span></a>
+      <a href="#llmops"><span class="num">11</span><span>MLOps e LLMOps</span></a>
+    </nav>
+
+    <p class="rail-note">
+      Fonte da verdade: os arquivos <code>docs/*.md</code> do repositório.
+      Esta página é a versão navegável, para leitura e apresentação.
+    </p>
+  </aside>
+
+  <!-- ============================ MAIN ============================ -->
+  <main class="main">
+
+    <!-- HERO -->
+    <header class="band" style="padding-top:64px;">
+      <div class="stack">
+        <p class="eyebrow">Squad agêntica · AIOps · protótipo</p>
+        <h1>Como o EasyRun funciona, peça por peça</h1>
+        <p class="lede">
+          Uma squad de oito agentes que detecta uma anomalia em produção, descobre a causa,
+          decide <strong>o que o caso exige</strong> — ação de infraestrutura, correção de
+          código, mudança de configuração ou escalonamento —, pede autorização humana quando
+          o risco manda, executa e deixa o rastro que o processo da empresa cobra. Encaixada
+          entre ServiceNow, Datadog, IUClick, Devin e GitHub. Este documento explica o
+          produto, o código e o processo, sem pressupor conhecimento prévio.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-top:26px;">
+        <strong>Antes de tudo:</strong> o EasyRun é um protótipo. O dashboard é um mockup
+        estático, o pacote Python é contrato de tipos com implementação vazia, e nada de
+        AWS ou LangGraph existe ainda. Cada componente abaixo carrega um selo dizendo em
+        que estágio realmente está.
+      </div>
+
+      <div class="legend" style="margin-top:18px;">
+        <span class="badge b-ok">Implementado</span>
+        <span class="badge b-stub">Stub / contrato</span>
+        <span class="badge b-mock">Mockup</span>
+        <span class="badge b-plan">Planejado</span>
+      </div>
+    </header>
+
+    <!-- ==================== 01 VISÃO GERAL ==================== -->
+    <section id="visao" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">01</span><h2>Visão geral</h2></div>
+        <p class="fine">O problema, a proposta e o que de fato existe hoje.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="grid-2">
+          <div class="card">
+            <h3>O problema</h3>
+            <p class="fine">
+              Quando um serviço quebra em produção, alguém precisa perceber, diagnosticar,
+              decidir, executar e documentar. O ciclo tem uma métrica: <strong>MTTR</strong>,
+              o tempo médio de reparo. A referência humana usada no projeto é de
+              <strong>38 minutos</strong> por incidente — e a maior parte desse tempo não é
+              raciocínio difícil, é trabalho repetitivo.
+            </p>
+          </div>
+          <div class="card">
+            <h3>A proposta</h3>
+            <p class="fine">
+              Seis agentes especializados cobrindo o ciclo inteiro, com duas ideias no
+              centro: ações de alto risco <strong>param e pedem aprovação humana</strong>
+              (HITL), e cada incidente resolvido <strong>vira memória</strong> para o
+              próximo. No cenário de referência, o MTTR cai para 4m 32s.
+            </p>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Os oito agentes</h3>
+          <div class="tw">
+            <table>
+              <thead>
+                <tr><th>Agente</th><th>Papel</th><th>Analogia humana</th><th>Modelo</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>🎼 Maestro</td><td>Orquestrador</td><td>O líder do plantão, que distribui as tarefas</td><td>Bedrock · Claude Sonnet</td></tr>
+                <tr><td>🛰️ Sentinela</td><td>Detecção &amp; triggers</td><td>Quem fica de olho nos painéis e dá o alarme</td><td>Regras + Bedrock Haiku</td></tr>
+                <tr><td>🔗 <strong>Elo</strong></td><td>Rastreabilidade corporativa</td><td>Quem preenche o chamado, abre o card e a GMUD</td><td>Determinístico + Haiku</td></tr>
+                <tr><td>🧠 Contexto</td><td>Contexto &amp; memória</td><td>Quem lembra “isso já aconteceu no INC-1893”</td><td>Bedrock · Titan Embeddings</td></tr>
+                <tr><td>🔬 Diagnosta</td><td>Causa raiz &amp; natureza</td><td>Quem investiga e diz o que o caso exige</td><td>Bedrock · Claude Sonnet</td></tr>
+                <tr><td>🛠️ <strong>Artífice</strong></td><td>Código · Devin · PR</td><td>Quem escreve a correção e abre o pull request</td><td>Devin + Bedrock Sonnet</td></tr>
+                <tr><td>⚡ Executor</td><td>Ações de infra</td><td>Quem digita os comandos</td><td><strong>Determinístico</strong></td></tr>
+                <tr><td>🛡️ Auditor</td><td>Guardrails &amp; avaliação</td><td>Quem revisa, aprova e escreve o pós-mortem</td><td>Bedrock · Claude Haiku</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="fine">
+            O Executor é o único sem modelo de linguagem, e é um dos dois que mudam o mundo
+            real — não-determinismo ali seria risco, não recurso. Elo e Artífice aparecem
+            como agentes na tela porque é assim que a squad se apresenta; no grafo LangGraph
+            são <strong>nós adaptadores</strong> que usam ferramentas, não raciocinadores.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>Quadro de maturidade</h3>
+          <p class="fine">A tabela mais importante desta página. Consulte-a antes de qualquer apresentação.</p>
+          <div class="tw">
+            <table>
+              <thead>
+                <tr><th>Componente</th><th>Estado</th><th>O que seria em produção</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Dashboard <code>prototype/</code></td><td><span class="badge b-mock">Mockup</span></td><td>Frontend Angular 18 consumindo API real</td></tr>
+                <tr><td>Os 8 agentes</td><td><span class="badge b-mock">Mockup</span></td><td>Agentes LangGraph com LLM e ferramentas reais</td></tr>
+                <tr><td>Chat com a squad</td><td><span class="badge b-mock">Mockup</span></td><td>Conversa com o Maestro via LLM</td></tr>
+                <tr><td>Métricas das abas Avaliação e LLMOps</td><td><span class="badge b-mock">Mockup</span></td><td>Agregação real de Datadog, Langfuse e LangSmith</td></tr>
+                <tr><td>Integrações ServiceNow · Datadog · IUClick · Devin · GitHub</td><td><span class="badge b-stub">Contrato</span></td><td>Adaptadores reais na borda</td></tr>
+                <tr><td><code>AgentState</code>, <code>RemediationKind</code>, <code>REMEDIATION_MAP</code></td><td><span class="badge b-stub">Contrato</span></td><td>Os mesmos, agora efetivamente usados</td></tr>
+                <tr><td>Política de egresso (redação, allowlist)</td><td><span class="badge b-stub">Contrato</span></td><td>Aplicada de fato antes de cada chamada ao Devin</td></tr>
+                <tr><td>Planner / Explainer / Validator / Coach</td><td><span class="badge b-stub">Stub</span></td><td>Nós de raciocínio do grafo</td></tr>
+                <tr><td><code>TraceabilityNode</code> (Elo) / <code>CodeRemediationNode</code> (Artífice)</td><td><span class="badge b-stub">Stub</span></td><td>Nós adaptadores com ferramentas</td></tr>
+                <tr><td>Avaliação (golden set, judge, shadow/canário)</td><td><span class="badge b-stub">Contrato</span></td><td>Pipeline de promoção de versões</td></tr>
+                <tr><td><code>CheckpointStore</code> · <code>build_graph()</code></td><td><span class="badge b-stub">Stub</span></td><td>PostgreSQL e o grafo completo</td></tr>
+                <tr><td><code>serve.py</code></td><td><span class="badge b-ok">Implementado</span></td><td>Substituído por servidor de aplicação real</td></tr>
+                <tr><td>Testes (25, no CI)</td><td><span class="badge b-ok">Implementado</span></td><td>Ampliados para a lógica real</td></tr>
+                <tr><td>AWS · LangGraph · Langfuse · LangSmith</td><td><span class="badge b-plan">Planejado</span></td><td>A infraestrutura de verdade</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Uma confusão de nomes que vale resolver logo</h3>
+          <dl class="kv" style="margin-top:10px;">
+            <dt>Produto e repositório</dt><dd>EasyRun</dd>
+            <dt>Projeto Python</dt><dd><code>squad-agentica</code> (com hífen)</dd>
+            <dt>Pacote importável</dt><dd><code>squad_agentica</code> (com underscore)</dd>
+            <dt>Comando de terminal</dt><dd><code>squad-agentica-serve</code></dd>
+            <dt>Arquivo do dashboard</dt><dd><code>EasyRun.dc.html</code></dd>
+          </dl>
+          <p class="fine" style="margin-top:12px;">
+            O hífen vs. underscore não é descuido: nomes de distribuição usam hífen, nomes de
+            pacote usam underscore — porque hífen é operador de subtração em Python.
+          </p>
+        </div>
+      </div>
+      <a class="toplink" href="#visao">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 02 AMBIENTE ==================== -->
+    <section id="ambiente" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">02</span><h2>Ambiente e ferramentas</h2></div>
+        <p class="fine">O que é cada pasta de infraestrutura, por que existe e o que quebra sem ela.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>Do zero ao mockup rodando</h3>
+          <pre><code>git clone https://github.com/adfshownet/EasyRun.git
+cd EasyRun
+python -m venv .venv                 <span style="opacity:.6"># cria o ambiente virtual</span>
+.venv\Scripts\activate               <span style="opacity:.6"># Windows</span>
+pip install -e ".[dev]"              <span style="opacity:.6"># instala o projeto + pytest</span>
+pytest                               <span style="opacity:.6"># 25 testes devem passar</span>
+squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8080</span></code></pre>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3><code>.venv/</code> — o ambiente virtual</h3>
+            <p class="fine">
+              Uma instalação isolada e privada do Python só para este projeto: interpretador,
+              <code>Lib/site-packages</code> (todas as bibliotecas) e <code>Scripts/</code>
+              (os executáveis). O arquivo <code>pyvenv.cfg</code> traz a linha decisiva —
+              <code>include-system-site-packages = false</code> — que é o que garante o
+              isolamento.
+            </p>
+            <p class="fine" style="margin-top:10px;">
+              <strong>Sem ela:</strong> o <code>pip install</code> vai para o Python do
+              sistema, e três problemas aparecem — projetos brigando por versões
+              incompatíveis da mesma biblioteca, ambiente irreprodutível (“funciona na minha
+              máquina”) e poluição global irreversível.
+            </p>
+            <p class="fine" style="margin-top:10px;">
+              <strong>Por que é gitignorada:</strong> é grande, tem caminhos absolutos da
+              máquina, e é 100% reconstruível a partir do <code>pyproject.toml</code>. No
+              Windows a pasta é <code>Scripts/</code>; no Linux e macOS, <code>bin/</code>.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3><code>pyproject.toml</code> — a identidade</h3>
+            <p class="fine">
+              Descreve o projeto de forma declarativa: nome, versão, Python mínimo, extras e
+              comandos. Substituiu o antigo <code>setup.py</code>, que era código executável.
+            </p>
+            <dl class="kv" style="margin-top:12px;">
+              <dt>[build-system]</dt><dd>Qual ferramenta constrói o pacote (setuptools, via PEP 517)</dd>
+              <dt>[project]</dt><dd>Nome, versão 0.1.0, <code>requires-python = "&gt;=3.10"</code></dd>
+              <dt>optional-dependencies</dt><dd>O extra <code>dev</code> = <code>pytest&gt;=8</code></dd>
+              <dt>[project.scripts]</dt><dd>Cria o comando <code>squad-agentica-serve</code></dd>
+              <dt>packages.find</dt><dd><code>where = ["src"]</code> — o código mora em <code>src/</code></dd>
+            </dl>
+            <p class="fine" style="margin-top:12px;">
+              Note o que <em>não</em> está lá: nenhuma dependência obrigatória. O pacote roda
+              só com a biblioteca padrão do Python.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3><code>pip install -e ".[dev]"</code></h3>
+            <p class="fine">
+              O <code>.</code> instala o projeto atual. O <code>[dev]</code> traz o extra com
+              o pytest. E o <code>-e</code> — <em>editable install</em> — é o que mais importa
+              no dia a dia: em vez de <strong>copiar</strong> os arquivos para dentro do
+              ambiente, o pip grava um ponteiro para <code>src/</code>. Você edita o código e
+              a próxima execução já usa a versão nova, sem reinstalar.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Artefatos descartáveis</h3>
+            <dl class="kv" style="margin-top:4px;">
+              <dt>egg-info/</dt><dd>Ficha do pacote gerada pelo setuptools a partir do <code>pyproject.toml</code></dd>
+              <dt>__pycache__/</dt><dd>Bytecode compilado — só acelera a carga</dd>
+              <dt>.pytest_cache/</dt><dd>Resultado da última execução, habilita <code>--last-failed</code></dd>
+            </dl>
+            <p class="fine" style="margin-top:12px;">
+              Todos gitignorados pelo mesmo princípio: são derivados, reaparecem sozinhos, e
+              versioná-los criaria uma segunda fonte da mesma informação.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>O truque do <code>.gitignore</code> que vale conhecer</h3>
+          <pre style="margin-top:10px;"><code>.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json</code></pre>
+          <p class="fine" style="margin-top:12px;">
+            Ignora tudo na pasta e depois <strong>abre exceções</strong> com <code>!</code>.
+            A razão: <code>settings.json</code> costuma guardar preferência pessoal e não deve
+            ser imposto ao time; já <code>launch.json</code> e <code>tasks.json</code> são
+            infraestrutura compartilhada — é o que faz o F5 funcionar igual para todos.
+            Detalhe do Git: a negação só funciona porque a regra usa <code>/*</code>; se
+            ignorasse o diretório inteiro, o Git nem entraria nele.
+          </p>
+        </div>
+      </div>
+      <a class="toplink" href="#ambiente">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 03 CÓDIGO ==================== -->
+    <section id="codigo" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">03</span><h2>Arquitetura do código</h2></div>
+        <p class="fine">Cada módulo Python, com o conceito da linguagem explicado antes do código.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>Mapa do repositório</h3>
+          <div class="tree">
+<span class="n">EasyRun/</span>
+├── <span class="n">src/squad_agentica/</span>            <span class="c">← o pacote Python</span>
+│   ├── __init__.py               <span class="c">1 linha: a versão</span>
+│   ├── <span class="n">serve.py</span>                   <span class="c">servidor HTTP local     [IMPLEMENTADO]</span>
+│   └── <span class="n">aiops/</span>                     <span class="c">o contrato AIOps</span>
+│       ├── severity.py           <span class="c">enums de severidade      [CONTRATO]</span>
+│       ├── state.py              <span class="c">o AgentState             [CONTRATO]</span>
+│       ├── roles.py              <span class="c">os 4 papéis do grafo     [STUB]</span>
+│       ├── remediation.py        <span class="c">mapa anomalia → ação     [CONTRATO]</span>
+│       ├── governance.py         <span class="c">FinOps e modelos         [CONTRATO]</span>
+│       ├── checkpoint.py         <span class="c">persistência de estado   [STUB]</span>
+│       └── graph.py              <span class="c">o grafo LangGraph        [STUB]</span>
+├── <span class="n">tests/</span>                         <span class="c">25 testes (pytest)</span>
+├── <span class="n">prototype/</span>                     <span class="c">o mockup visual          [MOCKUP]</span>
+├── <span class="n">docs/</span>                          <span class="c">esta documentação</span>
+├── pyproject.toml
+└── validate_zip.py               <span class="c">script órfão de uma fase anterior</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Por que o código mora em <code>src/</code></h3>
+          <p class="fine">
+            Python resolve <code>import</code> olhando primeiro o diretório de onde você
+            rodou o comando. Se o pacote estivesse na raiz, <code>pytest</code> encontraria a
+            <strong>pasta local</strong> e nunca testaria o pacote instalado — mascarando
+            erros de empacotamento que só apareceriam na máquina do usuário final.
+          </p>
+          <p class="fine" style="margin-top:10px;">
+            Com <code>src/</code>, a única forma de o import funcionar é achando o pacote
+            instalado. Consequência intencional: <strong>sem <code>pip install -e</code>, os
+            testes nem coletam.</strong> Isso é feature, não bug.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>O subpacote <code>aiops/</code></h3>
+          <div class="tw">
+            <table>
+              <thead>
+                <tr><th>Módulo</th><th>Conceito Python</th><th>O que define</th><th>Estado</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>severity.py</code></td>
+                  <td><code>class X(str, Enum)</code> — o membro <em>é</em> uma string, serializa em JSON sem conversão</td>
+                  <td><code>Severity</code>: crítico / alerta / preditivo · <code>DetectionAlgorithm</code>: basic / agile / robust</td>
+                  <td><span class="badge b-stub">Contrato</span></td>
+                </tr>
+                <tr>
+                  <td><code>state.py</code></td>
+                  <td><code>TypedDict</code> — em runtime é um <code>dict</code> comum; o contrato é verificado <em>antes</em> de rodar</td>
+                  <td><code>AgentState</code>, 13 campos, incluindo <code>schema_version</code></td>
+                  <td><span class="badge b-stub">Contrato</span></td>
+                </tr>
+                <tr>
+                  <td><code>roles.py</code></td>
+                  <td><em>Callable class</em> (<code>__call__</code>) — encaixa na assinatura que um nó de grafo espera</td>
+                  <td>Planner, Explainer, Validator, Coach e <code>request_human_approval</code></td>
+                  <td><span class="badge b-stub">Stub</span></td>
+                </tr>
+                <tr>
+                  <td><code>remediation.py</code></td>
+                  <td><code>@dataclass(frozen=True)</code> — gera <code>__init__</code>/<code>__eq__</code> e congela contra mutação</td>
+                  <td><code>REMEDIATION_MAP</code>: 3 anomalias → ação → serviço AWS</td>
+                  <td><span class="badge b-stub">Contrato</span></td>
+                </tr>
+                <tr>
+                  <td><code>governance.py</code></td>
+                  <td>Constantes puras, sem imports</td>
+                  <td>Modelos gold/mínimo, temperaturas, VRAM</td>
+                  <td><span class="badge b-stub">Contrato</span></td>
+                </tr>
+                <tr>
+                  <td><code>checkpoint.py</code></td>
+                  <td>Dataclass + classe de repositório</td>
+                  <td><code>Checkpoint</code> e <code>CheckpointStore</code> (PostgreSQL)</td>
+                  <td><span class="badge b-stub">Stub</span></td>
+                </tr>
+                <tr>
+                  <td><code>graph.py</code></td>
+                  <td>—</td>
+                  <td><code>build_graph()</code>; <strong>deliberadamente não importa <code>langgraph</code></strong></td>
+                  <td><span class="badge b-stub">Stub</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Os 13 campos do <code>AgentState</code></h3>
+            <p class="fine">
+              É o objeto que atravessa todo o fluxo. Três detalhes de design merecem
+              atenção:
+            </p>
+            <ul class="plain fine" style="margin-top:10px;">
+              <li><code>confidence</code> guarda a confiança do diagnóstico (0,89 a 0,95 nos cenários) — o agente diz “causa provável”, não “a causa é”.</li>
+              <li><code>hitl_approved</code> é <code>Optional[bool]</code> de propósito: <code>None</code> = ainda não perguntamos, <code>False</code> = rejeitado. Um booleano puro confundiria os dois.</li>
+              <li><code>schema_version</code> existe porque, durante um deploy gradual, versões antiga e nova do contrato coexistem — e é preciso detectar isso em vez de quebrar com <code>KeyError</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Por que os papéis levantam erro</h3>
+            <p class="fine">
+              Todo papel em <code>roles.py</code> tem corpo <code>raise NotImplementedError</code>
+              — o idioma Python para “existe, mas ainda não”. E há um teste que
+              <strong>garante que continue assim</strong>.
+            </p>
+            <p class="fine" style="margin-top:10px;">
+              Parece estranho testar que um stub segue stub, mas é intencional: ninguém
+              implementa um papel pela metade sem também remover o teste deliberadamente. O
+              contrato fica congelado até a decisão consciente de destravá-lo.
+            </p>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Mapa de remediação e política de modelos</h3>
+          <div class="grid-2">
+            <div class="tw">
+              <table>
+                <thead><tr><th>Gatilho</th><th>Ação</th><th>Serviço</th></tr></thead>
+                <tbody>
+                  <tr><td>CPU Spike &gt; 90%</td><td>Escalonamento horizontal</td><td>ASG</td></tr>
+                  <tr><td>Lambda Error &gt; 5%</td><td>Rollback ou update de config</td><td>AWS Lambda</td></tr>
+                  <tr><td>DNS Timeout</td><td>Failover de rota</td><td>Route 53</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tw">
+              <table>
+                <thead><tr><th>Papel</th><th class="num">Temp.</th><th>Racional</th></tr></thead>
+                <tbody>
+                  <tr><td>Validator</td><td class="num">0.1</td><td>Está julgando — mesmo caso, mesma nota</td></tr>
+                  <tr><td>Coach</td><td class="num">0.4</td><td>Sintetiza aprendizado para humanos lerem</td></tr>
+                  <tr><td>Explainer</td><td class="num">0.4</td><td>Explica a causa raiz</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="fine">
+            <strong>Temperatura</strong> controla a aleatoriedade da geração de um LLM: perto de
+            zero, determinístico; mais alto, mais variado. O teste não trava os números — trava
+            a <em>relação</em> <code>TEMPERATURE_VALIDATOR &lt; TEMPERATURE_COACH</code>,
+            preservando o princípio sem engessar os valores.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3><code>serve.py</code> — as 38 linhas que realmente executam</h3>
+          <p class="fine">
+            Sobe um servidor HTTP estático apontando para <code>prototype/</code>. Duas
+            decisões interessantes num arquivo tão pequeno:
+          </p>
+          <ul class="plain fine" style="margin-top:10px;">
+            <li><code>Cache-Control: no-store</code> em toda resposta — sem isso você editaria o mockup, apertaria F5 e continuaria vendo a versão antiga do cache.</li>
+            <li><code>except KeyboardInterrupt: pass</code> — <kbd>Ctrl+C</kbd> encerra em silêncio, sem despejar um traceback de erro para uma saída que é normal.</li>
+          </ul>
+          <p class="fine" style="margin-top:10px;">
+            E uma armadilha: <code>Path(__file__).resolve().parents[2]</code> sobe três níveis
+            para achar a raiz do repositório. Funciona no checkout; quebraria se o pacote fosse
+            instalado normalmente em <code>site-packages</code>.
+          </p>
+        </div>
+      </div>
+      <a class="toplink" href="#codigo">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 04 PROTÓTIPO ==================== -->
+    <section id="prototipo" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">04</span><h2>Frontend / protótipo</h2></div>
+        <p class="fine">Como o dashboard funciona — e onde a ilusão começa e termina.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="callout">
+          <strong>Tudo nesta seção é aparência.</strong> Não existe backend, não existe LLM,
+          não existe AWS. Os 8 agentes, os 7 cenários, as métricas e os 123 passos de
+          simulação estão escritos como literais dentro de um único arquivo HTML. O “chat com
+          a squad” responde por correspondência de palavra-chave — e nenhuma linha de código
+          fala com ServiceNow, Datadog, IUClick, Devin ou GitHub.
+        </div>
+
+        <div class="stack-s">
+          <h3>Os arquivos, e qual usar</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Arquivo</th><th>Tamanho</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>EasyRun.dc.html</code></td><td class="num">96 KB</td><td><strong>Fonte canônica</strong> — é esta que o servidor abre</td></tr>
+                <tr><td><code>support.js</code></td><td class="num">66 KB</td><td>Runtime gerado — <strong>não editar</strong>; o projeto-fonte não está no repo</td></tr>
+                <tr><td><code>export/EasyRun-src.dc.html</code></td><td class="num">97 KB</td><td>Espelho manual — difere em 2 linhas, sincronizado à mão</td></tr>
+                <tr><td><code>EasyRun - Standalone.html</code></td><td class="num">381 KB</td><td><span class="badge b-risk">Desatualizado</span> e não regenerável</td></tr>
+                <tr><td><code>thumbnail.webp</code></td><td class="num">9 KB</td><td>Imagem órfã, sem referências</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>O runtime <code>dc</code></h3>
+            <p class="fine">
+              Um micro-framework que permite escrever uma tela inteira num único HTML: o
+              visual dentro de <code>&lt;x-dc&gt;</code>, a lógica numa
+              <code>class Component extends DCLogic</code>. Ele carrega React 18.3.1 e Babel
+              do CDN unpkg com <strong>SRI</strong> (o navegador confere o hash do script antes
+              de executar) e acrescenta tags próprias ao HTML: <code>&lt;sc-for&gt;</code>,
+              <code>&lt;sc-if&gt;</code>, <code>&lt;helmet&gt;</code>, e atributos
+              <code>style-hover</code> para pseudo-classes que CSS inline não suporta.
+            </p>
+          </div>
+          <div class="card">
+            <h3>As 9 telas</h3>
+            <ul class="plain fine">
+              <li><strong>Console</strong> — cenários, agentes, log ao vivo, plano, memória, natureza e rastreabilidade</li>
+              <li><strong>Chat da squad</strong> — conversa com o “Maestro”</li>
+              <li><strong>Aprovações HITL</strong> — fila pendente, com layout por tipo de gate</li>
+              <li><strong>Avaliação</strong> — métricas, distribuição por natureza, scores por agente</li>
+              <li><strong>Configuração</strong> — agentes, guardrails, triggers, telemetria, política de código</li>
+              <li><strong>Integrações</strong> — o que a squad lê e escreve em cada plataforma</li>
+              <li><strong>LLMOps</strong> — observabilidade da própria esteira</li>
+              <li><strong>FinOps</strong> — política de governança de modelos</li>
+              <li><strong>Arquitetura</strong> — os 13 pilares, stack-alvo e integração</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>O motor de simulação</h3>
+          <p class="fine">
+            Um laço de <code>setTimeout</code> avança um passo a cada
+            <code>1900 / velocidade</code> milissegundos. Cada passo é um objeto que declara o
+            agente, o pilar, o serviço AWS, o texto do log e — opcionalmente — efeitos
+            colaterais e um portão de aprovação:
+          </p>
+          <pre><code>{
+  ag: 'auditor', pilar: '🛡️ Guardrails',
+  txt: 'Guardrail G-02 interceptou o passo 2…',
+  fx:   { agStatus: {…}, planoCriar: […], memoriaAdd: {…} },
+  gate: { id: 'APR-01', risco: 'médio', detalhe: '$ easyrun executar rollback…' }
+}</code></pre>
+          <p class="fine">
+            Quando o passo tem <code>gate</code>, o laço <strong>não é reagendado</strong> — a
+            simulação congela de verdade até alguém clicar em Aprovar ou Rejeitar. Rejeitar
+            não aborta: passos marcados como <code>dinamico</code> passam a usar um texto
+            alternativo, e a squad segue com o plano B conservador.
+          </p>
+        </div>
+      </div>
+      <a class="toplink" href="#prototipo">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 05 PROCESSO ==================== -->
+    <section id="processo" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">05</span><h2>Processo end-to-end</h2></div>
+        <p class="fine">Duas jornadas: a do desenvolvedor e a do incidente.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>A) O ciclo do desenvolvedor — a cadeia do F5</h3>
+          <p class="fine">
+            Apertar <kbd>F5</kbd> no VS Code dispara quatro elos encadeados. Quando o F5
+            quebra, é sempre um deles:
+          </p>
+          <pre class="mermaid">
+flowchart LR
+    A["F5"] --> B["launch.json<br/>preLaunchTask"]
+    B --> C["tasks.json<br/>python -m squad_agentica.serve"]
+    C --> D["serve.py<br/>print('Serving … at …')"]
+    D --> E{"problemMatcher<br/>casa /^Serving/ ?"}
+    E -->|sim| F["Chrome abre em<br/>localhost:8080"]
+    E -->|não| G["F5 trava<br/>esperando a task"]
+          </pre>
+          <div class="callout">
+            <strong>Acoplamento invisível:</strong> o texto do <code>print()</code> no
+            <code>serve.py</code> é contrato com o <code>tasks.json</code>. Traduzir a
+            mensagem para português faz o F5 travar para sempre — e nada no sintoma aponta
+            para uma string de log como causa.
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>B) O ciclo do incidente</h3>
+          <pre class="mermaid">
+flowchart TD
+    T["TRIGGER · Datadog ou ServiceNow"] --&gt; D
+    D["DETECÇÃO — Sentinela<br/>severidade, algoritmo, origem"] --&gt; EL
+    EL["REGISTRO — Elo<br/>INC + CMDB no ServiceNow · Bug no IUClick"] --&gt; CT
+    CT["CONTEXTO — Contexto<br/>runbooks + episódios"] --&gt; DG
+    DG["DIAGNÓSTICO — Diagnosta<br/>causa raiz + confiança + NATUREZA"] --&gt; NAT
+    NAT{"natureza da remediação?"}
+    NAT --&gt;|INFRA| GR{"excede a autonomia?"}
+    NAT --&gt;|CONFIG| GM["Elo abre a GMUD"]
+    NAT --&gt;|CODIGO| RED["Guardrail G-05<br/>allowlist + redação de segredos"]
+    NAT --&gt;|EXTERNO| ESC["Elo escala ao time dono"]
+    RED --&gt; ART["Artífice<br/>clona → Devin → Pull Request"]
+    ART --&gt; GM2["Elo abre a GMUD"]
+    GM2 --&gt; H2["✋ aprovar o PR"]
+    H2 --&gt; H3["✋ aprovar a GMUD"]
+    H3 --&gt; EX
+    GM --&gt; H1["✋ aprovar a GMUD"]
+    H1 --&gt; EX
+    GR --&gt;|não| EX
+    GR --&gt;|sim| H0["✋ aprovar a ação"]
+    H0 --&gt; EX
+    EX["EXECUÇÃO — Executor<br/>AWS · API on-premises · merge"] --&gt; V
+    ESC --&gt; V
+    V["VALIDAÇÃO — Sentinela · Datadog"] --&gt; F
+    F["ENCERRAMENTO — Elo + Auditor<br/>move o kanban, fecha o INC, grava o pós-mortem"]
+          </pre>
+
+          <p class="fine">Abaixo, cada etapa ancorada no cenário de referência <strong>ANM-2047</strong> (latência no checkout-api).</p>
+
+          <div class="steps">
+            <div class="step">
+              <div class="n">01</div>
+              <div>
+                <h4>Detecção</h4>
+                <div class="who">Sentinela · CloudWatch</div>
+                <p class="quote">“Latência p99 do checkout-api em 2.840 ms (limiar: 650 ms). Anomalia ANM-2047 aberta.”</p>
+                <p><strong>p99</strong> significa que 99% das requisições foram mais rápidas que esse valor — a métrica certa, porque a média esconde o 1% de clientes que abre chamado.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">02</div>
+              <div>
+                <h4>Evento no barramento</h4>
+                <div class="who">Sentinela · EventBridge</div>
+                <p>A Sentinela não chama o Maestro diretamente — ela <em>anuncia o fato</em>. Quem se interessar reage. Isso permite acrescentar consumidores depois sem tocar em quem publica.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">03</div>
+              <div>
+                <h4>Orquestração</h4>
+                <div class="who">Maestro · Step Functions</div>
+                <p>Decompõe em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar. É uma máquina de estados: sabe o que vem depois, o que fazer se falhar e onde pode pausar.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">04</div>
+              <div>
+                <h4>Contexto e memória</h4>
+                <div class="who">Contexto · OpenSearch + DynamoDB</div>
+                <p>Duas camadas: <strong>semântica</strong> (runbooks vetorizados — “o que eu sei sobre latência de API”) e <strong>episódica</strong> (“já vi exatamente isso em março”). É a etapa que faz a squad melhorar com o tempo.</p>
+                <p class="quote">“INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).”</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">05</div>
+              <div>
+                <h4>Diagnóstico de causa raiz</h4>
+                <div class="who">Diagnosta · Bedrock</div>
+                <p class="quote">“Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.”</p>
+                <p>Deploy às 14:00, pico às 14:02 — a correlação temporal é a pista principal. E a confiança é <em>explícita</em>: honestidade epistêmica embutida no design.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">06</div>
+              <div>
+                <h4>Plano de remediação</h4>
+                <div class="who">Maestro · Step Functions</div>
+                <p>Quatro passos, e a ordem revela pensamento: <strong>congelar deploys vem primeiro</strong>. Antes de corrigir, estanca a fonte — se alguém publicar outra versão no meio da remediação, o diagnóstico vira ruído.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">07</div>
+              <div>
+                <h4>O guardrail intercepta</h4>
+                <div class="who">Auditor</div>
+                <p>Guardrail é uma política determinística, avaliada <em>fora</em> do modelo. Não é o LLM decidindo se deve pedir permissão. Quatro estão definidos: aprovação humana para rollback, limite de 3 ações de escrita, escopo de ambiente e modo somente-leitura noturno.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">08</div>
+              <div>
+                <h4>A fila HITL — a execução para</h4>
+                <div class="who">decisão humana</div>
+                <p>O card traz quatro informações juntas de propósito: <strong>o quê</strong> (o comando exato), <strong>por quê</strong> (a justificativa com confiança), <strong>com que precedente</strong> (a memória) e <strong>qual o risco</strong>. O humano decide em segundos sem abrir cinco abas.</p>
+                <p style="margin-top:8px;">E rejeitar <strong>não é abortar</strong>: a squad tem um plano B conservador — reciclar as instâncias do pool sem reverter o deploy.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">09</div>
+              <div>
+                <h4>Execução</h4>
+                <div class="who">Executor · Lambda + SSM</div>
+                <p>Rollback v2.14.3 → v2.14.2 e escalonamento do pool RDS de 50 para 120 conexões. O único agente sem LLM, porque é o único que muda o mundo.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">10</div>
+              <div>
+                <h4>Validação</h4>
+                <div class="who">Sentinela · CloudWatch</div>
+                <p>Etapa frequentemente esquecida em automações: <strong>confirmar que funcionou</strong>. A latência cai de 2.840 ms para 610 ms — abaixo do limiar de 650 ms que abriu o alarme. O ciclo fecha contra o mesmo critério que o abriu.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">11</div>
+              <div>
+                <h4>Pós-mortem e aprendizado</h4>
+                <div class="who">Auditor · S3</div>
+                <p class="quote">APR-2047 — assinatura “pool RDS + deploy recente” → rollback prioritário.</p>
+                <p>O próximo incidente com essa assinatura já vai começar com a hipótese pronta. É o que separa uma automação de um sistema que aprende.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">12</div>
+              <div>
+                <h4>Encerramento</h4>
+                <div class="who">Maestro</div>
+                <p><strong>MTTR: 4m 32s</strong>, contra 38 minutos de referência humana. A Sentinela volta a vigiar e o ciclo recomeça no próximo trigger.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Os sete cenários</h3>
+          <div class="tw">
+            <table>
+              <thead>
+                <tr><th>Cenário</th><th>Origem</th><th>Natureza</th><th>Gates HITL</th><th class="num">Desfecho</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>🐢 ANM-2047 · Latência checkout-api</td><td>Datadog</td><td><span class="badge b-ok">INFRA</span></td><td>1 · ação</td><td class="num">4m 32s</td></tr>
+                <tr><td>📈 ANM-2091 · CPU spike catalog-svc</td><td>Datadog</td><td><span class="badge b-ok">INFRA</span></td><td>1 · ação</td><td class="num">6m 05s</td></tr>
+                <tr><td>🌐 ANM-2118 · DNS timeout</td><td>Datadog</td><td><span class="badge b-ok">INFRA</span></td><td>— autônomo</td><td class="num">2m 18s</td></tr>
+                <tr><td>🔮 PRD-2144 · Exaustão de disco</td><td>Agendado</td><td><span class="badge b-ok">INFRA</span></td><td>— autônomo</td><td class="num">3m 40s</td></tr>
+                <tr><td>🧬 <strong>INC-3312 · Erro no cálculo de frete</strong></td><td>Datadog + ServiceNow</td><td><span class="badge b-stub">CÓDIGO</span></td><td><strong>2 · PR + GMUD</strong></td><td class="num">18m 40s</td></tr>
+                <tr><td>💼 <strong>INC-3350 · Faturamento não conciliado</strong></td><td><strong>ServiceNow</strong></td><td><span class="badge b-mock">CONFIG</span></td><td>1 · GMUD</td><td class="num">22m 05s</td></tr>
+                <tr><td>⛔ <strong>INC-3377 · Gateway de pagamento</strong></td><td>Datadog</td><td><span class="badge b-plan">EXTERNO</span></td><td>1 · ação</td><td class="num">escalado</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid-2" style="margin-top:6px;">
+            <div class="card">
+              <h3>Por que dois rodam sozinhos</h3>
+              <p class="fine">
+                O critério de autonomia <strong>não é a severidade</strong> — é
+                reversibilidade × custo do erro. O DNS é crítico e mesmo assim autônomo,
+                porque failover de rota é trivialmente reversível e esperar custaria mais
+                que errar; resultado, o menor MTTR dos sete. O disco roda sozinho pelo
+                motivo oposto: é preventivo, sem urgência, e expandir volume é
+                não-destrutivo.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Por que a natureza muda tudo</h3>
+              <p class="fine">
+                Um sistema que só soubesse agir em infraestrutura teria reiniciado o
+                <code>frete-service</code> do INC-3312, visto os erros sumirem e fechado o
+                incidente. O defeito continuaria no código e voltaria no próximo pico — com
+                o agravante de existir um registro dizendo que "foi resolvido". Classificar
+                como <code>CODIGO</code> é o que impede esse falso positivo.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Por que saber desistir é um resultado</h3>
+              <p class="fine">
+                O INC-3377 termina sem que a squad conserte nada, e isso é o comportamento
+                correto: a falha está no gateway de um adquirente, fora do perímetro. A
+                squad isola, prova que o problema não é nosso, propõe um workaround
+                <strong>com o custo explícito</strong>, aceita a recusa e escala formalmente.
+                Numa apresentação, é o cenário que responde à pergunta mais difícil da sala.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Por que o ramo de código para duas vezes</h3>
+              <p class="fine">
+                Aprovar um patch e aprovar uma janela de mudança em produção são autoridades
+                diferentes, exercidas por pessoas diferentes. Fundir as duas não sobrevive ao
+                primeiro comitê de mudança. E se o PR é rejeitado, o gate da GMUD nem aparece
+                — não se pede janela para um patch recusado.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="toplink" href="#processo">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 06 ARQUITETURA-ALVO ==================== -->
+    <section id="alvo" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">06</span><h2>Arquitetura-alvo</h2></div>
+        <p class="fine">
+          <span class="badge b-plan">Planejado</span>
+          &nbsp;Nada desta seção está implementado.
+        </p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>O grafo LangGraph pretendido</h3>
+          <p class="fine">
+            <strong>LangGraph</strong> estrutura aplicações com LLM como grafos de estado: nós
+            (unidades de trabalho), arestas condicionais, um estado compartilhado que atravessa
+            tudo, <code>interrupt()</code> para pausar, e um checkpointer para retomar.
+          </p>
+          <pre class="mermaid">
+flowchart TD
+    S([início]) --> P["Planner<br/>define o plano"]
+    P --> E["Explainer<br/>causa raiz via MCP"]
+    E --> V["Validator<br/>julga eficácia · temp 0.1"]
+    V --> Q{"hitl_required ?"}
+    Q -->|True| I["interrupt()<br/>estado vai ao checkpoint"]
+    I --> HU(["decisão humana"])
+    HU --> C
+    Q -->|False| C["Coach<br/>sintetiza e encerra"]
+    C --> F([fim])
+          </pre>
+          <div class="callout">
+            <strong>A armadilha documentada no código:</strong> depois de um
+            <code>interrupt()</code>, o nó <em>precisa</em> devolver o <code>AgentState</code>
+            completo. A tentação é retornar só o que mudou — <code>{"hitl_approved": True}</code>
+            — assumindo que o framework mescla. Ele não mescla: substitui. O nó seguinte recebe
+            um estado sem <code>incident_id</code> e falha com um erro que aponta para o lugar
+            errado.
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Do agente ao papel do grafo</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Agente</th><th>Papel</th><th>Responsabilidade</th></tr></thead>
+              <tbody>
+                <tr><td>🎼 Maestro</td><td>Planner</td><td>Define o plano de diagnóstico e remediação</td></tr>
+                <tr><td>🔬 Diagnosta</td><td>Explainer</td><td>Causa raiz via ferramentas MCP</td></tr>
+                <tr><td>🛡️ Auditor</td><td>Quiz/Validator</td><td>Valida a eficácia pós-execução</td></tr>
+                <tr><td>🎼 Maestro + 🛡️ Auditor</td><td>Coach</td><td>Sintetiza aprendizado, encerra ou escala</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="fine">
+            A correspondência não é 1:1 — e Sentinela, Contexto e Executor não viram nós.
+            É a distinção entre <strong>quem raciocina</strong> (nós do grafo) e
+            <strong>quem observa ou age</strong> (adaptadores).
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>Backend</h3>
+            <p class="fine">
+              FastAPI com arquitetura hexagonal e quatro <em>bounded contexts</em> DDD:
+              Detecção, Diagnóstico, Execução, Governança — que espelham os agentes.
+              Checkpoints em PostgreSQL.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Frontend</h3>
+            <p class="fine">
+              Angular 18 com standalone components e Signals, um módulo por tela do protótipo.
+              Ou seja: o mockup em React é <strong>descartável por design</strong>.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Infraestrutura</h3>
+            <p class="fine">
+              Bedrock, Step Functions, Lambda, EventBridge, DynamoDB, OpenSearch, S3,
+              CloudWatch, SSM, Route 53.
+            </p>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Os 13 pilares agênticos</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Pilar</th><th>O que significa</th><th>Onde aparece</th></tr></thead>
+              <tbody>
+                <tr><td>🧠 Context</td><td>Métricas, logs, deploys e topologia do serviço</td><td>Painel “Contexto &amp; Memória”</td></tr>
+                <tr><td>📚 Memory</td><td>Memória episódica e semântica, com aprendizado contínuo</td><td>Cards INC / APR</td></tr>
+                <tr><td>🎯 Planning</td><td>Causa raiz e plano em passos verificáveis</td><td>Painel “Plano de ação”</td></tr>
+                <tr><td>⚡ Action</td><td>Mutações idempotentes e auditáveis</td><td>Agente Executor</td></tr>
+                <tr><td>🔧 Tools &amp; APIs</td><td>Ferramentas tipadas expostas aos agentes</td><td>Skills por agente</td></tr>
+                <tr><td>🤝 Multi-Agent</td><td>Seis papéis com contratos explícitos</td><td>Coluna “Agentes”</td></tr>
+                <tr><td>🛡️ Guardrails</td><td>Escopo, quotas de escrita e aprovação humana</td><td>Configuração + gates</td></tr>
+                <tr><td>📦 Skills</td><td>Capacidades versionadas e testáveis</td><td>Chips de skills</td></tr>
+                <tr><td>⚡ Triggers</td><td>Alarmes, deploys, agenda e pedidos humanos</td><td>Lista de triggers</td></tr>
+                <tr><td>🎼 Orchestration</td><td>Máquina de estados com pausa para HITL</td><td>Fluxo central do console</td></tr>
+                <tr><td>📊 Evaluation</td><td>MTTR, precisão, scores, pós-mortems</td><td>Aba “Avaliação”</td></tr>
+                <tr><td>🔎 Detecção &amp; Severidade</td><td>Basic / Agile / Robust → Crítico / Alerta / Preditivo</td><td>Log da Sentinela</td></tr>
+                <tr><td>🔗 Interoperabilidade</td><td>MCP para ferramentas; A2A entre frameworks</td><td>Diagnosta e Contexto</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Hardening — o que separa protótipo de produção</h3>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Versionamento de schema</h3>
+              <p class="fine">Já existe no contrato: o campo <code>schema_version</code> permite detectar versões coexistindo num deploy gradual.</p>
+            </div>
+            <div class="card">
+              <h3>Circuit breakers</h3>
+              <p class="fine">Sem eles, um serviço já sobrecarregado recebe uma avalanche de retentativas do próprio sistema que deveria ajudar — a automação vira parte do incidente.</p>
+            </div>
+            <div class="card">
+              <h3>Logs de auditoria imutáveis</h3>
+              <p class="fine">Se um agente reverteu um deploy às 3h da manhã, tem que haver prova de quem decidiu, com base em quê, e que o registro não foi editado depois.</p>
+            </div>
+            <div class="card">
+              <h3>Sanitização de entrada e saída</h3>
+              <p class="fine">Risco específico de sistemas com LLM: se um agente lê logs e alguém escreve lá “ignore as instruções anteriores”, o modelo pode obedecer. Texto externo é entrada não confiável.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="toplink" href="#alvo">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 07 CI/CD ==================== -->
+    <section id="cicd" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">07</span><h2>CI/CD e Git</h2></div>
+        <p class="fine">O que roda quando você dá push — e o que não roda.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="grid-2">
+          <div class="card">
+            <h3><code>tests.yml</code> <span class="badge b-ok">Ativo</span></h3>
+            <p class="fine">
+              Dispara em push e pull request, filtrado por <code>paths</code>:
+              <code>src/</code>, <code>tests/</code>, <code>pyproject.toml</code> e o próprio
+              workflow. Monta um Ubuntu limpo, instala Python 3.12, roda
+              <code>pip install -e ".[dev]"</code> e <code>pytest</code>.
+            </p>
+            <p class="fine" style="margin-top:10px;">
+              Traz <code>permissions: contents: read</code> — princípio do menor privilégio.
+              O job só precisa ler o código, então o token não pode escrever no repositório.
+            </p>
+          </div>
+          <div class="card">
+            <h3><code>validate-zip.yml</code> <span class="badge b-risk">Inerte</span></h3>
+            <p class="fine">
+              Roda <code>validate_zip.py</code> quando algo muda em <code>uploads/</code> — só
+              que essa pasta foi removida do repositório. O filtro nunca casa e, se casasse, o
+              script imprimiria “nothing to validate” e retornaria sucesso.
+            </p>
+            <p class="fine" style="margin-top:10px;">
+              É herança de uma fase anterior do projeto, quando havia um protótipo de upload em
+              Express. Na aba Actions o repositório aparenta ter duas verificações; tem uma.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Editar só <code>prototype/</code> não dispara workflow nenhum.</strong>
+          O mockup — que é a parte mais visível do produto — não tem cobertura automatizada de
+          espécie alguma. A verificação ali é visual e manual.
+        </div>
+
+        <div class="stack-s">
+          <h3>As três fases do repositório</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Fase</th><th>O que era</th><th>Resíduo deixado</th></tr></thead>
+              <tbody>
+                <tr><td>1 · Upload em Node</td><td>Express + Multer, <code>POST /upload</code>, pasta <code>uploads/</code></td><td><code>validate_zip.py</code>, seu workflow e regras órfãs no <code>.gitignore</code></td></tr>
+                <tr><td>2 · Protótipo visual</td><td>Express removido; entra o dashboard <code>.dc.html</code></td><td>—</td></tr>
+                <tr><td>3 · Pacote Python</td><td><code>src/squad_agentica</code>, testes, CI, task do VS Code</td><td>fase atual</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout risk">
+          <strong>Dois arquivos ainda não estão na <code>main</code>:</strong>
+          <code>.github/workflows/tests.yml</code> e <code>.vscode/tasks.json</code> existem
+          apenas na branch <code>feature/python-package</code>. Enquanto ela não for mesclada,
+          a <code>main</code> não roda testes automaticamente, e quem clona a branch padrão não
+          consegue usar o F5.
+        </div>
+      </div>
+      <a class="toplink" href="#cicd">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 08 GLOSSÁRIO ==================== -->
+    <section id="glossario" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">08</span><h2>Glossário</h2></div>
+        <p class="fine">Os termos técnicos do EasyRun, incluindo os das plataformas da empresa. Digite para filtrar.</p>
+      </div>
+
+      <div class="stack">
+        <input class="gl-search" id="gl-search" type="search" placeholder="Filtrar termos — ex.: venv, HITL, MTTR, guardrail…" aria-label="Filtrar glossário" autocomplete="off">
+        <div class="gl-list" id="gl-list">
+          <div class="gl-item"><span class="term">A2A</span> — Protocolo para agentes de frameworks diferentes se descobrirem e conversarem, via um <em>Agent Card</em> em <code>.well-known/agent-card.json</code>.</div>
+          <div class="gl-item"><span class="term">Agente</span> — Programa que combina um modelo de linguagem, ferramentas e alguma autonomia para agir. Diferente de um chatbot, ele executa ações.</div>
+          <div class="gl-item"><span class="term">AgentState</span> — O <code>TypedDict</code> de 13 campos que carrega o contexto do incidente por todo o fluxo. O contrato central da arquitetura.</div>
+          <div class="gl-item"><span class="term">AIOps</span> — Inteligência artificial aplicada à operação de TI: detectar anomalias, diagnosticar causas, remediar automaticamente.</div>
+          <div class="gl-item"><span class="term">Ambiente virtual (venv)</span> — Instalação isolada do Python para um projeto, na pasta <code>.venv/</code>. Impede que as dependências de projetos diferentes colidam.</div>
+          <div class="gl-item"><span class="term">ASG (Auto Scaling Group)</span> — Serviço AWS que mantém um número desejado de instâncias EC2, adicionando ou removendo conforme a demanda.</div>
+          <div class="gl-item"><span class="term">Bedrock</span> — Serviço AWS de modelos de linguagem gerenciados (Claude, Titan), sem gerenciar GPU.</div>
+          <div class="gl-item"><span class="term">Bounded context</span> — Fronteira dentro da qual cada termo do domínio tem um significado único. Conceito central do DDD.</div>
+          <div class="gl-item"><span class="term">Bytecode</span> — Forma compilada intermediária de um <code>.py</code>, guardada em <code>__pycache__/</code>. Só acelera a carga.</div>
+          <div class="gl-item"><span class="term">Cache-Control</span> — Cabeçalho HTTP sobre armazenar ou não a resposta. O <code>serve.py</code> envia <code>no-store</code> para que edições apareçam sem F5 forçado.</div>
+          <div class="gl-item"><span class="term">Callable class</span> — Classe que define <code>__call__</code> e pode ser chamada como função. É como os papéis do grafo são declarados.</div>
+          <div class="gl-item"><span class="term">Checkpoint</span> — Fotografia durável do estado, para retomar dali em caso de falha. Crítico quando as ações já executadas são irreversíveis.</div>
+          <div class="gl-item"><span class="term">CI/CD</span> — Verificação automática de cada mudança (CI) e publicação automática do que passou (CD). Este projeto tem só CI.</div>
+          <div class="gl-item"><span class="term">Circuit breaker</span> — Interrompe tentativas após N falhas seguidas, evitando <em>retry storms</em> contra um serviço já saturado.</div>
+          <div class="gl-item"><span class="term">Console script</span> — Mecanismo que transforma uma função Python em comando de terminal. Gera o <code>squad-agentica-serve</code>.</div>
+          <div class="gl-item"><span class="term">dataclass</span> — Decorador que gera <code>__init__</code>, <code>__repr__</code> e <code>__eq__</code> de uma classe de dados. Com <code>frozen=True</code>, torna-a imutável.</div>
+          <div class="gl-item"><span class="term">DDD (Domain-Driven Design)</span> — Modelar o software na linguagem do negócio, organizado em <em>bounded contexts</em>.</div>
+          <div class="gl-item"><span class="term">Editable install</span> — <code>pip install -e</code>: instala por ponteiro em vez de cópia, então editar o código-fonte reflete na hora.</div>
+          <div class="gl-item"><span class="term">egg-info</span> — Metadados gerados pelo setuptools na instalação. Artefato derivado, por isso gitignorado.</div>
+          <div class="gl-item"><span class="term">Embedding</span> — Texto representado como vetor numérico, de modo que significados próximos fiquem próximos no espaço. Viabiliza a busca semântica.</div>
+          <div class="gl-item"><span class="term">Enum</span> — Tipo com conjunto fixo e nomeado de valores. Elimina “strings mágicas” e transforma erro de digitação em falha imediata.</div>
+          <div class="gl-item"><span class="term">EventBridge</span> — Barramento de eventos da AWS. Publica <code>anomalia.detectada</code>.</div>
+          <div class="gl-item"><span class="term">Exit code</span> — Número devolvido ao sistema operacional: 0 = sucesso. É como o CI decide se um step passou.</div>
+          <div class="gl-item"><span class="term">Failover</span> — Redirecionar tráfego para um recurso reserva quando o principal falha. A remediação para <code>dns_timeout</code>.</div>
+          <div class="gl-item"><span class="term">FastAPI</span> — Framework web Python assíncrono que gera documentação OpenAPI a partir das anotações de tipo.</div>
+          <div class="gl-item"><span class="term">FinOps</span> — Gestão financeira de nuvem. No contexto de IA: escolha de modelo, orçamento de tokens, local vs. nuvem.</div>
+          <div class="gl-item"><span class="term">GitHub Actions</span> — Sistema de CI integrado ao GitHub, configurado por arquivos YAML em <code>.github/workflows/</code>.</div>
+          <div class="gl-item"><span class="term">Guardrail</span> — Política explícita e determinística que limita o que os agentes podem fazer sozinhos. Avaliada fora do modelo.</div>
+          <div class="gl-item"><span class="term">Hardening</span> — Medidas que tornam um sistema apto a produção: versionamento de schema, circuit breakers, auditoria imutável, sanitização.</div>
+          <div class="gl-item"><span class="term">Hexagonal (ports and adapters)</span> — Arquitetura que isola o domínio das tecnologias externas por trás de interfaces.</div>
+          <div class="gl-item"><span class="term">HITL (Human-In-The-Loop)</span> — Humano no circuito: a execução automática para e aguarda decisão humana. O mecanismo central de segurança do EasyRun.</div>
+          <div class="gl-item"><span class="term">Idempotente</span> — Operação que, executada duas vezes, produz o mesmo resultado que uma. Requisito para remediação automática segura.</div>
+          <div class="gl-item"><span class="term">Injeção de prompt</span> — Ataque em que texto de fonte não confiável contém instruções que o modelo obedece.</div>
+          <div class="gl-item"><span class="term">interrupt()</span> — Função do LangGraph que suspende o grafo, persiste o estado e devolve o controle. O mecanismo do gate HITL.</div>
+          <div class="gl-item"><span class="term">LangGraph</span> — Framework que estrutura aplicações com LLM como grafos de estado, com nós, arestas condicionais, <code>interrupt()</code> e checkpointing.</div>
+          <div class="gl-item"><span class="term">LLM-as-judge</span> — Técnica em que um modelo julga a qualidade da saída de outro. Necessária quando não há resposta única esperada.</div>
+          <div class="gl-item"><span class="term">MCP (Model Context Protocol)</span> — Protocolo aberto que padroniza o acesso de modelos a ferramentas e fontes de dados externas.</div>
+          <div class="gl-item"><span class="term">Memória episódica</span> — Registro de incidentes já vividos, com desfecho e eficácia. Fica no DynamoDB.</div>
+          <div class="gl-item"><span class="term">Memória semântica</span> — Conhecimento geral vetorizado (runbooks), consultável por significado. Fica no OpenSearch.</div>
+          <div class="gl-item"><span class="term">Mockup</span> — Protótipo de aparência, sem funcionamento real por trás. É o que a pasta <code>prototype/</code> é.</div>
+          <div class="gl-item"><span class="term">MTTR (Mean Time To Repair)</span> — Tempo médio de reparo. A métrica-chave: 4m 32s da squad contra 38 min de referência humana.</div>
+          <div class="gl-item"><span class="term">NotImplementedError</span> — Exceção que Python usa para marcar código ainda não implementado. É o que todos os papéis levantam.</div>
+          <div class="gl-item"><span class="term">Ollama</span> — Ferramenta para rodar modelos de linguagem localmente. Citada na política FinOps como alternativa à nuvem.</div>
+          <div class="gl-item"><span class="term">OpenSearch</span> — Motor de busca da AWS com suporte a busca vetorial. Guarda a memória semântica.</div>
+          <div class="gl-item"><span class="term">Optional[X]</span> — “Ou um X, ou None”. Comunica que a ausência de valor é um estado esperado, não um erro.</div>
+          <div class="gl-item"><span class="term">p99 (percentil 99)</span> — Valor abaixo do qual estão 99% das medições. Revela a experiência da minoria mal atendida, invisível na média.</div>
+          <div class="gl-item"><span class="term">parents[N]</span> — Do <code>pathlib</code>: sobe N níveis na árvore de diretórios.</div>
+          <div class="gl-item"><span class="term">parametrize</span> — Decorador do pytest que roda a mesma função com valores diferentes, contando cada um como teste separado.</div>
+          <div class="gl-item"><span class="term">PEP 517</span> — Padrão que permite a cada projeto declarar qual ferramenta de build usar, em vez de assumir setuptools.</div>
+          <div class="gl-item"><span class="term">problemMatcher</span> — Configuração do VS Code que interpreta a saída de uma task. Aqui, detecta pela linha <code>Serving…</code> que o servidor subiu.</div>
+          <div class="gl-item"><span class="term">pyproject.toml</span> — Arquivo padrão que descreve um projeto Python: nome, versão, dependências, build e comandos.</div>
+          <div class="gl-item"><span class="term">pytest</span> — Framework de testes do Python. Descobre <code>test_*.py</code> por convenção e usa <code>assert</code> puro.</div>
+          <div class="gl-item"><span class="term">Qwen</span> — Família de modelos abertos. <code>qwen2.5-coder:32b</code> é o padrão-ouro do projeto; <code>qwen2.5:7b</code>, o piso mínimo.</div>
+          <div class="gl-item"><span class="term">Rolling deployment</span> — Atualização gradual em que instâncias antiga e nova coexistem. A razão de existir o <code>schema_version</code>.</div>
+          <div class="gl-item"><span class="term">Rollback</span> — Reverter um sistema para a versão anterior. Ação de maior risco do cenário ANM-2047, protegida por guardrail.</div>
+          <div class="gl-item"><span class="term">Root cause (causa raiz)</span> — A origem real do problema, distinta dos sintomas. Responsabilidade do Diagnosta / Explainer.</div>
+          <div class="gl-item"><span class="term">Route 53</span> — Serviço de DNS da AWS. Executa o failover de rota.</div>
+          <div class="gl-item"><span class="term">Runbook</span> — Procedimento documentado para uma situação operacional conhecida. Recuperado por busca semântica.</div>
+          <div class="gl-item"><span class="term">SARIMA</span> — Modelo estatístico de séries temporais com componente sazonal. Base do algoritmo de detecção Agile.</div>
+          <div class="gl-item"><span class="term">Severidade</span> — Classificação do impacto: crítico, alerta ou preditivo.</div>
+          <div class="gl-item"><span class="term">Skills</span> — Capacidades versionadas atribuídas a cada agente, como <code>rollback-deploy</code> ou <code>buscar-runbooks</code>.</div>
+          <div class="gl-item"><span class="term">SRI (Subresource Integrity)</span> — Hash esperado de um script externo; o navegador recusa executar se não bater.</div>
+          <div class="gl-item"><span class="term">src-layout</span> — Colocar o código em <code>src/</code> para que os testes rodem contra o pacote instalado, não contra a pasta local.</div>
+          <div class="gl-item"><span class="term">Step Functions</span> — Serviço AWS de máquinas de estado. Representa a orquestração do Maestro.</div>
+          <div class="gl-item"><span class="term">Stub</span> — Implementação vazia que declara a interface sem o comportamento. Em Python, <code>raise NotImplementedError</code>.</div>
+          <div class="gl-item"><span class="term">Temperatura</span> — Controla a aleatoriedade da geração de um LLM. Perto de zero, determinístico. Validator = 0.1; Coach e Explainer = 0.4.</div>
+          <div class="gl-item"><span class="term">Tool calling</span> — Capacidade de um modelo emitir uma chamada de ferramenta estruturada em JSON. Critério que define o padrão-ouro de modelo.</div>
+          <div class="gl-item"><span class="term">Trigger</span> — Gatilho que aciona a squad: alarme, deploy, varredura agendada ou pedido humano.</div>
+          <div class="gl-item"><span class="term">TypedDict</span> — Dicionário com contrato de chaves declarado. Em runtime é um <code>dict</code> comum; a verificação é estática.</div>
+          <div class="gl-item"><span class="term">VRAM</span> — Memória da placa de vídeo. Determina se um modelo cabe localmente: 24 GB para o 32B, 8 GB para o 7B.</div>
+          <div class="gl-item"><span class="term">Workflow</span> — Arquivo YAML que descreve um processo automatizado no GitHub Actions.</div>
+          <div class="gl-item"><span class="term">Artífice</span> — Agente responsável pelo ramo de código: clona o repositório, delega a correção ao Devin e abre o pull request. No grafo, um nó adaptador.</div>
+          <div class="gl-item"><span class="term">CI (Configuration Item)</span> — Item de configuração: como a CMDB inventaria cada serviço. É o CI que diz qual time é dono e qual repositório sustenta o serviço.</div>
+          <div class="gl-item"><span class="term">CMDB</span> — Base de itens de configuração do ServiceNow. Para o EasyRun, a fonte que liga um incidente ao serviço, ao time e ao repositório de código.</div>
+          <div class="gl-item"><span class="term">Datadog</span> — Plataforma de observabilidade da empresa: métricas, logs, traces, error tracking e forecast. Principal fonte de gatilhos.</div>
+          <div class="gl-item"><span class="term">Devin</span> — Agente de código usado pela empresa. Recebe o diagnóstico redigido e devolve o patch que vira pull request.</div>
+          <div class="gl-item"><span class="term">Drift</span> — Deriva silenciosa da qualidade: nos baselines de detecção e na precisão do próprio agente ao longo do tempo.</div>
+          <div class="gl-item"><span class="term">Elo</span> — Agente da rastreabilidade corporativa: consulta a CMDB, abre o bug no IUClick, inicia a GMUD, move o kanban e escala quando preciso.</div>
+          <div class="gl-item"><span class="term">Error Tracking</span> — Recurso do Datadog que agrupa exceções por assinatura em vez de listar ocorrências isoladas.</div>
+          <div class="gl-item"><span class="term">Golden set</span> — Conjunto de incidentes encerrados usado para avaliar versões candidatas de agente. Cresce sozinho conforme a squad opera.</div>
+          <div class="gl-item"><span class="term">GMUD</span> — Gestão de mudança: o registro formal que autoriza alteração em produção. Aberta automaticamente pela squad, aprovada sempre por um humano.</div>
+          <div class="gl-item"><span class="term">IUClick</span> — Ferramenta de Kanban da empresa. Recebe um card de Bug por incidente, movido automaticamente conforme a esteira avança.</div>
+          <div class="gl-item"><span class="term">LangChain</span> — Framework de abstração de ferramentas, retrievers e integração com modelos.</div>
+          <div class="gl-item"><span class="term">Langfuse</span> — Observabilidade de LLM voltada à operação: traces, prompts versionados e custo por execução.</div>
+          <div class="gl-item"><span class="term">LangSmith</span> — Datasets e avaliação de LLM: experimentos e comparação entre versões candidatas.</div>
+          <div class="gl-item"><span class="term">LLMOps</span> — Práticas de operação de sistemas com LLM: traces, prompts versionados, avaliação, rollout controlado e orçamento de tokens.</div>
+          <div class="gl-item"><span class="term">Natureza da remediação</span> — A classificação que o Diagnosta atribui depois da causa raiz: INFRA, CÓDIGO, CONFIG ou EXTERNO. Roteia toda a esteira.</div>
+          <div class="gl-item"><span class="term">Nó adaptador</span> — Nó do grafo que chama plataformas externas por portas tipadas, em vez de raciocinar. Elo e Artífice são adaptadores.</div>
+          <div class="gl-item"><span class="term">Porta (port)</span> — Interface que o domínio declara para o que precisa do mundo externo. Em Python, um <code>typing.Protocol</code>.</div>
+          <div class="gl-item"><span class="term">Prompt versionado</span> — Prompt tratado como artefato: versionado, promovido por ambiente e referenciado por id, nunca literal no código.</div>
+          <div class="gl-item"><span class="term">Pull request (PR)</span> — Proposta de mudança de código submetida à revisão antes do merge. Artefato final do ramo CÓDIGO.</div>
+          <div class="gl-item"><span class="term">Rastreabilidade (cadeia de)</span> — O “fio único” que liga anomalia, incidente, CI, card do kanban, repositório, sessão do Devin, PR, GMUD e trace.</div>
+          <div class="gl-item"><span class="term">Redação (de segredos)</span> — Remoção de credenciais e dados pessoais antes de enviar conteúdo a um agente externo. Obrigatória por contrato.</div>
+          <div class="gl-item"><span class="term">ServiceNow</span> — Plataforma de ITSM da empresa: incidentes, CMDB e gestão de mudança. Sistema de registro na entrada e na saída.</div>
+          <div class="gl-item"><span class="term">Shadow mode</span> — Modo em que a versão nova roda sobre incidentes reais registrando o que faria, sem agir.</div>
+          <div class="gl-item"><span class="term">zip-slip (path traversal)</span> — Arquivo dentro de um ZIP declara um caminho como <code>../../etc/passwd</code> e escapa da pasta de destino ao ser extraído.</div>
+        </div>
+        <p class="gl-empty" id="gl-empty" hidden>Nenhum termo corresponde ao filtro.</p>
+      </div>
+      <a class="toplink" href="#glossario">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 09 LACUNAS ==================== -->
+    <section id="lacunas" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">09</span><h2>Lacunas e riscos</h2></div>
+        <p class="fine">
+          Nenhum destes é bug de execução — hoje tudo roda. São riscos de manutenção: o tipo
+          de problema que só aparece quando alguém edita a coisa errada seis meses depois.
+        </p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>Armadilhas silenciosas — quebram sem avisar</h3>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Fonte da verdade duplicada</h3>
+              <p class="fine">
+                <code>REMEDIATION_MAP</code> e <code>governance.py</code> existem
+                <em>também</em> escritos à mão dentro do HTML do mockup. Alterar um não muda o
+                outro, e nenhum teste percebe — porque o teste só olha o Python. Já há
+                divergência de redação entre as duas cópias.
+              </p>
+            </div>
+            <div class="card">
+              <h3>O <code>problemMatcher</code> e o <code>print()</code></h3>
+              <p class="fine">
+                Contrato invisível entre dois arquivos que não se referenciam. Reescrever a
+                mensagem de log faz o F5 travar esperando eternamente — e o sintoma não aponta
+                para a causa.
+              </p>
+            </div>
+            <div class="card">
+              <h3><code>export/</code> é espelho manual</h3>
+              <p class="fine">
+                Duas cópias de 96 KB mantidas à mão divergem no primeiro esquecimento. Nenhum
+                teste, lint ou CI compara os arquivos; depois de divergirem, reconciliar exige
+                um diff de mil linhas.
+              </p>
+            </div>
+            <div class="card">
+              <h3>O F5 só funciona no Windows</h3>
+              <p class="fine">
+                O <code>tasks.json</code> fixa <code>.venv/Scripts/python.exe</code>. Como é um
+                arquivo versionado deliberadamente, é infraestrutura compartilhada — que serve
+                a metade do time.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Falsa sensação de cobertura</h3>
+          <div class="grid-2">
+            <div class="card">
+              <h3><code>validate-zip.yml</code> não valida nada</h3>
+              <p class="fine">A pasta <code>uploads/</code> não existe mais. O workflow sempre passa sem testar coisa alguma.</p>
+            </div>
+            <div class="card">
+              <h3>O CI testa só Python 3.12</h3>
+              <p class="fine">Mas o <code>pyproject.toml</code> promete <code>&gt;=3.10</code>. A compatibilidade com 3.10 e 3.11 não é verificada por ninguém. Uma matriz de versões resolveria.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>O que não é testado</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Componente</th><th>Testado?</th></tr></thead>
+              <tbody>
+                <tr><td>Módulos do contrato <code>aiops/</code> e a versão do pacote</td><td><span class="badge b-ok">Sim</span></td></tr>
+                <tr><td><code>serve.py</code></td><td><span class="badge b-risk">Não</span></td></tr>
+                <tr><td><code>graph.build_graph()</code> e <code>CheckpointStore</code></td><td><span class="badge b-risk">Não</span></td></tr>
+                <tr><td><code>validate_zip.py</code> — inclusive o código de segurança</td><td><span class="badge b-risk">Não</span></td></tr>
+                <tr><td>Todo o <code>prototype/</code></td><td><span class="badge b-risk">Não</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="fine">
+            O caso mais notável é <code>is_safe_member</code>, a defesa contra zip-slip: se
+            alguém “simplificar” a condição e deixar passar <code>..</code>, nada acusa.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>Não é lacuna — decisões deliberadas</h3>
+          <p class="fine">Para evitar que alguém “corrija” o que está certo:</p>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Aparência de problema</th><th>Por que é intencional</th></tr></thead>
+              <tbody>
+                <tr><td>Papéis levantam <code>NotImplementedError</code></td><td>São stubs declarados, e um teste garante que continuem assim até a implementação real</td></tr>
+                <tr><td><code>graph.py</code> não importa <code>langgraph</code></td><td>Evita dependência pesada por um módulo que ainda não faz nada — o projeto segue sem dependências obrigatórias</td></tr>
+                <tr><td>O chat do mockup não usa LLM</td><td>É um mockup: o roteador de palavra-chave entrega a demonstração sem custo nem latência</td></tr>
+                <tr><td>O Executor não tem modelo</td><td>É o único agente que muda o mundo real. Não-determinismo ali é risco, não recurso</td></tr>
+                <tr><td>Os testes checam relação, não valor</td><td><code>TEMPERATURE_VALIDATOR &lt; TEMPERATURE_COACH</code> trava o princípio sem engessar os números</td></tr>
+                <tr><td><code>pytest</code> falha sem instalar antes</td><td>Consequência desejada do src-layout — é o que garante que se teste o pacote instalado</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <a class="toplink" href="#lacunas">↑ topo da seção</a>
+    </section>
+
+
+    <!-- ==================== 10 ECOSSISTEMA ==================== -->
+    <section id="ecossistema" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">10</span><h2>Ecossistema da empresa</h2></div>
+        <p class="fine">Onde o EasyRun se encaixa nas plataformas que já existem — e onde ele para.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="stack-s">
+          <h3>A cadeia de rastreabilidade — o fio único</h3>
+          <p class="fine">
+            Um identificador de correlação amarra todos os registros que o processo exige, e
+            cada elo é preenchido <strong>ao vivo</strong> enquanto a esteira avança. A squad
+            não só resolve: deixa o rastro que a auditoria e o processo ágil cobram, sem
+            ninguém preencher formulário.
+          </p>
+          <pre class="mermaid">
+flowchart LR
+    A["ANM-2047<br/>EasyRun"] --&gt; B["INC-0098431<br/>ServiceNow"]
+    B --&gt; C["CI: svc-frete<br/>CMDB"]
+    C --&gt; D["BUG-4512<br/>IUClick"]
+    D --&gt; E["org/frete-service<br/>GitHub"]
+    E --&gt; F["devin-8842<br/>Devin"]
+    F --&gt; G["PR #217<br/>GitHub"]
+    G --&gt; H["CHG-0044120<br/>GMUD"]
+    H --&gt; I["trace dd-9f2c4a1e<br/>Datadog · Langfuse"]
+          </pre>
+          <p class="fine">
+            Os elos vazios <strong>também informam</strong>: um incidente que termina sem
+            repositório e sem PR é, por construção, um caso resolvido em runtime. O painel
+            conta a história do caminho tomado sem precisar de legenda.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>A natureza da remediação</h3>
+          <p class="fine">
+            O conceito que roteia tudo. Depois da causa raiz, o Diagnosta classifica o que o
+            problema <em>exige</em> — e é isso que decide quem executa, quais gates sobem e
+            qual é o artefato final.
+          </p>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Natureza</th><th>O que significa</th><th>Quem executa</th><th>Desfecho</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge b-ok">INFRA</span></td><td>Ação em runtime na infraestrutura</td><td>Executor ⚡</td><td>Comando aplicado</td></tr>
+                <tr><td><span class="badge b-stub">CÓDIGO</span></td><td>O software precisa mudar</td><td>Artífice 🛠️ → Devin</td><td><strong>Pull request</strong></td></tr>
+                <tr><td><span class="badge b-mock">CONFIG</span></td><td>Parâmetro, feature flag ou dado</td><td>Executor ⚡</td><td>Mudança sob <strong>GMUD</strong></td></tr>
+                <tr><td><span class="badge b-plan">EXTERNO</span></td><td>Fora do escopo da squad</td><td>Elo 🔗</td><td><strong>Escalonamento</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="fine">
+            Errar essa classificação é o erro mais caro do fluxo: rotear infraestrutura para
+            o caminho de código gasta uma sessão do Devin à toa; rotear código para o caminho
+            de infraestrutura “resolve” o sintoma e o bug volta no próximo deploy.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>O que a squad lê e escreve em cada plataforma</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Plataforma</th><th>Lê</th><th>Escreve</th><th>Modo</th></tr></thead>
+              <tbody>
+                <tr><td>🎫 ServiceNow</td><td>Incidentes, item de configuração, time dono, repositório</td><td>Anomalia correlacionada, GMUD, encerramento ou reatribuição</td><td>Automático · GMUD aprovada por humano</td></tr>
+                <tr><td>🐶 Datadog</td><td>Métricas, logs, traces, error tracking, forecast</td><td>Evento de anomalia, janela de validação</td><td>Automático</td></tr>
+                <tr><td>📋 IUClick</td><td>Coluna atual do card</td><td>Bug criado e movido a cada avanço</td><td>Automático</td></tr>
+                <tr><td>🛠️ Devin</td><td>Sessão, diagnóstico e trecho de código — já redigido</td><td>Patch com teste de regressão</td><td>Automático · saída sempre revisada</td></tr>
+                <tr><td>🐙 GitHub (org)</td><td>Repositório do CI, checks de CI</td><td>Branch e pull request</td><td><strong>HITL obrigatório</strong></td></tr>
+                <tr><td>☁️ AWS</td><td>Estado de ASG, Lambda, Route 53, EBS</td><td>Ação de remediação em runtime</td><td>Automático dentro dos guardrails</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>A CMDB é o que torna a correção de código possível</h3>
+            <p class="fine">
+              O campo mais importante que a squad lê não é o nome do serviço nem o time dono
+              — é <strong>qual repositório sustenta aquele item de configuração</strong>. Sem
+              esse vínculo, o Artífice não tem o que clonar e o ramo de código não existe.
+              Na prática, é o campo com maior chance de estar vazio ou desatualizado num CMDB
+              real: a esteira precisa degradar escalando com o diagnóstico pronto.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Nem tudo está na AWS</h3>
+            <p class="fine">
+              O EasyRun roda na AWS, mas o incidente pode estar num ERP on-premises ou num
+              serviço de terceiro. Por isso o desfecho final nem sempre é um comando de
+              nuvem — pode ser um pull request, uma GMUD ou um escalonamento. O Executor não
+              presume nuvem: age pela API do próprio sistema quando é o caso.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>A fronteira que resume o produto:</strong> a squad <em>abre</em> a GMUD
+          sozinha, mas nunca a aprova. Gera o pull request, mas nunca faz o merge. O ganho é
+          de tempo de preenchimento — 48 segundos contra ~25 minutos —, não de controle.
+        </div>
+
+        <div class="stack-s">
+          <h3>Onde a decisão continua sendo humana</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Ação</th><th class="num">Automático</th><th class="num">Humano</th></tr></thead>
+              <tbody>
+                <tr><td>Detectar, classificar e diagnosticar</td><td class="num">✅</td><td class="num"></td></tr>
+                <tr><td>Abrir incidente, consultar CMDB, criar e mover o card</td><td class="num">✅</td><td class="num"></td></tr>
+                <tr><td>Ações de infra dentro dos guardrails</td><td class="num">✅</td><td class="num"></td></tr>
+                <tr><td>Ações de infra fora dos guardrails</td><td class="num"></td><td class="num">✋</td></tr>
+                <tr><td>Clonar repositório e delegar ao Devin</td><td class="num">✅</td><td class="num"></td></tr>
+                <tr><td><strong>Merge do pull request</strong></td><td class="num"></td><td class="num">✋</td></tr>
+                <tr><td><strong>Abrir</strong> a GMUD</td><td class="num">✅</td><td class="num"></td></tr>
+                <tr><td><strong>Aprovar</strong> a GMUD</td><td class="num"></td><td class="num">✋</td></tr>
+                <tr><td>Validar, encerrar e escalar quando não há saída segura</td><td class="num">✅</td><td class="num"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <a class="toplink" href="#ecossistema">↑ topo da seção</a>
+    </section>
+
+    <!-- ==================== 11 LLMOPS ==================== -->
+    <section id="llmops" class="band-wide">
+      <div class="sec-head">
+        <div class="rowline"><span class="idx">11</span><h2>MLOps e LLMOps</h2></div>
+        <p class="fine">Observabilidade da própria esteira, avaliação e rollout seguro de agentes.</p>
+      </div>
+
+      <div class="stack-l">
+        <div class="callout">
+          <strong>Há duas observabilidades neste sistema, e confundi-las é o erro mais
+          comum.</strong> O Datadog observa os <em>sistemas monitorados</em> — isso é a
+          entrada da squad. Esta seção é sobre observar <em>a squad</em>: qual prompt rodou,
+          quanto custou, se o diagnóstico estava certo.
+        </div>
+
+        <div class="stack-s">
+          <h3>A stack</h3>
+          <div class="grid-3">
+            <div class="card"><h3>LangGraph</h3><p class="fine">Grafo de estados, <code>interrupt()</code> para HITL, checkpointing.</p></div>
+            <div class="card"><h3>LangChain</h3><p class="fine">Ferramentas, retrievers e integração com os modelos.</p></div>
+            <div class="card"><h3>Langfuse</h3><p class="fine">Traces de operação, prompts versionados, custo por execução.</p></div>
+            <div class="card"><h3>LangSmith</h3><p class="fine">Datasets, avaliações e comparação entre versões.</p></div>
+            <div class="card"><h3>Datadog LLM Obs.</h3><p class="fine">Correlação com o APM dos sistemas monitorados.</p></div>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Os nove conceitos</h3>
+          <div class="grid-2">
+            <div class="card"><h3>🧵 Trace único ponta a ponta</h3><p class="fine">O mesmo <code>trace_id</code> atravessa Datadog APM, LangSmith e Langfuse e é gravado no incidente do ServiceNow. De “por que a squad reverteu meu deploy às 3h?” até a chamada de modelo exata são dois cliques.</p></div>
+            <div class="card"><h3>📌 Prompts versionados</h3><p class="fine">Prompt é artefato, não literal no código: versionado, promovido por ambiente e referenciado por id. Sem isso não há como saber, três meses depois, qual prompt produziu uma decisão.</p></div>
+            <div class="card"><h3>🥇 Golden set de incidentes</h3><p class="fine">Incidentes encerrados do ServiceNow viram casos de avaliação offline. O conjunto cresce sozinho: o que a squad resolve hoje é o teste de regressão de amanhã.</p></div>
+            <div class="card"><h3>⚖️ LLM-as-judge com portão</h3><p class="fine">Um modelo julga a qualidade do diagnóstico a temperatura 0.1. Versão candidata só é promovida se não piorar — e errar a natureza da remediação tem limiar próprio, mais rígido.</p></div>
+            <div class="card"><h3>👻 Shadow mode e canário</h3><p class="fine">A versão nova roda sobre incidentes reais registrando o que <em>faria</em>, sem agir. Só depois de um histórico comparável assume tráfego. É o que torna autonomia aceitável num ambiente avesso a risco.</p></div>
+            <div class="card"><h3>🔁 Feedback loop do HITL</h3><p class="fine">Cada aprovação e rejeição, com a justificativa, vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema.</p></div>
+            <div class="card"><h3>📉 Drift em dois níveis</h3><p class="fine">Nos baselines de detecção e na precisão do agente ao longo do tempo. O segundo é o perigoso, porque nada quebra — a qualidade só escorrega.</p></div>
+            <div class="card"><h3>🧽 Redação antes da saída</h3><p class="fine">Código e logs passam por remoção de segredos e dados pessoais antes de ir a um agente externo. É a primeira objeção de segurança, e precisa de resposta no contrato, não no adaptador.</p></div>
+            <div class="card"><h3>🎟️ Orçamento por execução</h3><p class="fine">Teto de tokens por agente e por incidente, com corte automático. Um agente em laço não vira uma fatura surpresa.</p></div>
+          </div>
+        </div>
+
+        <div class="stack-s">
+          <h3>Como uma versão nova chega a produção</h3>
+          <pre class="mermaid">
+flowchart TD
+    A["incidentes encerrados<br/>no ServiceNow"] --&gt; B["golden set<br/>maior ou igual a 40 casos"]
+    B --&gt; C["roda a versão candidata"]
+    C --&gt; D["LLM-as-judge<br/>pontua a temperatura 0.1"]
+    D --&gt; E{"portão de regressão"}
+    E --&gt;|reprovou| F["volta para ajuste"]
+    E --&gt;|passou| G["SHADOW<br/>propõe sem agir"]
+    G --&gt; H{"histórico comparável?"}
+    H --&gt;|não| F
+    H --&gt;|sim| I["CANARY<br/>fatia delimitada"]
+    I --&gt; J["FULL"]
+    K["decisões HITL<br/>rotuladas"] --&gt; B
+          </pre>
+          <p class="fine">
+            O loop se fecha: as decisões humanas na fila HITL realimentam o golden set, que é
+            o que avalia a próxima versão. Quanto mais a squad é usada, melhor fica o
+            critério que julga suas mudanças.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>As três perguntas que decidem a aprovação</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Pergunta</th><th>Resposta</th></tr></thead>
+              <tbody>
+                <tr><td>“E se ele errar?”</td><td>Erra em shadow mode, sem agir; e nas ações reais há guardrails e HITL</td></tr>
+                <tr><td>“Como eu audito uma decisão automática?”</td><td>Trace único do incidente até a chamada de modelo, com prompt versionado</td></tr>
+                <tr><td>“Vocês vão mandar nosso código para fora?”</td><td>Só repositórios autorizados, redigidos, com clone raso e PR revisado por uma pessoa</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <a class="toplink" href="#llmops">↑ topo da seção</a>
+    </section>
+
+    <footer class="band-wide" style="margin-top:90px; padding-top:22px; border-top:1px solid var(--line);">
+      <p class="fine">
+        Documentação gerada a partir do código-fonte do repositório EasyRun, branch
+        <code>feature/python-package</code>. Todos os valores citados — nomes de modelos,
+        temperaturas, portas, chaves de mapa, cenários — foram lidos diretamente dos arquivos,
+        não de memória. Os números de MTTR, custo e precisão vêm do mockup e são
+        <strong>fictícios</strong>.
+      </p>
+      <p class="fine" style="margin-top:10px;">
+        Versão completa e versionada em <code>docs/*.md</code>.
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function () {
+    // --- destaque da seção ativa na navegação lateral ---
+    var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+    var current = null;
+
+    function setCurrent(id) {
+      if (id === current) return;
+      current = id;
+      links.forEach(function (a) { a.removeAttribute('aria-current'); });
+      if (byId[id]) byId[id].setAttribute('aria-current', 'true');
+    }
+
+    if ('IntersectionObserver' in window) {
+      var visible = {};
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+        for (var i = 0; i < sections.length; i++) {
+          if (visible[sections[i].id]) { setCurrent(sections[i].id); return; }
+        }
+      }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+      sections.forEach(function (s) { obs.observe(s); });
+    }
+
+    // --- filtro do glossário ---
+    var search = document.getElementById('gl-search');
+    var items = Array.prototype.slice.call(document.querySelectorAll('#gl-list .gl-item'));
+    var empty = document.getElementById('gl-empty');
+
+    function normalize(s) {
+      return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+    items.forEach(function (el) { el.dataset.hay = normalize(el.textContent); });
+
+    search.addEventListener('input', function () {
+      var q = normalize(search.value.trim());
+      var shown = 0;
+      items.forEach(function (el) {
+        var hit = !q || el.dataset.hay.indexOf(q) !== -1;
+        el.hidden = !hit;
+        if (hit) shown++;
+      });
+      empty.hidden = shown !== 0;
+    });
+  })();
+</script>
