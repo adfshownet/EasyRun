@@ -3,13 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="../support.js"></script>
-<template id="__bundler_thumbnail" data-bg-color="#0B0F14">
-  <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
-    <rect x="44" y="24" width="32" height="32" rx="9" fill="#3DDC84"/>
-    <text x="60" y="46" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="20" fill="#06110B">E</text>
-  </svg>
-</template>
+<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -47,7 +41,7 @@
 
     <div style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: {{ incFundo }}; border: 1px solid {{ incBorda }}; min-width: 0;">
       <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ incCor }}; animation: {{ incAnim }}; flex-shrink: 0;"></span>
-      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ incCor }}; flex-shrink: 0;">ANM-2047</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ incCor }}; flex-shrink: 0;">{{ incId }}</span>
       <span style="font-size: 12px; color: #93A1B0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ incTexto }}</span>
     </div>
 
@@ -65,7 +59,7 @@
 
     <!-- ============ NAV ============ -->
     <nav style="width: 184px; flex-shrink: 0; background: #10151C; border-right: 1px solid #1E2833; padding: 14px 10px; display: flex; flex-direction: column; gap: 4px;">
-      <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="6">
+      <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="7">
         <div onClick="{{ nv.aoClicar }}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; background: {{ nv.fundo }}; color: {{ nv.cor }}; font-size: 13.5px; font-weight: {{ nv.peso }}; transition: background .15s;" style-hover="background: #182028;">
           <span style="font-size: 15px; width: 20px; text-align: center;">{{ nv.icone }}</span>
           <span style="flex: 1;">{{ nv.rotulo }}</span>
@@ -92,6 +86,16 @@
 
         <!-- Agentes -->
         <section style="border-right: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">CENÁRIO</div>
+          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="4">
+            <div onClick="{{ cn.aoClicar }}" style="padding: 10px 12px; border-radius: 10px; background: {{ cn.fundo }}; border: 1px solid {{ cn.borda }}; cursor: {{ cn.cursor }}; opacity: {{ cn.opacidade }}; display: flex; flex-direction: column; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 14px;">{{ cn.icone }}</span>
+                <span style="font-size: 12px; font-weight: 500; line-height: 1.3;">{{ cn.titulo }}</span>
+              </div>
+              <span style="font-size: 10.5px; font-family: 'IBM Plex Mono', monospace; color: {{ cn.corSeveridade }};">{{ cn.tagSeveridade }}</span>
+            </div>
+          </sc-for>
           <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">AGENTES · {{ numAgentes }}</div>
           <sc-for list="{{ agentesLista }}" as="ag" hint-placeholder-count="6">
             <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid {{ ag.borda }}; display: flex; flex-direction: column; gap: 8px;">
@@ -424,19 +428,67 @@
                 </div>
               </sc-for>
             </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🗺️ MAPA DE REMEDIAÇÃO</div>
+              <sc-for list="{{ remediacaoLista }}" as="rm" hint-placeholder-count="3">
+                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 15px;">{{ rm.icone }}</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: 13px; font-weight: 500;">{{ rm.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ rm.desc }}</div>
+                  </div>
+                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ rm.aws }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📡 FONTES DE TELEMETRIA</div>
+              <sc-for list="{{ telemetriaLista }}" as="tl" hint-placeholder-count="4">
+                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 15px;">{{ tl.icone }}</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: 13px; font-weight: 500;">{{ tl.nome }}</div>
+                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ tl.desc }}</div>
+                  </div>
+                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ tl.aws }}</span>
+                </div>
+              </sc-for>
+            </div>
           </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ FINOPS ============ -->
+    <sc-if value="{{ vFinops }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="FinOps — Governança de Modelos" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">💰 FinOps &amp; Governança de Modelos</h2>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade avaliada para camadas de LLM auto-hospedadas — complemento ao Bedrock que hoje sustenta os agentes da squad EasyRun.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+          <sc-for list="{{ finopsCards }}" as="fc" hint-placeholder-count="5">
+            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">{{ fc.icone }}</span>
+                <span style="font-weight: 600; font-size: 13px; color: #B48CFF;">{{ fc.titulo }}</span>
+              </div>
+              <div style="font-size: 12px; color: #93A1B0; line-height: 1.55;">{{ fc.desc }}</div>
+            </div>
+          </sc-for>
         </div>
       </main>
     </sc-if>
 
     <!-- ============ ARQUITETURA ============ -->
     <sc-if value="{{ vArq }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Arquitetura — 11 pilares" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🏗️ Arquitetura de referência — 11 pilares</h2>
+      <main data-screen-label="Arquitetura — 13 pilares" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
+        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🏗️ Arquitetura de referência — 13 pilares</h2>
         <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Cada pilar da squad agêntica mapeado para o serviço AWS que o sustenta e para onde ele vive neste protótipo.</p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 20px;">
-          <sc-for list="{{ pilares }}" as="pl" hint-placeholder-count="11">
+          <sc-for list="{{ pilares }}" as="pl" hint-placeholder-count="13">
             <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;" style-hover="border-color: #3DDC84;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 18px;">{{ pl.icone }}</span>
@@ -458,7 +510,7 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">BACKEND · PYTHON</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Agentes como agregados; casos de uso por porta/adaptador (SOLID).</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração dos 4 papéis (Planner/Explainer/Validator/Coach) como grafo de estados LangGraph, com contrato tipado AgentState (TypedDict) e pausas via interrupt() para HITL. Checkpoints em PostgreSQL permitem retomar a remediação do ponto exato de interrupção.</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">FRONTEND · ANGULAR</span>
@@ -468,6 +520,32 @@
               <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">INFRA · AWS</span>
               <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Bedrock (agentes), Step Functions (orquestração), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), CloudWatch (avaliação).</span>
             </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">🛡️ Estabilidade &amp; Hardening (SDD/Harness)</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+            <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="5">
+              <div style="display: flex; gap: 8px; align-items: flex-start;">
+                <span style="color: #3DDC84; font-size: 13px; padding-top: 1px;">●</span>
+                <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.55;">{{ hd.texto }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔗 Squad EasyRun × papéis LangGraph</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 6 agentes desta squad mapeiam para os 4 papéis do grafo de estados da especificação.</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;">
+                <span style="color: #93A1B0; min-width: 160px;">{{ lg.agentes }}</span>
+                <span style="color: #5C6B7A;">→</span>
+                <span style="color: #E8EEF4; font-weight: 500;">{{ lg.papel }}</span>
+              </div>
+            </sc-for>
           </div>
         </div>
       </main>
@@ -489,7 +567,7 @@ class Component extends DCLogic {
     this.state = this.estadoInicial();
   }
 
-  estadoInicial() {
+  estadoInicial(cenarioId) {
     return {
       view: 'console',
       rodando: false,
@@ -503,11 +581,16 @@ class Component extends DCLogic {
       hitl: [],
       rejeitado: false,
       aguardandoHitl: false,
+      cenarioAtivo: cenarioId || this.cenarios()[0].id,
       chat: [{ de: 'squad', texto: 'Olá! Sou o Maestro, orquestrador da squad EasyRun. Posso responder sobre o status da anomalia, a causa raiz, o plano de ação ou a memória de incidentes. Como posso ajudar?' }],
       chatInput: '',
       digitando: false,
       guardrails: { g1: true, g2: true, g3: true, g4: false },
     };
+  }
+
+  cenarioAtiva() {
+    return this.cenarios().find(c => c.id === this.state.cenarioAtivo) || this.cenarios()[0];
   }
 
   // ---------- dados estáticos ----------
@@ -522,23 +605,171 @@ class Component extends DCLogic {
     ];
   }
 
-  passos() {
-    const self = this;
+  cenarios() {
     return [
-      { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: latência p99 do checkout-api em 2.840ms (limiar: 650ms). Anomalia ANM-2047 aberta com severidade ALTA.', fx: { agStatus: { sentinela: 'detectando' } } },
-      { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
-      { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
-      { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: 3 runbooks e 2 incidentes similares recuperados (INC-1893, INC-1544).', fx: { agStatus: { contexto: 'buscando' }, memorias: [{ ref: 'RB-041', tipo: 'runbook', texto: 'Runbook "Degradação de latência em APIs de checkout" — 7 execuções anteriores.' }] } },
-      { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).', fx: { agStatus: { contexto: 'concluído' }, memorias: 'add:INC' } },
-      { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
-      { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.', fx: { agStatus: { diagnosta: 'concluído' } } },
-      { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { plano: 'criar' } },
-      { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-02 interceptou o passo 2: "rollback em produção" excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', gate: true, fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } } },
-      { ag: 'executor', pilar: '⚡ Action', aws: 'Lambda', dinamico: 'passoAcao', fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, plano: 'p2' } },
-      { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Escalando pool de conexões RDS: max_connections 50 → 120 via Parameter Store + restart gracioso.', fx: { plano: 'p3' } },
-      { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Latência p99 caindo: 2.840ms → 610ms (−78%). Erros 5xx zerados. Janela de validação de 10 min iniciada.', fx: { plano: 'p4' } },
-      { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memorias: 'add:APR' } },
-      { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2047 resolvida ✅ MTTR: 4m 32s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+      // ---------- Cenário 1 (padrão) — Crítico · Robust ----------
+      {
+        id: 'anm2047', titulo: 'ANM-2047 · Latência checkout-api', idIncidente: 'ANM-2047',
+        severidade: 'Crítico', algoritmo: 'Robust', icone: '🐢',
+        textoProblema: 'Latência p99 checkout-api +340%',
+        textoConcluido: 'Resolvida · MTTR 4m 32s',
+        chat: {
+          causa: 'O Diagnosta apontou como causa provável o esgotamento do pool de conexões RDS, causado por um vazamento de conexões introduzido no deploy v2.14.3 do checkout-api (confiança: 92%). A correlação temporal com o deploy e o episódio INC-1893 sustentam a hipótese.',
+          plano: 'O plano tem 4 passos: 1) congelar deploys do checkout-api; 2) rollback v2.14.3 → v2.14.2 (este passo exige aprovação humana pelo guardrail G-02); 3) escalar o pool de conexões RDS de 50 para 120; 4) validar métricas por 10 minutos.',
+          statusAtivo: 'A squad está trabalhando na ANM-2047 (latência elevada no checkout-api). Você pode acompanhar cada passo no Console de orquestração.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana: o rollback em produção precisa de aprovação na fila HITL. Assim que houver decisão, o Executor prossegue.',
+          statusConcluido: 'ANM-2047 foi resolvida ✅ MTTR de 4m 32s. A latência p99 voltou a 610ms e o pós-mortem já está salvo no S3.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: latência p99 do checkout-api em 2.840ms (limiar: 650ms). Anomalia ANM-2047 aberta com severidade ALTA.', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: 3 runbooks e 2 incidentes similares recuperados (INC-1893, INC-1544).', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-041', tipo: 'runbook', texto: 'Runbook "Degradação de latência em APIs de checkout" — 7 execuções anteriores.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1893', tipo: 'episódio', texto: 'Mesma assinatura pós-deploy. Rollback resolveu em 6 min. Eficácia 96%.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
+            { id: 1, titulo: 'Congelar novos deploys do checkout-api', st: 'ok' },
+            { id: 2, titulo: 'Rollback do deploy v2.14.3 → v2.14.2', st: 'hitl' },
+            { id: 3, titulo: 'Escalar pool de conexões RDS (50 → 120)', st: 'pendente' },
+            { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
+          ] } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-02 interceptou o passo 2: "rollback em produção" excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-01', titulo: 'Rollback de deploy em produção',
+            descricao: 'O plano da squad propõe reverter o checkout-api de v2.14.3 para v2.14.2. Ação classificada como crítica pelo guardrail G-02 (mudança em produção).',
+            risco: 'médio', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
+            detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api \\\n    --de v2.14.3 --para v2.14.2 \\\n    --estrategia blue-green\n\nJustificativa do Diagnosta: vazamento de conexões\nintroduzido em v2.14.3 (confiança 92%).\nMemória: INC-1893 resolvido com a mesma ação.',
+            mensagemAprovado: 'Decisão humana: rollback APROVADO. Executor liberado para agir.',
+            mensagemRejeitado: 'Decisão humana: rollback REJEITADO. Maestro replaneja com mitigação conservadora.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — rollback liberado.',
+          } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'Lambda', dinamico: {
+            aprovado: 'Aprovação recebida. Executando rollback: checkout-api v2.14.3 → v2.14.2 via Lambda de deploy.',
+            rejeitado: 'Rollback rejeitado pelo operador. Executando mitigação conservadora: reciclando instâncias do pool sem reverter o deploy.',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Escalando pool de conexões RDS: max_connections 50 → 120 via Parameter Store + restart gracioso.', fx: { planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Latência p99 caindo: 2.840ms → 610ms (−78%). Erros 5xx zerados. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2047', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pool RDS + deploy recente" → rollback prioritário.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2047 resolvida ✅ MTTR: 4m 32s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 2 — CPU Spike sazonal · Alerta · Agile ----------
+      {
+        id: 'anm2091', titulo: 'ANM-2091 · CPU Spike — catalog-svc', idIncidente: 'ANM-2091',
+        severidade: 'Alerta', algoritmo: 'Agile', icone: '📈',
+        textoProblema: 'CPU catalog-svc em 92% · campanha ativa',
+        textoConcluido: 'Resolvida · MTTR 6m 05s',
+        chat: {
+          causa: 'O Diagnosta correlacionou o pico de CPU com o início da campanha "Semana Relâmpago" (tráfego +410%) — não é regressão de deploy. O algoritmo Agile (SARIMA) identificou o desvio como um novo normal sazonal, não uma anomalia isolada. Confiança: 95%.',
+          plano: 'O plano tem 4 passos: 1) confirmar ausência de regressão de deploy; 2) escalar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias (exige aprovação humana por exceder o orçamento aprovado); 3) ajustar o cooldown de health-check; 4) validar métricas por 10 minutos.',
+          statusAtivo: 'A squad está trabalhando na ANM-2091 (CPU acima de 92% no catalog-svc, durante campanha de tráfego). Acompanhe no Console de orquestração.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana: o escalonamento acima do orçamento de instâncias aprovado precisa de aprovação na fila HITL.',
+          statusConcluido: 'ANM-2091 foi resolvida ✅ MTTR de 6m 05s. A CPU do catalog-svc voltou a 58% e o pós-mortem já está salvo no S3.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Alarme disparado: CPU do ASG catalog-svc sustentada acima de 92% por 5 minutos. Severidade: ALERTA · Algoritmo: Agile (SARIMA) — desvio de baseline sazonal detectado (campanha de tráfego ativa).', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Escalonamento horizontal sob pico sazonal" e 1 incidente similar recuperados.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-118', tipo: 'runbook', texto: 'Runbook "Escalonamento horizontal sob pico sazonal" — 3 execuções anteriores.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: pico de Black Friday anterior teve assinatura semelhante — resolvido com escalonamento horizontal (eficácia 98%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1777', tipo: 'episódio', texto: 'Pico sazonal (Black Friday) resolvido com ASG. Eficácia 98%.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando métricas de CPU com o início da campanha de marketing "Semana Relâmpago" (tráfego +410%) e o histórico de deploys (nenhum deploy recente)…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: saturação legítima por tráfego, não é vazamento ou regressão. Confiança: 95%. Recomendação (mapa de remediação): CPU Spike → escalonamento horizontal via ASG.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
+            { id: 1, titulo: 'Confirmar ausência de regressão de deploy', st: 'ok' },
+            { id: 2, titulo: 'Escalar ASG catalog-svc (6 → 14 instâncias)', st: 'hitl' },
+            { id: 3, titulo: 'Ajustar cooldown de health-check', st: 'pendente' },
+            { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
+          ] } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail interceptou o passo 2: escalonamento acima do orçamento de instâncias aprovado excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-02', titulo: 'Escalonamento acima do orçamento aprovado',
+            descricao: 'O plano da squad propõe elevar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias, acima do teto de 10 aprovado no orçamento de infraestrutura.',
+            risco: 'baixo', guardrail: 'G-01 · escalonamento acima do orçamento exige humano', aws: 'EC2 Auto Scaling',
+            detalhe: '$ easyrun escalar catalog-svc \\\n    --de 6 --para 14 \\\n    --motivo "campanha Semana Relâmpago"\n\nJustificativa do Diagnosta: saturação legítima por\ntráfego (+410%), confiança 95%.\nMemória: INC-1777 resolvido com a mesma ação.',
+            mensagemAprovado: 'Decisão humana: escalonamento APROVADO. Executor liberado para agir.',
+            mensagemRejeitado: 'Decisão humana: escalonamento REJEITADO. Maestro replaneja com escalonamento parcial dentro do orçamento.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — escalonamento liberado.',
+          } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'EC2 Auto Scaling', dinamico: {
+            aprovado: 'Aprovação recebida. Escalando ASG catalog-svc: capacidade desejada 6 → 14 instâncias.',
+            rejeitado: 'Escalonamento rejeitado pelo operador. Executando mitigação conservadora: capacidade desejada 6 → 10 instâncias (dentro do orçamento).',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'CloudWatch', txt: 'Ajustando grace period de health-check para absorver o tempo de warm-up das novas instâncias.', fx: { planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'CPU caindo: 92% → 58%. Latência estável, sem erros. Janela de validação de 10 min iniciada.', fx: { planoOk: 4 } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Aprendizado gravado na memória de longo prazo (embedding + episódio).', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2091', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pico sazonal + campanha ativa" → escalonamento horizontal prioritário.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2091 resolvida ✅ MTTR: 6m 05s (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 3 — DNS Timeout · Crítico · Basic (sem HITL) ----------
+      {
+        id: 'anm2118', titulo: 'ANM-2118 · DNS Timeout — endpoint novo', idIncidente: 'ANM-2118',
+        severidade: 'Crítico', algoritmo: 'Basic', icone: '🌐',
+        textoProblema: 'Timeouts de DNS · endpoint sa-east-2',
+        textoConcluido: 'Resolvida · MTTR 2m 18s (autônoma)',
+        chat: {
+          causa: 'O Diagnosta identificou falha de health checks concentrada numa única região (sa-east-2), com o registro backup saudável na região secundária. Como o endpoint foi lançado há poucos dias (sem histórico para baseline), o algoritmo Basic classificou por janelas de quantil. Confiança: 89%.',
+          plano: 'Plano autônomo de 4 passos (sem aprovação humana, por ser ação reversível e de baixo risco): 1) confirmar saúde do registro backup; 2) promover failover de rota para a região secundária via Route 53; 3) monitorar propagação/TTL; 4) validar e encerrar.',
+          statusAtivo: 'A squad está trabalhando na ANM-2118 (timeouts de DNS num endpoint recém-lançado). Acompanhe no Console de orquestração.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana.',
+          statusConcluido: 'ANM-2118 foi resolvida ✅ MTTR de 2m 18s, 100% autônoma. A resolução DNS voltou ao normal e o pós-mortem já está salvo no S3.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Route 53', txt: 'Alarme disparado: timeouts de resolução DNS num endpoint lançado há poucos dias (sa-east-2). Severidade: CRÍTICO · Algoritmo: Basic — sem histórico suficiente para baseline; monitoramento por janelas de quantil (rolling quantile).', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado no barramento. Squad EasyRun acionada.' },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook genérico "Failover de rota Route 53" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-077', tipo: 'runbook', texto: 'Runbook "Failover de rota Route 53" — genérico, sem histórico específico deste endpoint.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: nenhum episódio similar encontrado — endpoint novo, sem incidentes anteriores registrados.', fx: { agStatus: { contexto: 'concluído' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Correlacionando falhas de health check por região: degradação concentrada em sa-east-2, registro backup saudável na região secundária…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: degradação regional do resolver/target, não é erro de aplicação. Confiança: 89%. Recomendação (mapa de remediação): DNS Timeout → failover de rota via Route 53.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação autônomo gerado com 4 passos — ação reversível e de baixo risco, sem gate de aprovação humana.', fx: { planoCriar: [
+            { id: 1, titulo: 'Confirmar saúde do registro backup', st: 'ok' },
+            { id: 2, titulo: 'Promover failover de rota para região secundária', st: 'pendente' },
+            { id: 3, titulo: 'Monitorar propagação/TTL', st: 'pendente' },
+            { id: 4, titulo: 'Validar métricas e encerrar', st: 'pendente' },
+          ] } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'Route 53', txt: 'Promovendo registro de failover para a região secundária — execução imediata, sem espera humana (severidade crítica + ação reversível).', fx: { agStatus: { executor: 'executando' }, planoOk: 2 } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'Route 53', txt: 'Monitorando propagação do novo registro e TTL de cache dos resolvers.', fx: { planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Timeouts de DNS zerados. Resolução normalizada em todas as regiões monitoradas.', fx: { planoOk: 4 } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem automático gerado e salvo. Novo baseline estabelecido para este endpoint na memória de longo prazo.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2118', tipo: 'aprendizado', texto: 'Novo episódio gravado: endpoint sa-east-2 agora com baseline e runbook específico de failover.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2118 resolvida ✅ MTTR: 2m 18s — 100% autônoma (média humana: 38m). Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 4 — Previsão de exaustão de disco · Preditivo (sem HITL) ----------
+      {
+        id: 'prd2144', titulo: 'PRD-2144 · Previsão de exaustão de disco', idIncidente: 'PRD-2144',
+        severidade: 'Preditivo', algoritmo: 'Robust', icone: '🔮',
+        textoProblema: 'Disco orders-db-fleet projetado para 100% em ~2h',
+        textoConcluido: 'Ação preventiva concluída · 3m 40s',
+        chat: {
+          causa: 'O Diagnosta projetou o ponto de saturação do volume EBS da frota orders-db-fleet em aproximadamente 2h10min, com base numa tendência linear estável (algoritmo Robust, que ignora ruído de curto prazo). Confiança: 93%. Não há causa "raiz" no sentido reativo — é uma previsão de exaustão de recurso.',
+          plano: 'Plano autônomo de 4 passos, agendado para janela de baixo tráfego (ação não-destrutiva, sem gate de aprovação humana): 1) confirmar tendência de crescimento; 2) expandir o volume EBS em +40%; 3) aguardar conclusão da otimização; 4) validar e encerrar.',
+          statusAtivo: 'A squad está monitorando a PRD-2144 (previsão de exaustão de disco na frota orders-db-fleet). Acompanhe no Console de orquestração.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana.',
+          statusConcluido: 'PRD-2144 foi tratada preventivamente ✅ Nenhum impacto ocorreu. Tempo de execução: 3m 40s.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'CloudWatch', txt: 'Job de forecasting projeta uso do volume EBS da frota orders-db-fleet atingindo 100% em ~2h (atual: 81%, tendência estável). Severidade: PREDITIVO · Algoritmo: Robust — deriva sistêmica de longo prazo confirmada, ruído de curto prazo ignorado; sem urgência imediata.', fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Evento anomalia.detectada publicado pela varredura agendada (auditoria de saúde a cada 15 min).' },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada com prioridade baixa. Decompondo em tarefas: recuperar contexto → diagnosticar → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Expansão preventiva de volume EBS" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-093', tipo: 'runbook', texto: 'Runbook "Expansão preventiva de volume EBS" — 2 execuções anteriores.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: 2 expansões preventivas anteriores concluídas sem downtime, eficácia 100%.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1622', tipo: 'episódio', texto: 'Expansão preventiva de EBS anterior — zero downtime, eficácia 100%.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Projetando ponto de saturação (ETA ~2h10min) e confirmando tendência linear estável de crescimento…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Confiança: 93% na projeção. Recomendação: expansão proativa de volume antes que o limiar crítico seja atingido.', fx: { agStatus: { diagnosta: 'concluído' } } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano preventivo agendado para janela de baixo tráfego — ação reversível e não-destrutiva, sem gate de aprovação humana.', fx: { planoCriar: [
+            { id: 1, titulo: 'Confirmar tendência de crescimento', st: 'ok' },
+            { id: 2, titulo: 'Expandir volume EBS em +40% (gp3)', st: 'pendente' },
+            { id: 3, titulo: 'Aguardar conclusão da otimização', st: 'pendente' },
+            { id: 4, titulo: 'Validar e encerrar', st: 'pendente' },
+          ] } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'EC2 (EBS)', txt: 'Disparando modify-volume: +40% de capacidade no volume gp3 da frota orders-db-fleet.', fx: { agStatus: { executor: 'executando' }, planoOk: 2 } },
+          { ag: 'executor', pilar: '🔧 Tools & APIs', aws: 'SSM', txt: 'Aguardando conclusão da otimização de volume (optimizing → completed).', fx: { planoOk: 3 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'CloudWatch', txt: 'Uso projetado do volume cai para ~54%. Forecast sem risco de exaustão nas próximas 24h.', fx: { planoOk: 4 } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3', txt: 'Pós-mortem leve gerado e salvo. Aprendizado gravado: ação preventiva concluída com zero downtime.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2144', tipo: 'aprendizado', texto: 'Novo episódio gravado: previsão de exaustão de disco tratada preventivamente antes de qualquer impacto.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'PRD-2144 tratada preventivamente ✅ Ação concluída antes de qualquer impacto. Tempo de execução: 3m 40s. Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
     ];
   }
 
@@ -558,9 +789,18 @@ class Component extends DCLogic {
 
   reiniciar = () => {
     clearTimeout(this.timer);
-    const s = this.estadoInicial();
+    const s = this.estadoInicial(this.state.cenarioAtivo);
     s.view = this.state.view;
     s.chat = this.state.chat;
+    s.guardrails = this.state.guardrails;
+    this.setState(s);
+  };
+
+  escolherCenario = (id) => {
+    if (this.state.rodando) return;
+    clearTimeout(this.timer);
+    const s = this.estadoInicial(id);
+    s.view = this.state.view;
     s.guardrails = this.state.guardrails;
     this.setState(s);
   };
@@ -571,15 +811,13 @@ class Component extends DCLogic {
   }
 
   tique() {
-    const passos = this.passos();
+    const passos = this.cenarioAtiva().passos;
     const p = passos[this.state.i];
     if (!p) return;
     const hora = this.fmtHora(this.state.relogio);
     let txt = p.txt;
-    if (p.dinamico === 'passoAcao') {
-      txt = this.state.rejeitado
-        ? 'Rollback rejeitado pelo operador. Executando mitigação conservadora: reciclando instâncias do pool sem reverter o deploy.'
-        : 'Aprovação recebida. Executando rollback: checkout-api v2.14.3 → v2.14.2 via Lambda de deploy.';
+    if (p.dinamico) {
+      txt = this.state.rejeitado ? p.dinamico.rejeitado : p.dinamico.aprovado;
     }
     const ag = this.agentesDef().find(a => a.id === p.ag);
     const evento = { hora, agente: ag.nome, cor: ag.cor, pilar: p.pilar, aws: p.aws, texto: txt };
@@ -592,35 +830,27 @@ class Component extends DCLogic {
       };
       if (p.fx) {
         if (p.fx.agStatus) patch.agStatus = { ...s.agStatus, ...p.fx.agStatus };
-        if (p.fx.plano === 'criar') patch.plano = [
-          { id: 1, titulo: 'Congelar novos deploys do checkout-api', st: 'ok' },
-          { id: 2, titulo: 'Rollback do deploy v2.14.3 → v2.14.2', st: 'hitl' },
-          { id: 3, titulo: 'Escalar pool de conexões RDS (50 → 120)', st: 'pendente' },
-          { id: 4, titulo: 'Validar métricas por 10 min e encerrar', st: 'pendente' },
-        ];
-        if (p.fx.plano === 'p2') patch.plano = s.plano.map(x => x.id === 2 ? { ...x, st: this.state.rejeitado ? 'rejeitado' : 'ok' } : x);
-        if (p.fx.plano === 'p3') patch.plano = s.plano.map(x => x.id === 3 ? { ...x, st: 'ok' } : x);
-        if (p.fx.plano === 'p4') patch.plano = s.plano.map(x => x.id === 4 ? { ...x, st: 'ok' } : x);
-        if (p.fx.memorias === 'add:INC') patch.memorias = [...s.memorias, { ref: 'INC-1893', tipo: 'episódio', texto: 'Mesma assinatura pós-deploy. Rollback resolveu em 6 min. Eficácia 96%.' }];
-        else if (p.fx.memorias === 'add:APR') patch.memorias = [...s.memorias, { ref: 'APR-2047', tipo: 'aprendizado', texto: 'Novo episódio gravado: assinatura "pool RDS + deploy recente" → rollback prioritário.' }];
-        else if (Array.isArray(p.fx.memorias)) patch.memorias = [...s.memorias, ...p.fx.memorias];
+        if (p.fx.planoCriar) patch.plano = p.fx.planoCriar;
+        if (p.fx.planoUpdate) {
+          const pu = p.fx.planoUpdate;
+          patch.plano = s.plano.map(x => x.id === pu.id ? { ...x, st: this.state.rejeitado ? pu.stRejeitado : pu.stAprovado } : x);
+        }
+        if (p.fx.planoOk) patch.plano = s.plano.map(x => x.id === p.fx.planoOk ? { ...x, st: 'ok' } : x);
+        if (p.fx.memoriaAdd) {
+          const add = Array.isArray(p.fx.memoriaAdd) ? p.fx.memoriaAdd : [p.fx.memoriaAdd];
+          patch.memorias = [...s.memorias, ...add];
+        }
       }
       if (p.gate) {
         patch.aguardandoHitl = true;
-        patch.hitl = [...s.hitl, {
-          id: 'APR-01', titulo: 'Rollback de deploy em produção', hora,
-          descricao: 'O plano da squad propõe reverter o checkout-api de v2.14.3 para v2.14.2. Ação classificada como crítica pelo guardrail G-02 (mudança em produção).',
-          risco: 'médio', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
-          detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api \\\n    --de v2.14.3 --para v2.14.2 \\\n    --estrategia blue-green\n\nJustificativa do Diagnosta: vazamento de conexões\nintroduzido em v2.14.3 (confiança 92%).\nMemória: INC-1893 resolvido com a mesma ação.',
-          status: 'pendente',
-        }];
+        patch.hitl = [...s.hitl, { ...p.gate, hora, status: 'pendente' }];
       }
       if (p.fim) { patch.concluido = true; patch.rodando = false; }
       return patch;
     }, () => {
       const p2 = passos[this.state.i - 1];
       if (p2 && p2.gate) {
-        if (this.props.autoAprovar) setTimeout(() => this.decidir('APR-01', true, true), this.duracao());
+        if (this.props.autoAprovar) setTimeout(() => this.decidir(p2.gate.id, true, true), this.duracao());
       } else if (!this.state.concluido && this.state.rodando) {
         this.agendar();
       }
@@ -630,6 +860,7 @@ class Component extends DCLogic {
   decidir = (id, aprovado, automatico) => {
     if (!this.state.aguardandoHitl) return;
     const hora = this.fmtHora(this.state.relogio);
+    const gate = this.state.hitl.find(h => h.id === id);
     this.setState(s => ({
       aguardandoHitl: false,
       rejeitado: !aprovado,
@@ -637,8 +868,8 @@ class Component extends DCLogic {
       eventos: [...s.eventos, {
         hora, agente: automatico ? 'Auto-aprovação' : 'Operador humano', cor: '#E8EEF4', pilar: '🤝 Multi-Agent', aws: '',
         texto: aprovado
-          ? (automatico ? 'Aprovação automática habilitada nos ajustes — rollback liberado.' : 'Decisão humana: rollback APROVADO. Executor liberado para agir.')
-          : 'Decisão humana: rollback REJEITADO. Maestro replaneja com mitigação conservadora.',
+          ? (automatico ? gate.mensagemAutoAprovado : gate.mensagemAprovado)
+          : gate.mensagemRejeitado,
       }],
       relogio: s.relogio + 8,
     }), () => { if (this.state.rodando) this.agendar(); });
@@ -647,24 +878,26 @@ class Component extends DCLogic {
   // ---------- chat ----------
   responderChat(texto) {
     const t = texto.toLowerCase();
+    const cen = this.cenarioAtiva();
     const temIncidente = this.state.eventos.length > 0;
     if (t.includes('causa')) return temIncidente
-      ? 'O Diagnosta apontou como causa provável o esgotamento do pool de conexões RDS, causado por um vazamento de conexões introduzido no deploy v2.14.3 do checkout-api (confiança: 92%). A correlação temporal com o deploy e o episódio INC-1893 sustentam a hipótese.'
+      ? cen.chat.causa
       : 'Ainda não há anomalia em análise. Inicie a simulação no console para que a squad detecte e diagnostique um incidente.';
     if (t.includes('status') || t.includes('situa')) {
-      if (this.state.concluido) return 'ANM-2047 foi resolvida ✅ MTTR de 4m 32s. A latência p99 voltou a 610ms e o pós-mortem já está salvo no S3.';
-      if (this.state.aguardandoHitl) return 'A execução está pausada aguardando decisão humana: o rollback em produção precisa de aprovação na fila HITL. Assim que houver decisão, o Executor prossegue.';
-      if (temIncidente) return 'A squad está trabalhando na ANM-2047 (latência elevada no checkout-api). Você pode acompanhar cada passo no Console de orquestração.';
+      if (this.state.concluido) return cen.chat.statusConcluido;
+      if (this.state.aguardandoHitl) return cen.chat.statusAguardando;
+      if (temIncidente) return cen.chat.statusAtivo;
       return 'Tudo tranquilo por aqui — a Sentinela está em vigília e nenhuma anomalia foi detectada. Inicie a simulação para ver a squad em ação.';
     }
     if (t.includes('plano')) return temIncidente
-      ? 'O plano tem 4 passos: 1) congelar deploys do checkout-api; 2) rollback v2.14.3 → v2.14.2 (este passo exige aprovação humana pelo guardrail G-02); 3) escalar o pool de conexões RDS de 50 para 120; 4) validar métricas por 10 minutos.'
+      ? cen.chat.plano
       : 'Ainda não há plano ativo. O Diagnosta gera o plano de remediação após identificar a causa raiz.';
     if (t.includes('memó') || t.includes('memo') || t.includes('hist')) return 'A memória da squad tem duas camadas: episódica (DynamoDB), com incidentes anteriores como o INC-1893, e semântica (OpenSearch), com runbooks vetorizados. Cada resolução gera um novo aprendizado gravado pelo Auditor.';
     if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 6 agentes: eu (Maestro, orquestração), Sentinela (detecção), Contexto (memória), Diagnosta (causa raiz e plano), Executor (ações via Lambda/SSM) e Auditor (guardrails e avaliação).';
     if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige aprovação humana (G-02), máximo de 3 ações de escrita por execução, e escopo restrito aos ambientes da squad. Você gerencia tudo na aba Configuração.';
     if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% das anomalias resolvidas de forma autônoma e precisão de diagnóstico de 91%. Detalhes na aba Avaliação.';
-    return 'Posso ajudar com: status da anomalia, causa raiz, plano de ação, memória da squad, guardrails ou métricas. Sobre o que quer saber?';
+    if (t.includes('cenário') || t.includes('cenario')) return 'Você pode escolher entre 4 cenários simulados no Console (antes de iniciar): latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco — cada um com severidade e algoritmo de detecção diferentes.';
+    return 'Posso ajudar com: status da anomalia, causa raiz, plano de ação, memória da squad, guardrails, cenários ou métricas. Sobre o que quer saber?';
   }
 
   enviarChat = () => {
@@ -684,6 +917,7 @@ class Component extends DCLogic {
   }
 
   componentDidUpdate(pp, ps) {
+    if (!ps) return;
     if (ps.eventos !== this.state.eventos && this.logRef.current) this.logRef.current.scrollTop = this.logRef.current.scrollHeight;
     if ((ps.chat !== this.state.chat || ps.digitando !== this.state.digitando) && this.chatRef.current) this.chatRef.current.scrollTop = this.chatRef.current.scrollHeight;
   }
@@ -704,12 +938,14 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const defs = this.agentesDef();
+    const cen = this.cenarioAtiva();
     const nav = [
       { id: 'console', icone: '🎼', rotulo: 'Console' },
       { id: 'chat', icone: '💬', rotulo: 'Chat da squad' },
       { id: 'hitl', icone: '✋', rotulo: 'Aprovações HITL' },
       { id: 'aval', icone: '📊', rotulo: 'Avaliação' },
       { id: 'config', icone: '⚙️', rotulo: 'Configuração' },
+      { id: 'finops', icone: '💰', rotulo: 'FinOps' },
       { id: 'arq', icone: '🏗️', rotulo: 'Arquitetura' },
     ];
     const pendentes = s.hitl.filter(h => h.status === 'pendente');
@@ -732,9 +968,9 @@ class Component extends DCLogic {
     });
 
     let incTexto = 'Sistemas nominais', incCor = '#3DDC84', incAnim = 'none';
-    if (s.concluido) { incTexto = 'Resolvida · MTTR 4m 32s'; }
+    if (s.concluido) { incTexto = cen.textoConcluido; }
     else if (s.aguardandoHitl) { incTexto = 'Aguardando humano'; incCor = '#FFC24B'; incAnim = 'er-pulse 1.4s infinite'; }
-    else if (s.eventos.length > 0) { incTexto = 'Latência p99 checkout-api +340%'; incCor = '#FF6B6B'; incAnim = 'er-pulse 1.2s infinite'; }
+    else if (s.eventos.length > 0) { incTexto = cen.textoProblema; incCor = '#FF6B6B'; incAnim = 'er-pulse 1.2s infinite'; }
 
     let squadStatus = 'Em vigília', squadCor = '#4DD8E6', squadAnim = 'er-pulse 2.4s infinite';
     if (s.concluido) { squadStatus = 'Missão concluída'; squadCor = '#3DDC84'; squadAnim = 'none'; }
@@ -753,13 +989,15 @@ class Component extends DCLogic {
       { dia: 'qui', auto: 5, humano: 3 }, { dia: 'sex', auto: 9, humano: 1 }, { dia: 'sáb', auto: 3, humano: 0 }, { dia: 'dom', auto: 2, humano: 1 },
     ];
 
+    const severidadeCor = { 'Crítico': '#FF6B6B', 'Alerta': '#FFC24B', 'Preditivo': '#5BA8FF' };
+
     return {
       logRef: this.logRef, chatRef: this.chatRef,
       relogio: this.fmtHora(s.relogio),
       numAgentes: defs.length,
 
       vConsole: s.view === 'console', vChat: s.view === 'chat', vHitl: s.view === 'hitl',
-      vAval: s.view === 'aval', vConfig: s.view === 'config', vArq: s.view === 'arq',
+      vAval: s.view === 'aval', vConfig: s.view === 'config', vFinops: s.view === 'finops', vArq: s.view === 'arq',
 
       navItens: nav.map(n => ({
         ...n,
@@ -770,9 +1008,23 @@ class Component extends DCLogic {
         badge: n.id === 'hitl' && pendentes.length > 0 ? pendentes.length : false,
       })),
 
+      incId: cen.idIncidente,
       incTexto, incCor, incAnim,
       incFundo: incCor === '#3DDC84' ? '#0E1A13' : (incCor === '#FFC24B' ? '#1A1408' : '#241014'),
       incBorda: incCor === '#3DDC84' ? '#1C3A28' : (incCor === '#FFC24B' ? '#3A2E12' : '#4A1E26'),
+
+      cenariosLista: this.cenarios().map(c => ({
+        id: c.id,
+        titulo: c.titulo,
+        icone: c.icone,
+        tagSeveridade: c.severidade + ' · ' + c.algoritmo,
+        corSeveridade: severidadeCor[c.severidade] || '#93A1B0',
+        fundo: c.id === s.cenarioAtivo ? '#182028' : 'transparent',
+        borda: c.id === s.cenarioAtivo ? '#3DDC84' : '#1E2833',
+        opacidade: (!s.rodando || c.id === s.cenarioAtivo) ? '1' : '0.45',
+        cursor: s.rodando ? 'default' : 'pointer',
+        aoClicar: s.rodando ? () => {} : () => this.escolherCenario(c.id),
+      })),
 
       btnSimRotulo: s.concluido ? '▶ Nova simulação' : (s.rodando ? '⏸ Pausar' : '▶ Iniciar simulação'),
       btnSimFundo: s.rodando ? '#1A1408' : '#3DDC84',
@@ -853,6 +1105,41 @@ class Component extends DCLogic {
         { icone: '💬', nome: 'Solicitação humana', desc: 'Operador pode acionar a squad diretamente pelo chat.', aws: 'API Gateway' },
       ],
 
+      remediacaoLista: [
+        { icone: '📈', nome: 'CPU Spike > 90%', desc: 'Escalonamento horizontal de instâncias', aws: 'ASG (Auto Scaling)' },
+        { icone: '⚠️', nome: 'Lambda Error > 5%', desc: 'Rollback ou atualização de configuração', aws: 'AWS Lambda' },
+        { icone: '🌐', nome: 'DNS Timeout', desc: 'Failover de rota para região/registro backup', aws: 'Route 53' },
+      ],
+      telemetriaLista: [
+        { icone: '🖥️', nome: 'Amazon EC2', desc: 'Métricas de performance — CPU, memória, disco', aws: 'JSON · 1 min' },
+        { icone: 'ƒ', nome: 'AWS Lambda', desc: 'Logs de execução, erros e invocações', aws: 'JSON · eventos' },
+        { icone: '📟', nome: 'Amazon CloudWatch', desc: 'Métricas agregadas e logs de sistema', aws: 'JSON · 1 min' },
+        { icone: '🌐', nome: 'Amazon Route 53', desc: 'Logs de consulta DNS e respostas', aws: 'CSV/JSON · eventos' },
+      ],
+
+      finopsCards: [
+        { icone: '🏆', titulo: 'Padrão-ouro', desc: 'Qwen 2.5-coder:32b — confiabilidade máxima em chamadas de ferramentas (tool calling).' },
+        { icone: '🪫', titulo: 'Piso mínimo viável', desc: 'Qwen 2.5:7b — abaixo desse porte, a geração de JSON estruturado tende a falhar.' },
+        { icone: '🌡️', titulo: 'Política de temperatura', desc: '0.1 para o Quiz/Validator (consistência analítica) · 0.4 para Coach e Explainer (tom mais informativo).' },
+        { icone: '💻', titulo: 'Local (Ollama) vs. Nuvem', desc: 'Local exige 24GB de VRAM para modelos 32B (8GB para 7B), com custo previsível; nuvem oferece maior poder de raciocínio e latência previsível, sem hardware dedicado.' },
+        { icone: '🎟️', titulo: 'Orçamento de tokens', desc: 'Gateways de inferência com limites estritos de tokens por agente, evitando estouro de custo por execução.' },
+      ],
+
+      hardeningItens: [
+        { texto: 'Versionamento de schema do AgentState — evita falhas quando versões antigas e novas coexistem durante rolling deployments.' },
+        { texto: 'Circuit breakers — evitam "retry storms" contra serviços AWS saturados.' },
+        { texto: 'Logs de auditoria imutáveis — todas as decisões autônomas registradas para conformidade em ambientes regulados.' },
+        { texto: 'Sanitização de entrada/saída — filtros contra injeção de prompt e vazamento de dados sensíveis em logs.' },
+        { texto: 'Testes unitários de contrato de estado + avaliação "LLM-as-judge" via DeepEval para medir fidelidade da remediação.' },
+      ],
+
+      mapaLangGraph: [
+        { agentes: 'Maestro', papel: 'Planner — define o plano de diagnóstico e remediação' },
+        { agentes: 'Diagnosta', papel: 'Explainer — causa raiz via ferramentas MCP' },
+        { agentes: 'Auditor', papel: 'Quiz/Validator — valida a eficácia pós-execução' },
+        { agentes: 'Maestro + Auditor', papel: 'Coach — sintetiza aprendizado e decide encerrar/escalonar' },
+      ],
+
       pilares: [
         { icone: '🧠', nome: 'Context', desc: 'Montagem do contexto do incidente: métricas, logs, deploys e topologia do serviço.', aws: ['OpenSearch', 'Bedrock KB'], onde: 'Painel "Contexto & Memória"' },
         { icone: '📚', nome: 'Memory', desc: 'Memória episódica (incidentes) e semântica (runbooks vetorizados) com aprendizado contínuo.', aws: ['DynamoDB', 'OpenSearch'], onde: 'Cards INC / APR no console' },
@@ -865,6 +1152,8 @@ class Component extends DCLogic {
         { icone: '⚡', nome: 'Triggers', desc: 'Gatilhos que acionam a squad: alarmes, deploys, agenda e pedidos humanos.', aws: ['EventBridge', 'CloudWatch'], onde: 'Lista de triggers (Configuração)' },
         { icone: '🎼', nome: 'Orchestration', desc: 'Máquina de estados que coordena o fluxo entre agentes, com pausa para HITL.', aws: ['Step Functions'], onde: 'Fluxo central do console' },
         { icone: '📊', nome: 'Evaluation', desc: 'Avaliação contínua: MTTR, precisão, scores por agente e pós-mortems automáticos.', aws: ['CloudWatch', 'S3'], onde: 'Aba "Avaliação"' },
+        { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo.', aws: ['CloudWatch', 'Lookout for Metrics'], onde: 'Log da Sentinela, por cenário' },
+        { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso a ferramentas (logs, arquivos, bancos); A2A coordena agentes entre frameworks via Agent Card em .well-known/agent-card.json.', aws: ['Bedrock AgentCore'], onde: 'Acesso a ferramentas do Diagnosta e do Contexto' },
       ],
     };
   }
