@@ -381,10 +381,11 @@ function checarEspelho() {
   }
   const normalizado = espelho
     .replace('<script src="../support.js"></script>', '<script src="./support.js"></script>')
+    .replace('<link rel="stylesheet" href="../EasyRun.dc.css">', '<link rel="stylesheet" href="./EasyRun.dc.css">')
     .replace(/<template id="__bundler_thumbnail"[\s\S]*?<\/template>\n/, '');
 
   if (normalizado === html) {
-    console.log('  export/ idêntico à fonte canônica (fora as 2 diferenças conhecidas)');
+    console.log('  export/ idêntico à fonte canônica (fora as 3 diferenças conhecidas)');
   } else {
     falha('export/EasyRun-src.dc.html divergiu da fonte canônica — rode: node tools/sync-export.mjs');
   }

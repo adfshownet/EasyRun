@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,10 +8,10 @@
 <body>
 <x-dc>
 <helmet>
-  <meta charset="utf-8">
   <title>EasyRun — Squad Agêntica AIOps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./EasyRun.dc.css">
   <style>
     html, body { margin: 0; padding: 0; background: #0B0F14; }
     * { box-sizing: border-box; }
@@ -27,95 +27,95 @@
   </style>
 </helmet>
 
-<div style="display: flex; flex-direction: column; height: 100vh; min-width: 0; background: #0B0F14; color: #E8EEF4; font-family: 'Space Grotesk', sans-serif; overflow: hidden;">
+<div class="er-root">
 
   <!-- ============ HEADER ============ -->
-  <header style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; background: #10151C; border-bottom: 1px solid #1E2833; flex-shrink: 0; min-width: 0; overflow: hidden;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <div style="width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #3DDC84, #4DD8E6); display: grid; place-items: center; font-weight: 700; color: #06110B; font-size: 15px;">E</div>
-      <div style="display: flex; flex-direction: column; line-height: 1.1;">
-        <span style="font-weight: 700; font-size: 16px; letter-spacing: .02em;">EasyRun</span>
-        <span style="font-size: 10px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; letter-spacing: .08em;">SQUAD AGÊNTICA · AIOPS</span>
+  <header class="er-header">
+    <div class="er-header-brand">
+      <div class="er-logo">E</div>
+      <div class="er-brand-text">
+        <span class="er-brand-title">EasyRun</span>
+        <span class="er-brand-subtitle">SQUAD AGÊNTICA · AIOPS</span>
       </div>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: {{ incFundo }}; border: 1px solid {{ incBorda }}; min-width: 0;">
-      <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ incCor }}; animation: {{ incAnim }}; flex-shrink: 0;"></span>
-      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ incCor }}; flex-shrink: 0;">{{ incId }}</span>
-      <span style="font-size: 12px; color: #93A1B0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ incTexto }}</span>
+    <div class="er-incident-badge" style="--inc-fundo: {{ incFundo }}; --inc-borda: {{ incBorda }}; --inc-cor: {{ incCor }}; --inc-anim: {{ incAnim }};">
+      <span class="er-incident-status"></span>
+      <span class="er-incident-id">{{ incId }}</span>
+      <span class="er-incident-text">{{ incTexto }}</span>
     </div>
 
-    <div style="flex: 1;"></div>
+    <div class="er-header-spacer"></div>
 
-    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-      <button onClick="{{ iniciarPausar }}" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; background: {{ btnSimFundo }}; color: {{ btnSimCor }}; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px;" style-hover="filter: brightness(1.12);">{{ btnSimRotulo }}</button>
-      <button onClick="{{ reiniciar }}" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #1E2833; cursor: pointer; background: transparent; color: #93A1B0; font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 13px;" style-hover="border-color: #3DDC84; color: #E8EEF4;">↺ Reiniciar</button>
+    <div class="er-header-actions">
+      <button onClick="{{ iniciarPausar }}" class="er-btn-primary" style="--btn-fundo: {{ btnSimFundo }}; --btn-cor: {{ btnSimCor }};">{{ btnSimRotulo }}</button>
+      <button onClick="{{ reiniciar }}" class="er-btn-secondary">↺ Reiniciar</button>
     </div>
 
-    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5C6B7A; min-width: 70px; text-align: right;">{{ relogio }}</div>
+    <div class="er-clock">{{ relogio }}</div>
   </header>
 
-  <div style="display: flex; flex: 1; min-height: 0; min-width: 0; overflow: hidden;">
+  <div class="er-main-wrapper">
 
     <!-- ============ NAV ============ -->
-    <nav style="width: 184px; flex-shrink: 0; background: #10151C; border-right: 1px solid #1E2833; padding: 14px 10px; display: flex; flex-direction: column; gap: 4px;">
+    <nav class="er-nav">
       <sc-for list="{{ navItens }}" as="nv" hint-placeholder-count="9">
-        <div onClick="{{ nv.aoClicar }}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; background: {{ nv.fundo }}; color: {{ nv.cor }}; font-size: 13.5px; font-weight: {{ nv.peso }}; transition: background .15s;" style-hover="background: #182028;">
-          <span style="font-size: 15px; width: 20px; text-align: center;">{{ nv.icone }}</span>
-          <span style="flex: 1;">{{ nv.rotulo }}</span>
+        <div onClick="{{ nv.aoClicar }}" class="er-nav-item" style="--nv-fundo: {{ nv.fundo }}; --nv-cor: {{ nv.cor }}; --nv-peso: {{ nv.peso }};">
+          <span class="er-nav-item-icon">{{ nv.icone }}</span>
+          <span class="er-nav-item-label">{{ nv.rotulo }}</span>
           <sc-if value="{{ nv.badge }}" hint-placeholder-val="{{ false }}">
-            <span style="min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #FFC24B; color: #1A1200; font-size: 11px; font-weight: 700; display: grid; place-items: center; font-family: 'IBM Plex Mono', monospace;">{{ nv.badge }}</span>
+            <span class="er-nav-badge">{{ nv.badge }}</span>
           </sc-if>
         </div>
       </sc-for>
 
-      <div style="flex: 1;"></div>
+      <div class="er-nav-spacer"></div>
 
-      <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833;">
-        <div style="font-size: 10px; color: #5C6B7A; letter-spacing: .1em; font-family: 'IBM Plex Mono', monospace; margin-bottom: 8px;">STATUS DA SQUAD</div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ squadCor }}; animation: {{ squadAnim }};"></span>
-          <span style="font-size: 12.5px; color: #93A1B0;">{{ squadStatus }}</span>
+      <div class="er-nav-status">
+        <div class="er-nav-status-label">STATUS DA SQUAD</div>
+        <div class="er-nav-status-content">
+          <span class="er-status-dot" style="--status-cor: {{ squadCor }}; --status-anim: {{ squadAnim }};"></span>
+          <span class="er-status-text">{{ squadStatus }}</span>
         </div>
       </div>
     </nav>
 
     <!-- ============ CONSOLE DE ORQUESTRAÇÃO ============ -->
     <sc-if value="{{ vConsole }}" hint-placeholder-val="{{ true }}">
-      <main data-screen-label="Console de orquestração" style="flex: 1; display: grid; grid-template-columns: minmax(180px, 240px) minmax(320px, 1fr) minmax(200px, 268px); min-height: 0; min-width: 0; overflow: hidden;">
+      <main data-screen-label="Console de orquestração" class="er-console-main">
 
         <!-- Agentes -->
-        <section style="border-right: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
-          <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">CENÁRIO</div>
+        <section class="er-section">
+          <div class="er-section-title">CENÁRIO</div>
           <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="8">
-            <div onClick="{{ cn.aoClicar }}" style="padding: 10px 12px; border-radius: 10px; background: {{ cn.fundo }}; border: 1px solid {{ cn.borda }}; cursor: {{ cn.cursor }}; opacity: {{ cn.opacidade }}; display: flex; flex-direction: column; gap: 4px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 14px;">{{ cn.icone }}</span>
-                <span style="font-size: 12px; font-weight: 500; line-height: 1.3;">{{ cn.titulo }}</span>
+            <div onClick="{{ cn.aoClicar }}"  class="er-console-btn-full {{ cn.classeBtn }}">
+              <div class="er-flex-center-8">
+                <span class="er-text-h5">{{ cn.icone }}</span>
+                <span  class="er-console-btn-text">{{ cn.titulo }}</span>
               </div>
-              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span style="font-size: 10.5px; font-family: 'IBM Plex Mono', monospace; color: {{ cn.corSeveridade }};">{{ cn.tagSeveridade }}</span>
-                <span style="font-size: 9.5px; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ cn.origem }}</span>
+              <div  class="er-flex-wrap-6">
+                <span class="er-severity-tag-dyn" style="color: {{ cn.corSeveridade }};">{{ cn.tagSeveridade }}</span>
+                <span  class="er-origin-tag">{{ cn.origem }}</span>
               </div>
             </div>
           </sc-for>
-          <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">AGENTES · {{ numAgentes }}</div>
+          <div class="er-section-title">AGENTES · {{ numAgentes }}</div>
           <sc-for list="{{ agentesLista }}" as="ag" hint-placeholder-count="8">
-            <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid {{ ag.borda }}; display: flex; flex-direction: column; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ag.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ag.icone }}</div>
-                <div style="display: flex; flex-direction: column; line-height: 1.2; flex: 1; min-width: 0;">
-                  <span style="font-weight: 600; font-size: 13.5px;">{{ ag.nome }}</span>
-                  <span style="font-size: 11px; color: #5C6B7A;">{{ ag.papel }}</span>
+            <div class="er-agent-card-dynamic" style="--ag-border: {{ ag.borda }};">
+              <div class="er-flex-center">
+                <div class="er-icon-btn" style="--bg-color: {{ ag.fundoIcone }};">{{ ag.icone }}</div>
+                <div  class="er-agent-info-col">
+                  <span class="er-text-bold">{{ ag.nome }}</span>
+                  <span  class="er-agent-role-text">{{ ag.papel }}</span>
                 </div>
               </div>
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ ag.statusCor }}; animation: {{ ag.statusAnim }};"></span>
-                <span style="font-size: 11.5px; color: {{ ag.statusCor }}; font-family: 'IBM Plex Mono', monospace;">{{ ag.status }}</span>
+              <div class="er-flex-center-6">
+                <span class="er-dot-status" style="--status-color: {{ ag.statusCor }}; animation: {{ ag.statusAnim }};"></span>
+                <span class="er-agent-status-text-dyn" style="color: {{ ag.statusCor }};">{{ ag.status }}</span>
               </div>
-              <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <div  class="er-flex-wrap-4">
                 <sc-for list="{{ ag.aws }}" as="svc" hint-placeholder-count="2">
-                  <span style="font-size: 10px; padding: 2px 7px; border-radius: 5px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ svc }}</span>
+                  <span  class="er-service-tag">{{ svc }}</span>
                 </sc-for>
               </div>
             </div>
@@ -123,63 +123,63 @@
         </section>
 
         <!-- Fluxo -->
-        <section style="display: flex; flex-direction: column; min-width: 0; min-height: 0;">
-          <div style="padding: 16px 20px 10px; display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid #1E2833;">
-            <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Fluxo de orquestração</h2>
-            <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ numEventos }} eventos</span>
+        <section class="er-section-flow">
+          <div class="er-section-header">
+            <h2 class="er-section-title-main">Fluxo de orquestração</h2>
+            <span class="er-section-event-count">{{ numEventos }} eventos</span>
           </div>
-          <div ref="{{ logRef }}" style="flex: 1; overflow-y: auto; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div ref="{{ logRef }}" class="er-section-content">
             <sc-if value="{{ logVazio }}" hint-placeholder-val="{{ false }}">
-              <div style="margin: auto; text-align: center; color: #5C6B7A; display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 40px 0;">
-                <div style="font-size: 32px;">🛰️</div>
-                <div style="font-size: 14px; max-width: 320px; line-height: 1.5;">A squad está em vigília. Clique em <strong style="color: #3DDC84;">▶ Iniciar simulação</strong> para injetar uma anomalia de latência e acompanhar os agentes trabalhando.</div>
+              <div  class="er-empty-center">
+                <div  class="er-emoji-lg">🛰️</div>
+                <div  class="er-empty-text">A squad está em vigília. Clique em <strong class="er-text-success">▶ Iniciar simulação</strong> para injetar uma anomalia de latência e acompanhar os agentes trabalhando.</div>
               </div>
             </sc-if>
             <sc-for list="{{ eventos }}" as="ev" hint-placeholder-count="0">
-              <div style="display: flex; gap: 12px; animation: er-entrar .3s ease;">
-                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5C6B7A; padding-top: 3px; width: 56px; flex-shrink: 0;">{{ ev.hora }}</div>
-                <div style="width: 3px; border-radius: 2px; background: {{ ev.cor }}; flex-shrink: 0;"></div>
-                <div style="display: flex; flex-direction: column; gap: 5px; padding: 2px 0 4px; min-width: 0;">
-                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <span style="font-weight: 600; font-size: 12.5px; color: {{ ev.cor }};">{{ ev.agente }}</span>
-                    <span style="font-size: 10px; padding: 1px 7px; border-radius: 5px; background: #131A22; border: 1px solid #1E2833; color: #93A1B0;">{{ ev.pilar }}</span>
+              <div  class="er-event-enter-anim">
+                <div  class="er-event-time">{{ ev.hora }}</div>
+                <div class="er-bar-colored" style="--bar-color: {{ ev.cor }};"></div>
+                <div  class="er-event-info-col">
+                  <div  class="er-event-header">
+                    <span class="er-event-agent-dyn" style="color: {{ ev.cor }};">{{ ev.agente }}</span>
+                    <span  class="er-event-pillar-tag">{{ ev.pilar }}</span>
                     <sc-if value="{{ ev.aws }}" hint-placeholder-val="{{ false }}">
-                      <span style="font-size: 10px; padding: 1px 7px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">AWS · {{ ev.aws }}</span>
+                      <span  class="er-event-aws-tag">AWS · {{ ev.aws }}</span>
                     </sc-if>
                   </div>
-                  <div style="font-size: 13px; color: #C7D2DC; line-height: 1.45;">{{ ev.texto }}</div>
+                  <div  class="er-event-text">{{ ev.texto }}</div>
                 </div>
               </div>
             </sc-for>
             <sc-if value="{{ aguardandoHitl }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; background: #1A1408; border: 1px dashed #FFC24B; animation: er-entrar .3s ease;">
-                <span style="font-size: 16px;">✋</span>
-                <span style="font-size: 13px; color: #FFC24B;">Execução pausada — aguardando decisão humana na <a href="#" onClick="{{ irParaHitl }}" style="color: #FFC24B; text-decoration: underline;">fila de aprovação</a>.</span>
+              <div  class="er-pause-box-amber">
+                <span class="er-text-h6">✋</span>
+                <span  class="er-pause-text">Execução pausada — aguardando decisão humana na <a href="#" onClick="{{ irParaHitl }}" class="er-text-amber-underline">fila de aprovação</a>.</span>
               </div>
             </sc-if>
             <sc-if value="{{ executando }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0 0 68px;">
-                <span style="width: 12px; height: 12px; border: 2px solid #1E2833; border-top-color: #3DDC84; border-radius: 50%; animation: er-girar .8s linear infinite;"></span>
-                <span style="font-size: 12px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">processando…</span>
+              <div  class="er-processing-flex">
+                <span class="er-spinner-success"></span>
+                <span  class="er-processing-text">processando…</span>
               </div>
             </sc-if>
           </div>
         </section>
 
         <!-- Plano + contexto -->
-        <section style="border-left: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+        <section class="er-section-right">
           <div>
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🎯 PLANO DE AÇÃO</div>
+            <div class="er-caption">🎯 PLANO DE AÇÃO</div>
             <sc-if value="{{ planoVazio }}" hint-placeholder-val="{{ true }}">
-              <div style="font-size: 12.5px; color: #5C6B7A; padding: 14px; border: 1px dashed #1E2833; border-radius: 10px; line-height: 1.5;">Nenhum plano ativo. O agente Diagnosta gera o plano após a análise de causa raiz.</div>
+              <div class="er-quote-hint">Nenhum plano ativo. O agente Diagnosta gera o plano após a análise de causa raiz.</div>
             </sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="er-flex-col-8">
               <sc-for list="{{ planoPassos }}" as="pp" hint-placeholder-count="0">
-                <div style="display: flex; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; align-items: flex-start;">
-                  <span style="font-size: 13px; padding-top: 1px;">{{ pp.icone }}</span>
-                  <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
-                    <span style="font-size: 12.5px; font-weight: 500; color: {{ pp.cor }}; line-height: 1.35;">{{ pp.titulo }}</span>
-                    <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ pp.status }}</span>
+                <div  class="er-plan-step-box">
+                  <span  class="er-plan-icon">{{ pp.icone }}</span>
+                  <div  class="er-plan-info-col">
+                    <span class="er-plan-title-dyn" style="color: {{ pp.cor }};">{{ pp.titulo }}</span>
+                    <span class="er-section-event-count">{{ pp.status }}</span>
                   </div>
                 </div>
               </sc-for>
@@ -187,43 +187,43 @@
           </div>
 
           <div>
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🧠 CONTEXTO & 📚 MEMÓRIA</div>
+            <div class="er-caption">🧠 CONTEXTO & 📚 MEMÓRIA</div>
             <sc-if value="{{ memoriaVazia }}" hint-placeholder-val="{{ true }}">
-              <div style="font-size: 12.5px; color: #5C6B7A; padding: 14px; border: 1px dashed #1E2833; border-radius: 10px; line-height: 1.5;">O agente Contexto recupera runbooks e incidentes similares quando uma anomalia é aberta.</div>
+              <div class="er-quote-hint">O agente Contexto recupera runbooks e incidentes similares quando uma anomalia é aberta.</div>
             </sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="er-flex-col-8">
               <sc-for list="{{ memorias }}" as="mm" hint-placeholder-count="0">
-                <div style="padding: 10px 12px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 4px;">
-                  <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #5BA8FF;">{{ mm.ref }}</span>
-                    <span style="font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0;">{{ mm.tipo }}</span>
+                <div  class="er-memory-item-box">
+                  <div class="er-flex-center-6">
+                    <span  class="er-memory-ref-blue">{{ mm.ref }}</span>
+                    <span  class="er-memory-type-tag">{{ mm.tipo }}</span>
                   </div>
-                  <div style="font-size: 12px; color: #C7D2DC; line-height: 1.4;">{{ mm.texto }}</div>
+                  <div  class="er-memory-text">{{ mm.texto }}</div>
                 </div>
               </sc-for>
             </div>
           </div>
 
           <div>
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🧭 NATUREZA DA REMEDIAÇÃO</div>
-            <div style="padding: 12px; border-radius: 10px; background: {{ naturezaFundo }}; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; font-family: 'IBM Plex Mono', monospace; color: {{ naturezaCor }};">{{ naturezaRotulo }}</span>
-              <span style="font-size: 11.5px; color: #93A1B0; line-height: 1.5;">{{ naturezaDesc }}</span>
+            <div class="er-caption">🧭 NATUREZA DA REMEDIAÇÃO</div>
+            <div class="er-nature-card" style="--nature-bg: {{ naturezaFundo }};">
+              <span class="er-nature-label-dyn" style="color: {{ naturezaCor }};">{{ naturezaRotulo }}</span>
+              <span  class="er-nature-desc">{{ naturezaDesc }}</span>
             </div>
           </div>
 
           <div>
-            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; gap: 8px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🔗 RASTREABILIDADE</div>
-              <span style="font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: #5C6B7A;">{{ rastreioResumo }}</span>
+            <div  class="er-trace-header">
+              <div class="er-section-title">🔗 RASTREABILIDADE</div>
+              <span  class="er-trace-summary">{{ rastreioResumo }}</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div  class="er-flex-col-5">
               <sc-for list="{{ rastreioLinhas }}" as="rs" hint-placeholder-count="9">
-                <div style="display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; background: #0B0F14; border: 1px solid #161D26;">
-                  <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ rs.marcaCor }}; flex-shrink: 0;"></span>
-                  <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 11px; color: {{ rs.cor }}; font-family: 'IBM Plex Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ rs.valor }}</div>
-                    <div style="font-size: 9.5px; color: #5C6B7A;">{{ rs.rotulo }} · {{ rs.plat }}</div>
+                <div  class="er-result-item-box">
+                  <span class="er-dot-colored" style="--dot-color: {{ rs.marcaCor }};"></span>
+                  <div class="er-flex-shrink">
+                    <div  class="er-text-ellipsis-dyn {{ rs.classeValor }}">{{ rs.valor }}</div>
+                    <div  class="er-text-xs-dim">{{ rs.rotulo }} · {{ rs.plat }}</div>
                   </div>
                 </div>
               </sc-for>
@@ -231,10 +231,10 @@
           </div>
 
           <div>
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">🛡️ GUARDRAILS ATIVOS</div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="er-caption">🛡️ GUARDRAILS ATIVOS</div>
+            <div class="er-flex-col-6">
               <sc-for list="{{ guardrailsLista }}" as="gc" hint-placeholder-count="5">
-                <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #93A1B0; line-height: 1.4;"><span style="color: {{ gc.trilha }};">●</span> {{ gc.nome }}</div>
+                <div  class="er-flex-start-note"><span class="er-text-dynamic" style="--text-color: {{ gc.trilha }};">●</span> {{ gc.nome }}</div>
               </sc-for>
             </div>
           </div>
@@ -244,83 +244,83 @@
 
     <!-- ============ CHAT ============ -->
     <sc-if value="{{ vChat }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Chat com a squad" style="flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0;">
-        <div style="padding: 16px 24px 10px; border-bottom: 1px solid #1E2833;">
-          <h2 style="margin: 0; font-size: 15px; font-weight: 600;">Conversar com a squad</h2>
-          <span style="font-size: 12px; color: #5C6B7A;">Pergunte sobre status, causa raiz, plano ou memória do incidente.</span>
+      <main data-screen-label="Chat com a squad"  class="er-flex-column-full">
+        <div class="er-card-header-bottom">
+          <h2 class="er-section-title-main">Conversar com a squad</h2>
+          <span  class="er-text-12-muted">Pergunte sobre status, causa raiz, plano ou memória do incidente.</span>
         </div>
-        <div ref="{{ chatRef }}" style="flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px;">
+        <div ref="{{ chatRef }}"  class="er-chat-scroll">
           <sc-for list="{{ chatMsgs }}" as="cm" hint-placeholder-count="1">
-            <div style="display: flex; flex-direction: {{ cm.direcao }}; gap: 10px; align-items: flex-end;">
-              <div style="width: 30px; height: 30px; border-radius: 8px; background: {{ cm.avatarFundo }}; display: grid; place-items: center; font-size: 14px; flex-shrink: 0;">{{ cm.avatar }}</div>
-              <div style="max-width: 620px; padding: 11px 14px; border-radius: 12px; background: {{ cm.fundo }}; border: 1px solid {{ cm.borda }}; font-size: 13.5px; line-height: 1.55; color: #E8EEF4; white-space: pre-wrap; animation: er-entrar .25s ease;">{{ cm.texto }}</div>
+            <div  class="er-flex-dynamic-end {{ cm.classeDir }}">
+              <div class="er-avatar-32" style="--avatar-bg: {{ cm.avatarFundo }};">{{ cm.avatar }}</div>
+              <div  class="er-chat-message {{ cm.classeBolha }}">{{ cm.texto }}</div>
             </div>
           </sc-for>
           <sc-if value="{{ digitando }}" hint-placeholder-val="{{ false }}">
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <div style="width: 30px; height: 30px; border-radius: 8px; background: #14251B; display: grid; place-items: center; font-size: 14px;">🎼</div>
-              <div style="padding: 12px 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; color: #5C6B7A; font-size: 13px; animation: er-pulse 1.2s infinite;">Maestro está digitando…</div>
+            <div  class="er-flex-center-10">
+              <div class="er-avatar-success">🎼</div>
+              <div class="er-item-loading">Maestro está digitando…</div>
             </div>
           </sc-if>
         </div>
-        <div style="padding: 14px 24px 18px; border-top: 1px solid #1E2833; display: flex; gap: 10px;">
-          <input value="{{ chatInput }}" onChange="{{ aoDigitarChat }}" onKeyDown="{{ aoTeclaChat }}" placeholder="Ex.: qual a causa raiz? · qual o status? · mostre o plano" style="flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid #1E2833; background: #131A22; color: #E8EEF4; font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; outline: none;" style-focus="border-color: #3DDC84;">
-          <button onClick="{{ enviarChat }}" style="padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13.5px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">Enviar</button>
+        <div class="er-card-footer-top">
+          <input value="{{ chatInput }}" onChange="{{ aoDigitarChat }}" onKeyDown="{{ aoTeclaChat }}" placeholder="Ex.: qual a causa raiz? · qual o status? · mostre o plano"  class="er-input-text" style-focus="border-color: #3DDC84;">
+          <button onClick="{{ enviarChat }}" class="er-btn-action" style-hover="filter: brightness(1.12);">Enviar</button>
         </div>
       </main>
     </sc-if>
 
     <!-- ============ HITL ============ -->
     <sc-if value="{{ vHitl }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Fila de aprovação HITL" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">✋ Fila de aprovação humana</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador. Há três tipos de gate — ação de infraestrutura, pull request e GMUD —, e cada um mostra o que aquela decisão específica exige.</p>
+      <main data-screen-label="Fila de aprovação HITL" class="er-flex-scroll">
+        <h2 class="er-title-1">✋ Fila de aprovação humana</h2>
+        <p class="er-text-muted">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador. Há três tipos de gate — ação de infraestrutura, pull request e GMUD —, e cada um mostra o que aquela decisão específica exige.</p>
 
         <sc-if value="{{ hitlVazia }}" hint-placeholder-val="{{ true }}">
-          <div style="padding: 32px; border: 1px dashed #1E2833; border-radius: 12px; text-align: center; color: #5C6B7A; font-size: 13.5px;">Nenhuma aprovação pendente. Quando um guardrail interceptar uma ação crítica, ela aparecerá aqui.</div>
+          <div class="er-empty-state">Nenhuma aprovação pendente. Quando um guardrail interceptar uma ação crítica, ela aparecerá aqui.</div>
         </sc-if>
 
-        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 760px;">
+        <div  class="er-flex-col-14-max">
           <sc-for list="{{ hitlPendentes }}" as="hp" hint-placeholder-count="0">
-            <div style="border-radius: 12px; background: #131A22; border: 1px solid #3A2E12; overflow: hidden; animation: er-entrar .3s ease;">
-              <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #1A1408; border-bottom: 1px solid #3A2E12;">
-                <span style="width: 8px; height: 8px; border-radius: 50%; background: #FFC24B; animation: er-pulse 1.4s infinite;"></span>
-                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #FFC24B;">{{ hp.id }}</span>
-                <span style="font-size: 9.5px; font-weight: 700; letter-spacing: .1em; padding: 2px 7px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: {{ hp.tipoCor }}; font-family: 'IBM Plex Mono', monospace;">{{ hp.tipoRotulo }}</span>
-                <span style="font-weight: 600; font-size: 14px;">{{ hp.titulo }}</span>
-                <span style="flex: 1;"></span>
-                <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hp.hora }}</span>
+            <div class="er-card-amber-anim">
+              <div  class="er-flex-header-amber">
+                <span class="er-dot-pulse-amber"></span>
+                <span  class="er-mono-12-amber">{{ hp.id }}</span>
+                <span  class="er-type-tag-dyn {{ hp.tipoClasse }}">{{ hp.tipoRotulo }}</span>
+                <span  class="er-title-14">{{ hp.titulo }}</span>
+                <span class="er-flex-1"></span>
+                <span class="er-section-event-count">{{ hp.hora }}</span>
               </div>
-              <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
-                <div style="font-size: 13.5px; color: #C7D2DC; line-height: 1.55;">{{ hp.descricao }}</div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #241014; border: 1px solid #4A1E26; color: #FF6B6B;">Risco: {{ hp.risco }}</span>
-                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0;">Guardrail: {{ hp.guardrail }}</span>
-                  <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ hp.aws }}</span>
+              <div class="er-flex-col-12">
+                <div  class="er-text-body-light">{{ hp.descricao }}</div>
+                <div  class="er-flex-wrap-8">
+                  <span  class="er-tag-error">Risco: {{ hp.risco }}</span>
+                  <span  class="er-tag-neutral">Guardrail: {{ hp.guardrail }}</span>
+                  <span  class="er-tag-neutral-mono">{{ hp.aws }}</span>
                 </div>
 
                 <sc-if value="{{ hp.tipoPr }}" hint-placeholder-val="{{ false }}">
-                  <div style="display: grid; grid-template-columns: 118px 1fr; gap: 6px 14px; padding: 12px 14px; border-radius: 8px; background: #1E1610; border: 1px solid #3A2B1E; font-size: 12.5px;">
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Repositório</span><span style="color: #E8A87C; font-family: 'IBM Plex Mono', monospace;">{{ hp.repositorio }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Branch</span><span style="color: #C7D2DC; font-family: 'IBM Plex Mono', monospace;">{{ hp.branch }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Alterações</span><span style="color: #C7D2DC;">{{ hp.arquivos }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Checks</span><span style="color: #3DDC84;">{{ hp.checks }}</span>
+                  <div  class="er-grid-label-amber">
+                    <span class="er-mono-small">Repositório</span><span class="er-mono-tan">{{ hp.repositorio }}</span>
+                    <span class="er-mono-small">Branch</span><span class="er-mono-light">{{ hp.branch }}</span>
+                    <span class="er-mono-small">Alterações</span><span class="er-text-light">{{ hp.arquivos }}</span>
+                    <span class="er-mono-small">Checks</span><span class="er-text-success">{{ hp.checks }}</span>
                   </div>
                 </sc-if>
 
                 <sc-if value="{{ hp.tipoGmud }}" hint-placeholder-val="{{ false }}">
-                  <div style="display: grid; grid-template-columns: 118px 1fr; gap: 6px 14px; padding: 12px 14px; border-radius: 8px; background: #101A26; border: 1px solid #1E2E42; font-size: 12.5px;">
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Mudança</span><span style="color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">{{ hp.gmud }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">CI afetado</span><span style="color: #C7D2DC; font-family: 'IBM Plex Mono', monospace;">{{ hp.ci }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Janela</span><span style="color: #C7D2DC;">{{ hp.janela }}</span>
-                    <span style="color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">Rollback</span><span style="color: #C7D2DC;">{{ hp.rollback }}</span>
+                  <div  class="er-grid-label-blue">
+                    <span class="er-mono-small">Mudança</span><span class="er-mono-blue">{{ hp.gmud }}</span>
+                    <span class="er-mono-small">CI afetado</span><span class="er-mono-light">{{ hp.ci }}</span>
+                    <span class="er-mono-small">Janela</span><span class="er-text-light">{{ hp.janela }}</span>
+                    <span class="er-mono-small">Rollback</span><span class="er-text-light">{{ hp.rollback }}</span>
                   </div>
                 </sc-if>
 
-                <div style="padding: 12px 14px; border-radius: 8px; background: #0B0F14; border: 1px solid #1E2833; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #93A1B0; line-height: 1.7; white-space: pre-wrap;">{{ hp.detalhe }}</div>
-                <div style="display: flex; gap: 10px;">
-                  <button onClick="{{ hp.aprovar }}" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; background: #3DDC84; color: #06110B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="filter: brightness(1.12);">{{ hp.rotuloAprovar }}</button>
-                  <button onClick="{{ hp.rejeitar }}" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #4A1E26; cursor: pointer; background: transparent; color: #FF6B6B; font-weight: 600; font-size: 13px; font-family: 'Space Grotesk', sans-serif;" style-hover="background: #241014;">✕ Rejeitar</button>
+                <div class="er-code-block">{{ hp.detalhe }}</div>
+                <div  class="er-flex-10">
+                  <button onClick="{{ hp.aprovar }}"  class="er-btn-ok" style-hover="filter: brightness(1.12);">{{ hp.rotuloAprovar }}</button>
+                  <button onClick="{{ hp.rejeitar }}"  class="er-btn-reject-alt" style-hover="background: #241014;">✕ Rejeitar</button>
                 </div>
               </div>
             </div>
@@ -328,17 +328,17 @@
         </div>
 
         <sc-if value="{{ temHistorico }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 26px; max-width: 760px;">
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;">HISTÓRICO DE DECISÕES</div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div  class="er-section-max-760">
+            <div class="er-caption">HISTÓRICO DE DECISÕES</div>
+            <div class="er-flex-col-8">
               <sc-for list="{{ hitlHistorico }}" as="hh" hint-placeholder-count="0">
-                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833;">
-                  <span style="font-size: 14px;">{{ hh.icone }}</span>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C6B7A;">{{ hh.id }}</span>
-                  <span style="font-size: 9.5px; letter-spacing: .08em; padding: 1px 6px; border-radius: 4px; background: #0B0F14; border: 1px solid #1E2833; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hh.tipoRotulo }}</span>
-                  <span style="font-size: 13px; flex: 1;">{{ hh.titulo }}</span>
-                  <span style="font-size: 12px; font-weight: 600; color: {{ hh.cor }};">{{ hh.decisao }}</span>
-                  <span style="font-size: 11px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ hh.hora }}</span>
+                <div  class="er-flex-chip-box">
+                  <span class="er-text-h5">{{ hh.icone }}</span>
+                  <span  class="er-mono-11-muted">{{ hh.id }}</span>
+                  <span  class="er-label-xs">{{ hh.tipoRotulo }}</span>
+                  <span  class="er-text-13-flex">{{ hh.titulo }}</span>
+                  <span  class="er-text-12-bold-dyn {{ hh.classeDecisao }}">{{ hh.decisao }}</span>
+                  <span class="er-section-event-count">{{ hh.hora }}</span>
                 </div>
               </sc-for>
             </div>
@@ -349,90 +349,90 @@
 
     <!-- ============ AVALIAÇÃO ============ -->
     <sc-if value="{{ vAval }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Avaliação e métricas" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">📊 Avaliação da squad</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Métricas de eficácia dos agentes nos últimos 7 dias · fonte: Datadog, ServiceNow e pós-mortems em S3.</p>
+      <main data-screen-label="Avaliação e métricas" class="er-flex-scroll">
+        <h2 class="er-title-1">📊 Avaliação da squad</h2>
+        <p class="er-text-muted">Métricas de eficácia dos agentes nos últimos 7 dias · fonte: Datadog, ServiceNow e pós-mortems em S3.</p>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <div  class="er-grid-150-spaced">
           <sc-for list="{{ metricas }}" as="mt" hint-placeholder-count="6">
-            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 11px; color: #5C6B7A; letter-spacing: .06em;">{{ mt.rotulo }}</span>
-              <span style="font-size: 24px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; color: {{ mt.cor }};">{{ mt.valor }}</span>
-              <span style="font-size: 11.5px; color: {{ mt.deltaCor }};">{{ mt.delta }}</span>
+            <div class="er-card-pad-gap6">
+              <span  class="er-text-11-spaced">{{ mt.rotulo }}</span>
+              <span  class="er-metric-value {{ mt.classeValor }}">{{ mt.valor }}</span>
+              <span  class="er-delta-text-dyn {{ mt.classeDelta }}">{{ mt.delta }}</span>
             </div>
           </sc-for>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
-          <div style="padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
-            <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Anomalias resolvidas por dia</div>
-            <div style="display: flex; gap: 14px; font-size: 11px; color: #5C6B7A; margin-bottom: 16px;">
-              <span><span style="color: #3DDC84;">■</span> autônomas</span>
-              <span><span style="color: #FFC24B;">■</span> com intervenção humana</span>
+        <div  class="er-grid-2col-equal">
+          <div class="er-panel">
+            <div class="er-subtitle">Anomalias resolvidas por dia</div>
+            <div  class="er-flex-tabs">
+              <span><span class="er-text-success">■</span> autônomas</span>
+              <span><span class="er-text-amber">■</span> com intervenção humana</span>
             </div>
-            <div style="display: flex; align-items: flex-end; gap: 14px; height: 160px;">
+            <div  class="er-flex-chart">
               <sc-for list="{{ barras }}" as="br" hint-placeholder-count="7">
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: stretch; gap: 6px; height: 100%; justify-content: flex-end;">
-                  <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; flex: 1;">
-                    <div style="height: {{ br.hHumano }}; background: #FFC24B; border-radius: 3px 3px 0 0; opacity: .9;"></div>
-                    <div style="height: {{ br.hAuto }}; background: #3DDC84; border-radius: 0 0 3px 3px;"></div>
+                <div  class="er-approval-bars">
+                  <div  class="er-flex-justify-end">
+                    <div  class="er-approval-human {{ br.classeHumano }}"></div>
+                    <div  class="er-approval-auto {{ br.classeAuto }}"></div>
                   </div>
-                  <span style="text-align: center; font-size: 10.5px; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">{{ br.dia }}</span>
+                  <span class="er-text-center-mono-xs">{{ br.dia }}</span>
                 </div>
               </sc-for>
             </div>
           </div>
 
-          <div style="padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
-            <div style="font-size: 13px; font-weight: 600; margin-bottom: 14px;">Qualidade por agente (score de avaliação)</div>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="er-panel">
+            <div  class="er-label-14-bold">Qualidade por agente (score de avaliação)</div>
+            <div class="er-flex-col-12">
               <sc-for list="{{ scores }}" as="sc" hint-placeholder-count="8">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <span style="font-size: 13px; width: 20px;">{{ sc.icone }}</span>
-                  <span style="font-size: 12.5px; width: 90px; color: #C7D2DC;">{{ sc.nome }}</span>
-                  <div style="flex: 1; height: 8px; border-radius: 4px; background: #0B0F14; overflow: hidden;">
-                    <div style="height: 100%; width: {{ sc.largura }}; background: {{ sc.cor }}; border-radius: 4px;"></div>
+                <div class="er-flex-center">
+                  <span  class="er-col-20">{{ sc.icone }}</span>
+                  <span  class="er-col-90-light">{{ sc.nome }}</span>
+                  <div class="er-progress-bar">
+                    <div  class="{{ sc.classeScore }}"></div>
                   </div>
-                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ sc.cor }}; width: 34px; text-align: right;">{{ sc.valor }}</span>
+                  <span  class="er-mono-number-dyn {{ sc.classeAg }}">{{ sc.valor }}</span>
                 </div>
               </sc-for>
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 16px; padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Distribuição por natureza da remediação</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 14px;">48 incidentes nos últimos 7 dias. Dois terços se resolvem em runtime — mas é o quinto que vira código que costuma consumir dias de engenharia no processo manual.</div>
-          <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="er-panel-spaced">
+          <div class="er-subtitle">Distribuição por natureza da remediação</div>
+          <div class="er-text-hint-14">48 incidentes nos últimos 7 dias. Dois terços se resolvem em runtime — mas é o quinto que vira código que costuma consumir dias de engenharia no processo manual.</div>
+          <div class="er-flex-col">
             <sc-for list="{{ naturezaResumo }}" as="nr" hint-placeholder-count="4">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="width: 76px; font-size: 11px; font-weight: 700; letter-spacing: .08em; font-family: 'IBM Plex Mono', monospace; color: {{ nr.cor }};">{{ nr.rotulo }}</span>
-                <div style="flex: 1; height: 8px; border-radius: 4px; background: #0B0F14; overflow: hidden;">
-                  <div style="height: 100%; width: {{ nr.larg }}; background: {{ nr.cor }}; border-radius: 4px;"></div>
+              <div  class="er-flex-center-12">
+                <span class="er-agent-code" style="--agent-color: {{ nr.cor }};">{{ nr.rotulo }}</span>
+                <div class="er-progress-bar">
+                  <div  class="er-bar-fill {{ nr.classeNat }}"></div>
                 </div>
-                <span style="width: 34px; text-align: right; font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: #E8EEF4;">{{ nr.qtd }}</span>
-                <span style="width: 40px; text-align: right; font-size: 11.5px; font-family: 'IBM Plex Mono', monospace; color: #5C6B7A;">{{ nr.pct }}</span>
-                <span style="width: 168px; font-size: 11.5px; color: #5C6B7A;">{{ nr.obs }}</span>
+                <span class="er-col-value">{{ nr.qtd }}</span>
+                <span class="er-col-number">{{ nr.pct }}</span>
+                <span class="er-col-label">{{ nr.obs }}</span>
               </div>
             </sc-for>
           </div>
         </div>
 
-        <div style="margin-top: 16px; padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Últimas anomalias</div>
-          <div style="display: grid; grid-template-columns: 100px 1fr 130px 90px 110px; gap: 0; font-size: 12.5px;">
-            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">ID</div>
-            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">DESCRIÇÃO</div>
-            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">RESOLUÇÃO</div>
-            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">MTTR</div>
-            <div style="padding: 8px 10px; color: #5C6B7A; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid #1E2833;">SCORE</div>
+        <div class="er-panel-spaced">
+          <div class="er-text-heading">Últimas anomalias</div>
+          <div  class="er-table-header">
+            <div class="er-tab-item">ID</div>
+            <div class="er-tab-item">DESCRIÇÃO</div>
+            <div class="er-tab-item">RESOLUÇÃO</div>
+            <div class="er-tab-item">MTTR</div>
+            <div class="er-tab-item">SCORE</div>
             <sc-for list="{{ historicoAnm }}" as="ha" hint-placeholder-count="4">
-              <div style="display: contents;">
-                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #5BA8FF; border-bottom: 1px solid #161D26;">{{ ha.id }}</div>
-                <div style="padding: 10px; color: #C7D2DC; border-bottom: 1px solid #161D26;">{{ ha.desc }}</div>
-                <div style="padding: 10px; color: {{ ha.resCor }}; border-bottom: 1px solid #161D26;">{{ ha.res }}</div>
-                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #93A1B0; border-bottom: 1px solid #161D26;">{{ ha.mttr }}</div>
-                <div style="padding: 10px; font-family: 'IBM Plex Mono', monospace; color: #3DDC84; border-bottom: 1px solid #161D26;">{{ ha.score }}</div>
+              <div  class="er-contents">
+                <div  class="er-code-line-blue">{{ ha.id }}</div>
+                <div  class="er-code-line-light">{{ ha.desc }}</div>
+                <div  class="er-code-line-dyn {{ ha.classeRes }}">{{ ha.res }}</div>
+                <div class="er-code-line">{{ ha.mttr }}</div>
+                <div  class="er-code-line-green">{{ ha.score }}</div>
               </div>
             </sc-for>
           </div>
@@ -442,100 +442,100 @@
 
     <!-- ============ CONFIGURAÇÃO ============ -->
     <sc-if value="{{ vConfig }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Configuração" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">⚙️ Configuração da squad</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A;">Agentes, skills, guardrails, gatilhos e a política de código que governam o comportamento autônomo da squad.</p>
+      <main data-screen-label="Configuração" class="er-flex-scroll">
+        <h2 class="er-title-1">⚙️ Configuração da squad</h2>
+        <p class="er-text-muted">Agentes, skills, guardrails, gatilhos e a política de código que governam o comportamento autônomo da squad.</p>
 
-        <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start;">
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📦 AGENTES & SKILLS</div>
+        <div  class="er-grid-2col-start">
+          <div class="er-flex-col">
+            <div class="er-section-title">📦 AGENTES & SKILLS</div>
             <sc-for list="{{ agentesConfig }}" as="ac" hint-placeholder-count="8">
-              <div style="padding: 14px 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ac.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ac.icone }}</div>
-                  <div style="flex: 1;">
-                    <div style="font-weight: 600; font-size: 13.5px;">{{ ac.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ ac.papel }} · {{ ac.modelo }}</div>
+              <div class="er-card-pad-14">
+                <div class="er-flex-center">
+                  <div class="er-icon-btn" style="--bg-color: {{ ac.fundoIcone }};">{{ ac.icone }}</div>
+                  <div class="er-flex-1">
+                    <div class="er-text-bold">{{ ac.nome }}</div>
+                    <div class="er-label">{{ ac.papel }} · {{ ac.modelo }}</div>
                   </div>
                 </div>
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <div  class="er-flex-wrap-6-b">
                   <sc-for list="{{ ac.skills }}" as="sk" hint-placeholder-count="3">
-                    <span style="font-size: 11px; padding: 3px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid #1E2833; color: {{ ac.corSkill }};">{{ sk }}</span>
+                    <span  class="er-tag-skill-dyn {{ ac.classeSkill }}">{{ sk }}</span>
                   </sc-for>
                 </div>
               </div>
             </sc-for>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🛡️ GUARDRAILS</div>
+          <div  class="er-flex-col-16">
+            <div class="er-flex-col">
+              <div class="er-section-title">🛡️ GUARDRAILS</div>
               <sc-for list="{{ guardrailsLista }}" as="gr" hint-placeholder-count="5">
-                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
-                  <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 13px; font-weight: 500;">{{ gr.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A; line-height: 1.4;">{{ gr.desc }}</div>
+                <div class="er-chip">
+                  <div class="er-flex-shrink">
+                    <div class="er-text-base">{{ gr.nome }}</div>
+                    <div  class="er-label-compact">{{ gr.desc }}</div>
                   </div>
-                  <div onClick="{{ gr.alternar }}" style="width: 38px; height: 21px; border-radius: 11px; background: {{ gr.trilha }}; cursor: pointer; position: relative; transition: background .2s; flex-shrink: 0;">
-                    <div style="width: 15px; height: 15px; border-radius: 50%; background: #E8EEF4; position: absolute; top: 3px; left: {{ gr.bolinha }}; transition: left .2s;"></div>
+                  <div onClick="{{ gr.alternar }}" class="er-toggle-track" style="--track-color: {{ gr.trilha }};">
+                    <div class="er-toggle-knob" style="--knob-left: {{ gr.bolinha }};"></div>
                   </div>
                 </div>
               </sc-for>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">⚡ TRIGGERS</div>
+            <div class="er-flex-col">
+              <div class="er-section-title">⚡ TRIGGERS</div>
               <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="6">
-                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
-                  <span style="font-size: 15px;">{{ tg.icone }}</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 13px; font-weight: 500;">{{ tg.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ tg.desc }}</div>
+                <div class="er-chip">
+                  <span class="er-text-lg">{{ tg.icone }}</span>
+                  <div class="er-flex-1">
+                    <div class="er-text-base">{{ tg.nome }}</div>
+                    <div class="er-label">{{ tg.desc }}</div>
                   </div>
-                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ tg.aws }}</span>
+                  <span class="er-tag-amber">{{ tg.aws }}</span>
                 </div>
               </sc-for>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🗺️ MAPA DE REMEDIAÇÃO</div>
+            <div class="er-flex-col">
+              <div class="er-section-title">🗺️ MAPA DE REMEDIAÇÃO</div>
               <sc-for list="{{ remediacaoLista }}" as="rm" hint-placeholder-count="7">
-                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
-                  <span style="font-size: 15px;">{{ rm.icone }}</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 13px; font-weight: 500;">{{ rm.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ rm.desc }}</div>
+                <div class="er-chip">
+                  <span class="er-text-lg">{{ rm.icone }}</span>
+                  <div class="er-flex-1">
+                    <div class="er-text-base">{{ rm.nome }}</div>
+                    <div class="er-label">{{ rm.desc }}</div>
                   </div>
-                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ rm.aws }}</span>
+                  <span class="er-tag-amber">{{ rm.aws }}</span>
                 </div>
               </sc-for>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📡 FONTES DE TELEMETRIA</div>
+            <div class="er-flex-col">
+              <div class="er-section-title">📡 FONTES DE TELEMETRIA</div>
               <sc-for list="{{ telemetriaLista }}" as="tl" hint-placeholder-count="5">
-                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
-                  <span style="font-size: 15px;">{{ tl.icone }}</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 13px; font-weight: 500;">{{ tl.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ tl.desc }}</div>
+                <div class="er-chip">
+                  <span class="er-text-lg">{{ tl.icone }}</span>
+                  <div class="er-flex-1">
+                    <div class="er-text-base">{{ tl.nome }}</div>
+                    <div class="er-label">{{ tl.desc }}</div>
                   </div>
-                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ tl.aws }}</span>
+                  <span class="er-tag-amber">{{ tl.aws }}</span>
                 </div>
               </sc-for>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🔐 POLÍTICA DE CÓDIGO</div>
-              <div style="font-size: 11.5px; color: #5C6B7A; line-height: 1.5; margin-top: -4px;">O que protege o repositório da empresa quando a correção é delegada a um agente externo.</div>
+            <div class="er-flex-col">
+              <div class="er-section-title">🔐 POLÍTICA DE CÓDIGO</div>
+              <div  class="er-label-tight-adjust">O que protege o repositório da empresa quando a correção é delegada a um agente externo.</div>
               <sc-for list="{{ politicaCodigo }}" as="pc" hint-placeholder-count="5">
-                <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
-                  <span style="font-size: 15px;">{{ pc.icone }}</span>
-                  <div style="flex: 1;">
-                    <div style="font-size: 13px; font-weight: 500;">{{ pc.nome }}</div>
-                    <div style="font-size: 11.5px; color: #5C6B7A;">{{ pc.desc }}</div>
+                <div class="er-chip">
+                  <span class="er-text-lg">{{ pc.icone }}</span>
+                  <div class="er-flex-1">
+                    <div class="er-text-base">{{ pc.nome }}</div>
+                    <div class="er-label">{{ pc.desc }}</div>
                   </div>
-                  <span style="font-size: 10.5px; padding: 2px 8px; border-radius: 5px; background: #0E1A13; border: 1px solid #1C3A28; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">{{ pc.aws }}</span>
+                  <span  class="er-tag-success-mono">{{ pc.aws }}</span>
                 </div>
               </sc-for>
             </div>
@@ -546,35 +546,35 @@
 
     <!-- ============ INTEGRAÇÕES ============ -->
     <sc-if value="{{ vIntegra }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Integrações — ecossistema da empresa" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🔌 Integrações do ecossistema</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 760px;">O EasyRun não substitui as plataformas que a empresa já usa — ele se encaixa entre elas. Cada linha abaixo mostra o que a squad lê, o que escreve, e onde a decisão continua sendo humana.</p>
+      <main data-screen-label="Integrações — ecossistema da empresa" class="er-flex-scroll">
+        <h2 class="er-title-1">🔌 Integrações do ecossistema</h2>
+        <p class="er-text-para-760">O EasyRun não substitui as plataformas que a empresa já usa — ele se encaixa entre elas. Cada linha abaixo mostra o que a squad lê, o que escreve, e onde a decisão continua sendo humana.</p>
 
-        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 980px;">
+        <div  class="er-flex-col-12-max">
           <sc-for list="{{ integracoesLista }}" as="ig" hint-placeholder-count="7">
-            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px; animation: er-entrar .3s ease;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 15px; background: #0B0F14; border: 1px solid #1E2833;">{{ ig.icone }}</span>
-                <div style="flex: 1; min-width: 0;">
-                  <div style="font-size: 13.5px; font-weight: 600; color: {{ ig.cor }};">{{ ig.nome }}</div>
-                  <div style="font-size: 11.5px; color: #5C6B7A;">{{ ig.papel }}</div>
+            <div class="er-card-animated">
+              <div class="er-flex-center">
+                <span class="er-icon-btn-outline">{{ ig.icone }}</span>
+                <div class="er-flex-shrink">
+                  <div  class="er-title-dyn {{ ig.classeNome }}">{{ ig.nome }}</div>
+                  <div class="er-label">{{ ig.papel }}</div>
                 </div>
-                <span style="font-size: 10.5px; padding: 3px 9px; border-radius: 5px; background: #0B0F14; border: 1px solid #1E2833; color: #93A1B0; font-family: 'IBM Plex Mono', monospace;">{{ ig.modo }}</span>
+                <span  class="er-tag-default-mono">{{ ig.modo }}</span>
               </div>
-              <div style="display: grid; grid-template-columns: 74px 1fr; gap: 6px 12px; font-size: 12.5px; color: #C7D2DC; line-height: 1.5;">
-                <span style="color: #4DD8E6; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">← LÊ</span><span>{{ ig.le }}</span>
-                <span style="color: #3DDC84; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">→ ESCREVE</span><span>{{ ig.escreve }}</span>
+              <div  class="er-grid-2col-label">
+                <span class="er-mono-cyan">← LÊ</span><span>{{ ig.le }}</span>
+                <span class="er-mono-success">→ ESCREVE</span><span>{{ ig.escreve }}</span>
               </div>
             </div>
           </sc-for>
         </div>
 
-        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">O fio único</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Um mesmo identificador de correlação atravessa todas as plataformas. É o que permite sair de "por que a squad mexeu nisso?" e chegar à chamada de modelo exata que decidiu.</div>
-          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px;">
+        <div class="er-card-large">
+          <div class="er-subtitle">O fio único</div>
+          <div class="er-text-hint-12">Um mesmo identificador de correlação atravessa todas as plataformas. É o que permite sair de "por que a squad mexeu nisso?" e chegar à chamada de modelo exata que decidiu.</div>
+          <div  class="er-flex-tags">
             <sc-for list="{{ rastreioLinhas }}" as="rf" hint-placeholder-count="9">
-              <span style="padding: 4px 9px; border-radius: 6px; background: #0B0F14; border: 1px solid {{ rf.marcaCor }}; color: {{ rf.cor }};">{{ rf.rotulo }}</span>
+              <span class="er-ref-tag" style="--ref-border: {{ rf.marcaCor }}; --ref-color: {{ rf.cor }};">{{ rf.rotulo }}</span>
             </sc-for>
           </div>
         </div>
@@ -583,27 +583,27 @@
 
     <!-- ============ LLMOPS ============ -->
     <sc-if value="{{ vLlmops }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="LLMOps — observabilidade da squad" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🔭 LLMOps — observabilidade da própria squad</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 760px;">Há duas observabilidades neste sistema, e confundi-las é o erro mais comum. O Datadog observa os <strong style="color: #93A1B0;">sistemas monitorados</strong> — isso é a entrada da squad. Esta tela é sobre observar <strong style="color: #93A1B0;">a squad</strong>: qual prompt rodou, quanto custou, se o diagnóstico estava certo.</p>
+      <main data-screen-label="LLMOps — observabilidade da squad" class="er-flex-scroll">
+        <h2 class="er-title-1">🔭 LLMOps — observabilidade da própria squad</h2>
+        <p class="er-text-para-760">Há duas observabilidades neste sistema, e confundi-las é o erro mais comum. O Datadog observa os <strong class="er-text-secondary">sistemas monitorados</strong> — isso é a entrada da squad. Esta tela é sobre observar <strong class="er-text-secondary">a squad</strong>: qual prompt rodou, quanto custou, se o diagnóstico estava certo.</p>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
+        <div  class="er-flex-wrap-8-mb">
           <sc-for list="{{ llmopsStack }}" as="ls" hint-placeholder-count="5">
-            <div style="padding: 10px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 2px; min-width: 190px; flex: 1;">
-              <span style="font-size: 12.5px; font-weight: 600; color: {{ ls.cor }};">{{ ls.nome }}</span>
-              <span style="font-size: 11px; color: #5C6B7A; line-height: 1.45;">{{ ls.papel }}</span>
+            <div  class="er-selector-box">
+              <span  class="er-label-bold-dyn {{ ls.classeStack }}">{{ ls.nome }}</span>
+              <span  class="er-text-11-muted-loose">{{ ls.papel }}</span>
             </div>
           </sc-for>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+        <div  class="er-grid-260">
           <sc-for list="{{ llmopsCards }}" as="lo" hint-placeholder-count="9">
-            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;" style-hover="border-color: #3DDC84;">
-              <div style="display: flex; align-items: center; gap: 9px;">
-                <span style="font-size: 16px;">{{ lo.icone }}</span>
-                <span style="font-size: 13.5px; font-weight: 600;">{{ lo.titulo }}</span>
+            <div class="er-card-md" style-hover="border-color: #3DDC84;">
+              <div  class="er-flex-center-9">
+                <span class="er-text-h6">{{ lo.icone }}</span>
+                <span  class="er-title-13">{{ lo.titulo }}</span>
               </div>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">{{ lo.desc }}</span>
+              <span class="er-text-main">{{ lo.desc }}</span>
             </div>
           </sc-for>
         </div>
@@ -612,18 +612,18 @@
 
     <!-- ============ FINOPS ============ -->
     <sc-if value="{{ vFinops }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="FinOps — Governança de Modelos" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">💰 FinOps &amp; Governança de Modelos</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade para as camadas de LLM: todo consumo dos agentes passa pelo IARA — o gateway corporativo que governa acesso e custo de LLMs — e o cenário auto-hospedado (Ollama) é avaliado como alternativa dentro dessa governança.</p>
+      <main data-screen-label="FinOps — Governança de Modelos" class="er-flex-scroll">
+        <h2 class="er-title-1">💰 FinOps &amp; Governança de Modelos</h2>
+        <p class="er-text-para-720">Política de custo e confiabilidade para as camadas de LLM: todo consumo dos agentes passa pelo IARA — o gateway corporativo que governa acesso e custo de LLMs — e o cenário auto-hospedado (Ollama) é avaliado como alternativa dentro dessa governança.</p>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <div  class="er-grid-220-12">
           <sc-for list="{{ finopsCards }}" as="fc" hint-placeholder-count="7">
-            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 16px;">{{ fc.icone }}</span>
-                <span style="font-weight: 600; font-size: 13px; color: #B48CFF;">{{ fc.titulo }}</span>
+            <div class="er-card-md">
+              <div class="er-flex-center-8">
+                <span class="er-text-h6">{{ fc.icone }}</span>
+                <span  class="er-text-purple">{{ fc.titulo }}</span>
               </div>
-              <div style="font-size: 12px; color: #93A1B0; line-height: 1.55;">{{ fc.desc }}</div>
+              <div  class="er-text-gray">{{ fc.desc }}</div>
             </div>
           </sc-for>
         </div>
@@ -632,90 +632,90 @@
 
     <!-- ============ ARQUITETURA ============ -->
     <sc-if value="{{ vArq }}" hint-placeholder-val="{{ false }}">
-      <main data-screen-label="Arquitetura — 13 pilares" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
-        <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">🏗️ Arquitetura de referência — 13 pilares</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Cada pilar da squad agêntica mapeado para a plataforma que o sustenta — AWS ou corporativa — e para onde ele vive neste protótipo.</p>
+      <main data-screen-label="Arquitetura — 13 pilares" class="er-flex-scroll">
+        <h2 class="er-title-1">🏗️ Arquitetura de referência — 13 pilares</h2>
+        <p class="er-text-para-720">Cada pilar da squad agêntica mapeado para a plataforma que o sustenta — AWS ou corporativa — e para onde ele vive neste protótipo.</p>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <div  class="er-grid-210-spaced">
           <sc-for list="{{ pilares }}" as="pl" hint-placeholder-count="13">
-            <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;" style-hover="border-color: #3DDC84;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 18px;">{{ pl.icone }}</span>
-                <span style="font-weight: 600; font-size: 13.5px;">{{ pl.nome }}</span>
+            <div class="er-card-md" style-hover="border-color: #3DDC84;">
+              <div class="er-flex-center-8">
+                <span  class="er-text-h4">{{ pl.icone }}</span>
+                <span class="er-text-bold">{{ pl.nome }}</span>
               </div>
-              <div style="font-size: 12px; color: #93A1B0; line-height: 1.5; flex: 1;">{{ pl.desc }}</div>
-              <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <div  class="er-text-gray-flex">{{ pl.desc }}</div>
+              <div  class="er-flex-wrap-5">
                 <sc-for list="{{ pl.aws }}" as="pa" hint-placeholder-count="2">
-                  <span style="font-size: 10px; padding: 2px 7px; border-radius: 5px; background: #1A1408; border: 1px solid #3A2E12; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">{{ pa }}</span>
+                  <span  class="er-tag-aws">{{ pa }}</span>
                 </sc-for>
               </div>
-              <div style="font-size: 11px; color: #5BA8FF;">→ {{ pl.onde }}</div>
+              <div  class="er-text-blue">→ {{ pl.onde }}</div>
             </div>
           </sc-for>
         </div>
 
-        <div style="padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Stack alvo de implementação</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #3DDC84; font-family: 'IBM Plex Mono', monospace;">BACKEND · PYTHON</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração em LangGraph com roteamento condicional por natureza da remediação, contrato tipado AgentState (TypedDict, schema versionado) e pausas via interrupt() para HITL — duas no ramo de código. LangChain para ferramentas e retrievers; checkpoints em PostgreSQL permitem retomar do ponto exato de interrupção.</span>
+        <div class="er-card-large">
+          <div class="er-text-heading">Stack alvo de implementação</div>
+          <div  class="er-grid-3col">
+            <div class="er-flex-col-6">
+              <span  class="er-mono-12-success">BACKEND · PYTHON</span>
+              <span class="er-text-main">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração em LangGraph com roteamento condicional por natureza da remediação, contrato tipado AgentState (TypedDict, schema versionado) e pausas via interrupt() para HITL — duas no ramo de código. LangChain para ferramentas e retrievers; checkpoints em PostgreSQL permitem retomar do ponto exato de interrupção.</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #5BA8FF; font-family: 'IBM Plex Mono', monospace;">FRONTEND · ANGULAR</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Angular 18 standalone components + Signals. Um módulo por visão deste protótipo (console, HITL, avaliação, configuração, integrações, LLMOps), estado via store dedicado. Servido na AWS como ambiente web da squad de Run.</span>
+            <div class="er-flex-col-6">
+              <span  class="er-mono-12-blue">FRONTEND · ANGULAR</span>
+              <span class="er-text-main">Angular 18 standalone components + Signals. Um módulo por visão deste protótipo (console, HITL, avaliação, configuração, integrações, LLMOps), estado via store dedicado. Servido na AWS como ambiente web da squad de Run.</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">INFRA · AWS</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">LLMs consumidas via MCP do IARA — o gateway corporativo que governa acesso, catálogo de modelos e custo; nenhum agente fala direto com o provedor. Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔌 Arquitetura de integração</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 14px;">O EasyRun roda na AWS, mas trata sistemas que nem sempre estão nela. As plataformas corporativas entram como adaptadores na borda — o domínio não conhece nenhum SDK.</div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #4DD8E6; font-family: 'IBM Plex Mono', monospace;">ENTRADA</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Webhooks do Datadog e do ServiceNow chegam por API Gateway, são normalizados em evento de anomalia e publicados no EventBridge. Um só formato de entrada, independentemente da origem.</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #7FD4A8; font-family: 'IBM Plex Mono', monospace;">RASTREABILIDADE</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Adaptadores de ServiceNow (incidente, CMDB, GMUD) e IUClick (bug, kanban) atrás de portas tipadas. Trocar de ferramenta é trocar de adaptador, não reescrever o domínio.</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #E8A87C; font-family: 'IBM Plex Mono', monospace;">CÓDIGO</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">GitHub App com escopo por repositório para clonar e abrir PR; Devin acionado por sessão. Redação de segredos e allowlist de repositórios rodam antes de qualquer saída — não é opcional no contrato.</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">EXECUÇÃO</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Ações de infra via Lambda e SSM na AWS; sistemas fora dela (ERP on-premises, SaaS de terceiro) por API própria, através de conectividade privada. O Executor não presume nuvem.</span>
+            <div class="er-flex-col-6">
+              <span class="er-mono-amber">INFRA · AWS</span>
+              <span class="er-text-main">LLMs consumidas via MCP do IARA — o gateway corporativo que governa acesso, catálogo de modelos e custo; nenhum agente fala direto com o provedor. Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">🛡️ Estabilidade &amp; Hardening (SDD/Harness)</div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+        <div class="er-card-large">
+          <div class="er-subtitle">🔌 Arquitetura de integração</div>
+          <div class="er-text-hint-14">O EasyRun roda na AWS, mas trata sistemas que nem sempre estão nela. As plataformas corporativas entram como adaptadores na borda — o domínio não conhece nenhum SDK.</div>
+          <div  class="er-grid-210-14">
+            <div class="er-flex-col-6">
+              <span  class="er-mono-12-cyan">ENTRADA</span>
+              <span class="er-text-main">Webhooks do Datadog e do ServiceNow chegam por API Gateway, são normalizados em evento de anomalia e publicados no EventBridge. Um só formato de entrada, independentemente da origem.</span>
+            </div>
+            <div class="er-flex-col-6">
+              <span  class="er-mono-mint">RASTREABILIDADE</span>
+              <span class="er-text-main">Adaptadores de ServiceNow (incidente, CMDB, GMUD) e IUClick (bug, kanban) atrás de portas tipadas. Trocar de ferramenta é trocar de adaptador, não reescrever o domínio.</span>
+            </div>
+            <div class="er-flex-col-6">
+              <span  class="er-mono-tan">CÓDIGO</span>
+              <span class="er-text-main">GitHub App com escopo por repositório para clonar e abrir PR; Devin acionado por sessão. Redação de segredos e allowlist de repositórios rodam antes de qualquer saída — não é opcional no contrato.</span>
+            </div>
+            <div class="er-flex-col-6">
+              <span class="er-mono-amber">EXECUÇÃO</span>
+              <span class="er-text-main">Ações de infra via Lambda e SSM na AWS; sistemas fora dela (ERP on-premises, SaaS de terceiro) por API própria, através de conectividade privada. O Executor não presume nuvem.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="er-card-large">
+          <div class="er-text-heading">🛡️ Estabilidade &amp; Hardening (SDD/Harness)</div>
+          <div  class="er-grid-220-14">
             <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="6">
-              <div style="display: flex; gap: 8px; align-items: flex-start;">
-                <span style="color: #3DDC84; font-size: 13px; padding-top: 1px;">●</span>
-                <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.55;">{{ hd.texto }}</span>
+              <div  class="er-flex-start-8">
+                <span class="er-text-success-lg">●</span>
+                <span  class="er-text-body-muted">{{ hd.texto }}</span>
               </div>
             </sc-for>
           </div>
         </div>
 
-        <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
-          <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔗 Squad EasyRun × papéis LangGraph</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo via MCP do IARA); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="er-card-large">
+          <div class="er-subtitle">🔗 Squad EasyRun × papéis LangGraph</div>
+          <div class="er-text-hint-12">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo via MCP do IARA); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
+          <div class="er-flex-col-8">
             <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="6">
-              <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;">
-                <span style="color: #93A1B0; min-width: 160px;">{{ lg.agentes }}</span>
-                <span style="color: #5C6B7A;">→</span>
-                <span style="color: #E8EEF4; font-weight: 500;">{{ lg.papel }}</span>
+              <div  class="er-flex-center-label">
+                <span class="er-col-160-muted">{{ lg.agentes }}</span>
+                <span class="er-text-dim">→</span>
+                <span class="er-text-bright">{{ lg.papel }}</span>
               </div>
             </sc-for>
           </div>
@@ -1494,6 +1494,7 @@ class Component extends DCLogic {
         ...r, valor: v || '—', preenchido: !!v,
         cor: v ? '#E8EEF4' : '#5C6B7A',
         marcaCor: v ? '#3DDC84' : '#1E2833',
+        classeValor: v ? 'er-rastreio-filled' : 'er-rastreio-empty',
       };
     });
     const rastreioPreenchidos = rastreioLinhas.filter(r => r.preenchido).length;
@@ -1532,6 +1533,7 @@ class Component extends DCLogic {
       incBorda: incCor === '#3DDC84' ? '#1C3A28' : (incCor === '#FFC24B' ? '#3A2E12' : '#4A1E26'),
 
       cenariosLista: this.cenarios().map(c => ({
+        classeBtn: (c.id === s.cenarioAtivo ? 'er-scenario-active' : '') + (s.rodando && c.id !== s.cenarioAtivo ? ' er-scenario-dimmed' : ''),
         id: c.id,
         titulo: c.titulo,
         icone: c.icone,
@@ -1572,8 +1574,8 @@ class Component extends DCLogic {
       naturezaDesc: nat ? nat.desc : 'O Diagnosta classifica a natureza logo após identificar a causa raiz — é ela que decide o caminho da esteira.',
 
       chatMsgs: s.chat.map(m => m.de === 'humano'
-        ? { texto: m.texto, direcao: 'row-reverse', avatar: '👤', avatarFundo: '#1E2833', fundo: '#182430', borda: '#24384A' }
-        : { texto: m.texto, direcao: 'row', avatar: '🎼', avatarFundo: '#221A33', fundo: '#131A22', borda: '#1E2833' }),
+        ? { texto: m.texto, direcao: 'row-reverse', avatar: '👤', avatarFundo: '#1E2833', fundo: '#182430', borda: '#24384A', classeDir: 'er-msg-reverse', classeBolha: 'er-msg-human' }
+        : { texto: m.texto, direcao: 'row', avatar: '🎼', avatarFundo: '#221A33', fundo: '#131A22', borda: '#1E2833', classeDir: '', classeBolha: 'er-msg-squad' }),
       digitando: s.digitando,
       chatInput: s.chatInput,
       aoDigitarChat: (e) => this.setState({ chatInput: e.target.value }),
@@ -1592,6 +1594,7 @@ class Component extends DCLogic {
         tipoGmud: h.tipo === 'gmud',
         tipoRotulo: h.tipo === 'pr' ? 'PULL REQUEST' : (h.tipo === 'gmud' ? 'GMUD' : 'AÇÃO'),
         tipoCor: h.tipo === 'pr' ? '#E8A87C' : (h.tipo === 'gmud' ? '#5BA8FF' : '#B48CFF'),
+        tipoClasse: h.tipo === 'pr' ? 'er-tag-tipo-pr' : (h.tipo === 'gmud' ? 'er-tag-tipo-gmud' : 'er-tag-tipo-acao'),
         rotuloAprovar: h.tipo === 'pr' ? '✓ Aprovar PR' : (h.tipo === 'gmud' ? '✓ Aprovar GMUD' : '✓ Aprovar'),
         aprovar: () => this.decidir(h.id, true),
         rejeitar: () => this.decidir(h.id, false),
@@ -1602,41 +1605,44 @@ class Component extends DCLogic {
         icone: h.status === 'aprovado' ? '✅' : '🚫',
         decisao: h.status === 'aprovado' ? 'Aprovado' : 'Rejeitado',
         cor: h.status === 'aprovado' ? '#3DDC84' : '#FF6B6B',
+        classeDecisao: h.status === 'aprovado' ? 'er-decisao-ok' : 'er-decisao-rej',
         tipoRotulo: h.tipo === 'pr' ? 'PULL REQUEST' : (h.tipo === 'gmud' ? 'GMUD' : 'AÇÃO'),
       })),
       temHistorico: s.hitl.some(h => h.status !== 'pendente'),
 
       metricas: [
-        { rotulo: 'MTTR médio', valor: '6m 12s', cor: '#3DDC84', delta: '−71% vs. manual', deltaCor: '#3DDC84' },
-        { rotulo: 'Resolução autônoma', valor: '84%', cor: '#3DDC84', delta: '+9 pts na semana', deltaCor: '#3DDC84' },
-        { rotulo: 'Acerto da natureza', valor: '96%', cor: '#4DD8E6', delta: '2 roteamentos errados em 48', deltaCor: '#93A1B0' },
-        { rotulo: 'PR aceito na 1ª revisão', valor: '78%', cor: '#E8A87C', delta: '7 de 9 PRs do Devin', deltaCor: '#93A1B0' },
-        { rotulo: 'Tempo até GMUD aberta', valor: '48s', cor: '#5BA8FF', delta: 'manual: ~25 min', deltaCor: '#3DDC84' },
-        { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'via IARA · 118k tokens', deltaCor: '#93A1B0' },
+        { rotulo: 'MTTR médio', valor: '6m 12s', cor: '#3DDC84', delta: '−71% vs. manual', deltaCor: '#3DDC84', classeValor: 'er-c-green', classeDelta: 'er-c-green' },
+        { rotulo: 'Resolução autônoma', valor: '84%', cor: '#3DDC84', delta: '+9 pts na semana', deltaCor: '#3DDC84', classeValor: 'er-c-green', classeDelta: 'er-c-green' },
+        { rotulo: 'Acerto da natureza', valor: '96%', cor: '#4DD8E6', delta: '2 roteamentos errados em 48', deltaCor: '#93A1B0', classeValor: 'er-c-cyan', classeDelta: 'er-c-muted' },
+        { rotulo: 'PR aceito na 1ª revisão', valor: '78%', cor: '#E8A87C', delta: '7 de 9 PRs do Devin', deltaCor: '#93A1B0', classeValor: 'er-c-tan', classeDelta: 'er-c-muted' },
+        { rotulo: 'Tempo até GMUD aberta', valor: '48s', cor: '#5BA8FF', delta: 'manual: ~25 min', deltaCor: '#3DDC84', classeValor: 'er-c-blue', classeDelta: 'er-c-green' },
+        { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'via IARA · 118k tokens', deltaCor: '#93A1B0', classeValor: 'er-c-purple', classeDelta: 'er-c-muted' },
       ],
       naturezaResumo: [
-        { rotulo: 'INFRA', cor: '#3DDC84', qtd: '31', pct: '65%', larg: '65%', obs: 'resolvidas em runtime' },
-        { rotulo: 'CÓDIGO', cor: '#E8A87C', qtd: '9', pct: '19%', larg: '19%', obs: 'viraram PR via Devin' },
-        { rotulo: 'CONFIG', cor: '#5BA8FF', qtd: '5', pct: '10%', larg: '10%', obs: 'sob GMUD' },
-        { rotulo: 'EXTERNO', cor: '#FFC24B', qtd: '3', pct: '6%', larg: '6%', obs: 'escaladas ao time dono' },
+        { rotulo: 'INFRA', cor: '#3DDC84', qtd: '31', pct: '65%', larg: '65%', obs: 'resolvidas em runtime', classeNat: 'er-nat-infra' },
+        { rotulo: 'CÓDIGO', cor: '#E8A87C', qtd: '9', pct: '19%', larg: '19%', obs: 'viraram PR via Devin', classeNat: 'er-nat-codigo' },
+        { rotulo: 'CONFIG', cor: '#5BA8FF', qtd: '5', pct: '10%', larg: '10%', obs: 'sob GMUD', classeNat: 'er-nat-config' },
+        { rotulo: 'EXTERNO', cor: '#FFC24B', qtd: '3', pct: '6%', larg: '6%', obs: 'escaladas ao time dono', classeNat: 'er-nat-externo' },
       ],
       barras: barrasDados.map(b => ({
         dia: b.dia,
         hAuto: Math.round((b.auto / 10) * 130) + 'px',
         hHumano: Math.round((b.humano / 10) * 130) + 'px',
+        classeAuto: 'er-barra-auto-' + b.dia.replace('á', 'a'),
+        classeHumano: 'er-barra-humano-' + b.dia.replace('á', 'a'),
       })),
       scores: defs.map(a => {
         const v = { maestro: 94, sentinela: 97, elo: 98, contexto: 89, diagnosta: 91, artifice: 86, executor: 99, auditor: 95 }[a.id];
-        return { icone: a.icone, nome: a.nome, valor: v, largura: v + '%', cor: a.cor };
+        return { icone: a.icone, nome: a.nome, valor: v, largura: v + '%', cor: a.cor, classeScore: 'er-score-' + a.id, classeAg: 'er-ag-' + a.id };
       }),
       historicoAnm: [
-        { id: 'ANM-2046', desc: 'Fila SQS de pedidos acima de 12k mensagens', res: 'Autônoma', resCor: '#3DDC84', mttr: '3m 58s', score: '0,96' },
-        { id: 'ANM-2045', desc: 'Erros 5xx no serviço de pagamentos (+8%)', res: 'Com humano', resCor: '#FFC24B', mttr: '11m 04s', score: '0,88' },
-        { id: 'ANM-2044', desc: 'CPU do cluster OpenSearch acima de 92%', res: 'Autônoma', resCor: '#3DDC84', mttr: '5m 21s', score: '0,93' },
-        { id: 'ANM-2043', desc: 'Lambda de notificação com throttling', res: 'Autônoma', resCor: '#3DDC84', mttr: '2m 47s', score: '0,97' },
+        { id: 'ANM-2046', desc: 'Fila SQS de pedidos acima de 12k mensagens', res: 'Autônoma', resCor: '#3DDC84', mttr: '3m 58s', score: '0,96', classeRes: 'er-c-green' },
+        { id: 'ANM-2045', desc: 'Erros 5xx no serviço de pagamentos (+8%)', res: 'Com humano', resCor: '#FFC24B', mttr: '11m 04s', score: '0,88', classeRes: 'er-c-amber' },
+        { id: 'ANM-2044', desc: 'CPU do cluster OpenSearch acima de 92%', res: 'Autônoma', resCor: '#3DDC84', mttr: '5m 21s', score: '0,93', classeRes: 'er-c-green' },
+        { id: 'ANM-2043', desc: 'Lambda de notificação com throttling', res: 'Autônoma', resCor: '#3DDC84', mttr: '2m 47s', score: '0,97', classeRes: 'er-c-green' },
       ],
 
-      agentesConfig: defs.map(a => ({ ...a, fundoIcone: a.cor + '22', corSkill: a.cor })),
+      agentesConfig: defs.map(a => ({ ...a, fundoIcone: a.cor + '22', corSkill: a.cor, classeSkill: 'er-ag-' + a.id })),
       guardrailsLista: grDefs.map(g => ({
         ...g,
         trilha: s.guardrails[g.k] ? '#3DDC84' : '#1E2833',
@@ -1680,13 +1686,13 @@ class Component extends DCLogic {
 
       // O que o EasyRun troca com cada plataforma do ecossistema
       integracoesLista: [
-        { icone: '🚪', nome: 'IARA', papel: 'Gateway corporativo de LLMs (MCP)', le: 'Catálogo de modelos homologados · quotas e orçamento de tokens por agente', escreve: 'Requisições de inferência dos agentes · telemetria de custo por execução', modo: 'Automático · acesso e custo governados pelo time IARA', cor: '#B48CFF' },
-        { icone: '🎫', nome: 'ServiceNow', papel: 'Registro, CMDB e gestão de mudança', le: 'Incidentes abertos · item de configuração · time dono · repositório do serviço', escreve: 'Anomalia correlacionada · GMUD aberta · incidente encerrado ou reatribuído', modo: 'Automático · GMUD aprovada por humano', cor: '#5BA8FF' },
-        { icone: '🐶', nome: 'Datadog', papel: 'Observabilidade dos sistemas monitorados', le: 'Métricas, logs, traces, error tracking, monitores e forecast', escreve: 'Evento de anomalia · janela de validação pós-remediação', modo: 'Automático', cor: '#B48CFF' },
-        { icone: '📋', nome: 'IUClick', papel: 'Kanban do processo ágil', le: 'Coluna atual do card e histórico de movimentação', escreve: 'Bug criado na abertura · card movido a cada avanço do incidente', modo: 'Automático', cor: '#7FD4A8' },
-        { icone: '🛠️', nome: 'Devin', papel: 'Agente de código', le: 'Sessão, diagnóstico e trecho de código relevante — já redigido', escreve: 'Patch proposto com teste de regressão', modo: 'Automático · saída sempre revisada', cor: '#E8A87C' },
-        { icone: '🐙', nome: 'GitHub (org)', papel: 'Versionamento e entrega', le: 'Repositório do CI afetado · checks de CI · histórico de commits', escreve: 'Branch e pull request — merge só após aprovação humana', modo: 'HITL obrigatório', cor: '#C7D2DC' },
-        { icone: '☁️', nome: 'AWS', papel: 'Execução de ações de infraestrutura', le: 'Estado de ASG, Lambda, Route 53, EBS e parâmetros do SSM', escreve: 'Ação de remediação aplicada em runtime', modo: 'Automático dentro dos guardrails', cor: '#FFC24B' },
+        { icone: '🚪', nome: 'IARA', papel: 'Gateway corporativo de LLMs (MCP)', le: 'Catálogo de modelos homologados · quotas e orçamento de tokens por agente', escreve: 'Requisições de inferência dos agentes · telemetria de custo por execução', modo: 'Automático · acesso e custo governados pelo time IARA', cor: '#B48CFF', classeNome: 'er-ig-iara' },
+        { icone: '🎫', nome: 'ServiceNow', papel: 'Registro, CMDB e gestão de mudança', le: 'Incidentes abertos · item de configuração · time dono · repositório do serviço', escreve: 'Anomalia correlacionada · GMUD aberta · incidente encerrado ou reatribuído', modo: 'Automático · GMUD aprovada por humano', cor: '#5BA8FF', classeNome: 'er-ig-servicenow' },
+        { icone: '🐶', nome: 'Datadog', papel: 'Observabilidade dos sistemas monitorados', le: 'Métricas, logs, traces, error tracking, monitores e forecast', escreve: 'Evento de anomalia · janela de validação pós-remediação', modo: 'Automático', cor: '#B48CFF', classeNome: 'er-ig-datadog' },
+        { icone: '📋', nome: 'IUClick', papel: 'Kanban do processo ágil', le: 'Coluna atual do card e histórico de movimentação', escreve: 'Bug criado na abertura · card movido a cada avanço do incidente', modo: 'Automático', cor: '#7FD4A8', classeNome: 'er-ig-iuclick' },
+        { icone: '🛠️', nome: 'Devin', papel: 'Agente de código', le: 'Sessão, diagnóstico e trecho de código relevante — já redigido', escreve: 'Patch proposto com teste de regressão', modo: 'Automático · saída sempre revisada', cor: '#E8A87C', classeNome: 'er-ig-devin' },
+        { icone: '🐙', nome: 'GitHub (org)', papel: 'Versionamento e entrega', le: 'Repositório do CI afetado · checks de CI · histórico de commits', escreve: 'Branch e pull request — merge só após aprovação humana', modo: 'HITL obrigatório', cor: '#C7D2DC', classeNome: 'er-ig-github' },
+        { icone: '☁️', nome: 'AWS', papel: 'Execução de ações de infraestrutura', le: 'Estado de ASG, Lambda, Route 53, EBS e parâmetros do SSM', escreve: 'Ação de remediação aplicada em runtime', modo: 'Automático dentro dos guardrails', cor: '#FFC24B', classeNome: 'er-ig-aws' },
       ],
 
       // Observabilidade da própria esteira agêntica — o lado LLMOps
@@ -1702,11 +1708,11 @@ class Component extends DCLogic {
         { icone: '🎟️', titulo: 'Orçamento por execução', desc: 'Teto de tokens por agente e por incidente, aplicado no gateway do IARA, com corte automático. Um agente em laço não vira uma fatura surpresa no fim do mês.' },
       ],
       llmopsStack: [
-        { nome: 'LangGraph', papel: 'Orquestração em grafo de estados, interrupt() para HITL e checkpointing', cor: '#B48CFF' },
-        { nome: 'LangChain', papel: 'Abstração de ferramentas, retrievers e integração com os modelos', cor: '#5BA8FF' },
-        { nome: 'Langfuse', papel: 'Traces, gestão de prompts versionados e custo por execução', cor: '#7FD4A8' },
-        { nome: 'LangSmith', papel: 'Datasets, execução de avaliações e comparação entre versões', cor: '#E8A87C' },
-        { nome: 'Datadog LLM Obs.', papel: 'Correlação com o APM dos sistemas monitorados e alertas de qualidade', cor: '#FFC24B' },
+        { nome: 'LangGraph', papel: 'Orquestração em grafo de estados, interrupt() para HITL e checkpointing', cor: '#B48CFF', classeStack: 'er-stack-langgraph' },
+        { nome: 'LangChain', papel: 'Abstração de ferramentas, retrievers e integração com os modelos', cor: '#5BA8FF', classeStack: 'er-stack-langchain' },
+        { nome: 'Langfuse', papel: 'Traces, gestão de prompts versionados e custo por execução', cor: '#7FD4A8', classeStack: 'er-stack-langfuse' },
+        { nome: 'LangSmith', papel: 'Datasets, execução de avaliações e comparação entre versões', cor: '#E8A87C', classeStack: 'er-stack-langsmith' },
+        { nome: 'Datadog LLM Obs.', papel: 'Correlação com o APM dos sistemas monitorados e alertas de qualidade', cor: '#FFC24B', classeStack: 'er-stack-datadog-llm' },
       ],
 
       finopsCards: [

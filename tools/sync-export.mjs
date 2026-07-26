@@ -2,9 +2,10 @@
 /**
  * Regenera prototype/export/EasyRun-src.dc.html a partir da fonte canônica.
  *
- * O espelho difere do canônico em exatamente duas coisas, e ambas são estruturais:
+ * O espelho difere do canônico em exatamente três coisas, e todas são estruturais:
  *   1. o <script src> aponta para "../support.js" (o arquivo está um nível abaixo);
- *   2. há um <template id="__bundler_thumbnail"> com o SVG de miniatura.
+ *   2. o <link> de CSS aponta para "../EasyRun.dc.css" (mesmo motivo);
+ *   3. há um <template id="__bundler_thumbnail"> com o SVG de miniatura.
  *
  * Manter as duas cópias sincronizadas à mão sempre divergiu no primeiro esquecimento.
  * Este script faz a cópia; `node tools/check-prototype.mjs` verifica se está em dia.
@@ -22,10 +23,16 @@ const ESPELHO = join(RAIZ, 'prototype', 'export', 'EasyRun-src.dc.html');
 
 const TAG_CANONICA = '<script src="./support.js"></script>';
 const TAG_ESPELHO = '<script src="../support.js"></script>';
+const LINK_CANONICO = '<link rel="stylesheet" href="./EasyRun.dc.css">';
+const LINK_ESPELHO = '<link rel="stylesheet" href="../EasyRun.dc.css">';
 
 const canonico = readFileSync(CANONICO, 'utf8');
 if (!canonico.includes(TAG_CANONICA)) {
   console.error(`não encontrei ${TAG_CANONICA} na fonte canônica — o cabeçalho mudou?`);
+  process.exit(1);
+}
+if (!canonico.includes(LINK_CANONICO)) {
+  console.error(`não encontrei ${LINK_CANONICO} na fonte canônica — o cabeçalho mudou?`);
   process.exit(1);
 }
 
@@ -44,7 +51,9 @@ try {
   console.warn('espelho ainda não existe; será criado sem o <template> de thumbnail');
 }
 
-const novo = canonico.replace(TAG_CANONICA, TAG_ESPELHO + (thumbnail ? EOL + thumbnail : ''));
+const novo = canonico
+  .replace(TAG_CANONICA, TAG_ESPELHO + (thumbnail ? EOL + thumbnail : ''))
+  .replace(LINK_CANONICO, LINK_ESPELHO);
 
 writeFileSync(ESPELHO, novo, 'utf8');
 console.log(
