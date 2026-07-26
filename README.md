@@ -27,6 +27,7 @@ técnico e o processo end-to-end, sem pressupor conhecimento prévio de Python o
 ├── tests/                    # testes (pytest)
 ├── prototype/                 # mockup estático de UI (HTML/JS), não integrado ao backend
 ├── docs/                       # documentação completa (ver seção acima)
+├── tools/                      # verificações do protótipo (Node, sem dependências)
 ├── pyproject.toml
 └── .gitignore
 ```
@@ -34,8 +35,9 @@ técnico e o processo end-to-end, sem pressupor conhecimento prévio de Python o
 ### `prototype/`
 
 Contém um dashboard estático chamado "EasyRun — Squad Agêntica AIOps" (HTML/JS,
-sem lógica Python), simulando 7 cenários de incidente com 8 agentes, integrado (na
-encenação) a ServiceNow, Datadog, IUClick, Devin e GitHub. Não é usado
+sem lógica Python), simulando 8 cenários de incidente com 8 agentes, integrado (na
+encenação) a ServiceNow, Datadog, IUClick, Devin, GitHub e ao IARA — o gateway
+corporativo por onde sai toda chamada de LLM. Não é usado
 pelo pacote `squad_agentica` — é só o mockup visual. Pontos a saber:
 
 - `EasyRun.dc.html` é a fonte canônica. Carrega `support.js` (runtime gerado, com
@@ -62,7 +64,14 @@ pip install -e ".[dev]"
 ## Testes
 
 ```bash
-pytest
+pytest                        # pacote Python — 25 testes
+node tools/check-prototype.mjs   # protótipo — cenários, motor, template e espelho
+```
+
+Depois de editar `prototype/EasyRun.dc.html`, regenere o espelho antes de verificar:
+
+```bash
+node tools/sync-export.mjs
 ```
 
 ## Rodando o mockup localmente

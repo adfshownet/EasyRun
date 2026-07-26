@@ -516,14 +516,14 @@
                 <tr><th>Agente</th><th>Papel</th><th>Analogia humana</th><th>Modelo</th></tr>
               </thead>
               <tbody>
-                <tr><td>🎼 Maestro</td><td>Orquestrador</td><td>O líder do plantão, que distribui as tarefas</td><td>Bedrock · Claude Sonnet</td></tr>
-                <tr><td>🛰️ Sentinela</td><td>Detecção &amp; triggers</td><td>Quem fica de olho nos painéis e dá o alarme</td><td>Regras + Bedrock Haiku</td></tr>
-                <tr><td>🔗 <strong>Elo</strong></td><td>Rastreabilidade corporativa</td><td>Quem preenche o chamado, abre o card e a GMUD</td><td>Determinístico + Haiku</td></tr>
-                <tr><td>🧠 Contexto</td><td>Contexto &amp; memória</td><td>Quem lembra “isso já aconteceu no INC-1893”</td><td>Bedrock · Titan Embeddings</td></tr>
-                <tr><td>🔬 Diagnosta</td><td>Causa raiz &amp; natureza</td><td>Quem investiga e diz o que o caso exige</td><td>Bedrock · Claude Sonnet</td></tr>
-                <tr><td>🛠️ <strong>Artífice</strong></td><td>Código · Devin · PR</td><td>Quem escreve a correção e abre o pull request</td><td>Devin + Bedrock Sonnet</td></tr>
+                <tr><td>🎼 Maestro</td><td>Orquestrador</td><td>O líder do plantão, que distribui as tarefas</td><td>IARA MCP · Claude Sonnet</td></tr>
+                <tr><td>🛰️ Sentinela</td><td>Detecção &amp; triggers</td><td>Quem fica de olho nos painéis e dá o alarme</td><td>Regras + IARA MCP · Haiku</td></tr>
+                <tr><td>🔗 <strong>Elo</strong></td><td>Rastreabilidade corporativa</td><td>Quem preenche o chamado, abre o card e a GMUD</td><td>Determinístico + IARA · Haiku</td></tr>
+                <tr><td>🧠 Contexto</td><td>Contexto &amp; memória</td><td>Quem lembra “isso já aconteceu no INC-1893”</td><td>IARA MCP · Titan Embeddings</td></tr>
+                <tr><td>🔬 Diagnosta</td><td>Causa raiz &amp; natureza</td><td>Quem investiga e diz o que o caso exige</td><td>IARA MCP · Claude Sonnet</td></tr>
+                <tr><td>🛠️ <strong>Artífice</strong></td><td>Código · Devin · PR</td><td>Quem escreve a correção e abre o pull request</td><td>Devin + IARA MCP · Sonnet</td></tr>
                 <tr><td>⚡ Executor</td><td>Ações de infra</td><td>Quem digita os comandos</td><td><strong>Determinístico</strong></td></tr>
-                <tr><td>🛡️ Auditor</td><td>Guardrails &amp; avaliação</td><td>Quem revisa, aprova e escreve o pós-mortem</td><td>Bedrock · Claude Haiku</td></tr>
+                <tr><td>🛡️ Auditor</td><td>Guardrails &amp; avaliação</td><td>Quem revisa, aprova e escreve o pós-mortem</td><td>IARA MCP · Claude Haiku</td></tr>
               </tbody>
             </table>
           </div>
@@ -532,6 +532,10 @@
             real — não-determinismo ali seria risco, não recurso. Elo e Artífice aparecem
             como agentes na tela porque é assim que a squad se apresenta; no grafo LangGraph
             são <strong>nós adaptadores</strong> que usam ferramentas, não raciocinadores.
+            E na coluna “Modelo”, <strong>IARA MCP</strong> significa que nenhum agente fala
+            direto com provedor de LLM: toda inferência sai como requisição ao MCP do IARA —
+            o gateway corporativo, governado pelo time IARA, que gerencia acesso, catálogo de
+            modelos homologados e custo.
           </p>
         </div>
 
@@ -878,7 +882,7 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
       <div class="stack-l">
         <div class="callout">
           <strong>Tudo nesta seção é aparência.</strong> Não existe backend, não existe LLM,
-          não existe AWS. Os 8 agentes, os 7 cenários, as métricas e os 123 passos de
+          não existe AWS. Os 8 agentes, os 8 cenários, as métricas e os 140 passos de
           simulação estão escritos como literais dentro de um único arquivo HTML. O “chat com
           a squad” responde por correspondência de palavra-chave — e nenhuma linha de código
           fala com ServiceNow, Datadog, IUClick, Devin ou GitHub.
@@ -1056,7 +1060,7 @@ flowchart TD
               <div class="n">05</div>
               <div>
                 <h4>Diagnóstico de causa raiz</h4>
-                <div class="who">Diagnosta · Bedrock</div>
+                <div class="who">Diagnosta · IARA MCP</div>
                 <p class="quote">“Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%.”</p>
                 <p>Deploy às 14:00, pico às 14:02 — a correlação temporal é a pista principal. E a confiança é <em>explícita</em>: honestidade epistêmica embutida no design.</p>
               </div>
@@ -1123,7 +1127,7 @@ flowchart TD
         </div>
 
         <div class="stack-s">
-          <h3>Os sete cenários</h3>
+          <h3>Os oito cenários</h3>
           <div class="tw">
             <table>
               <thead>
@@ -1137,20 +1141,34 @@ flowchart TD
                 <tr><td>🧬 <strong>INC-3312 · Erro no cálculo de frete</strong></td><td>Datadog + ServiceNow</td><td><span class="badge b-stub">CÓDIGO</span></td><td><strong>2 · PR + GMUD</strong></td><td class="num">18m 40s</td></tr>
                 <tr><td>💼 <strong>INC-3350 · Faturamento não conciliado</strong></td><td><strong>ServiceNow</strong></td><td><span class="badge b-mock">CONFIG</span></td><td>1 · GMUD</td><td class="num">22m 05s</td></tr>
                 <tr><td>⛔ <strong>INC-3377 · Gateway de pagamento</strong></td><td>Datadog</td><td><span class="badge b-plan">EXTERNO</span></td><td>1 · ação</td><td class="num">escalado</td></tr>
+                <tr><td>🐕 <strong>ANM-2150 · Watchdog: erros notificacoes-svc</strong></td><td><strong>Datadog Watchdog</strong></td><td><span class="badge b-ok">INFRA</span></td><td>— autônomo</td><td class="num">5m 44s</td></tr>
               </tbody>
             </table>
           </div>
 
           <div class="grid-2" style="margin-top:6px;">
             <div class="card">
-              <h3>Por que dois rodam sozinhos</h3>
+              <h3>Por que três rodam sozinhos</h3>
               <p class="fine">
                 O critério de autonomia <strong>não é a severidade</strong> — é
                 reversibilidade × custo do erro. O DNS é crítico e mesmo assim autônomo,
                 porque failover de rota é trivialmente reversível e esperar custaria mais
-                que errar; resultado, o menor MTTR dos sete. O disco roda sozinho pelo
+                que errar; resultado, o menor MTTR dos oito. O disco roda sozinho pelo
                 motivo oposto: é preventivo, sem urgência, e expandir volume é
-                não-destrutivo.
+                não-destrutivo. E o rolling restart do cenário Watchdog não muda versão nem
+                configuração persistente — reversível por definição.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Por que o Watchdog importa</h3>
+              <p class="fine">
+                No ANM-2150 <strong>nenhum monitor cobria a métrica</strong>: o Watchdog do
+                Datadog encontrou a anomalia por IA — vazamento lento de memória, três dias
+                de degradação gradual — e o insight entrou na esteira como qualquer outro
+                gatilho. O desfecho fecha o ciclo: além do alívio em runtime, a squad
+                <strong>cria o monitor permanente que faltava</strong> e abre card
+                preventivo para a causa de fundo. Detecção por IA como rede de segurança,
+                não como substituto de cobertura.
               </p>
             </div>
             <div class="card">
@@ -1267,8 +1285,8 @@ flowchart TD
           <div class="card">
             <h3>Infraestrutura</h3>
             <p class="fine">
-              Bedrock, Step Functions, Lambda, EventBridge, DynamoDB, OpenSearch, S3,
-              CloudWatch, SSM, Route 53.
+              LLMs via MCP do IARA, Step Functions, Lambda, EventBridge, DynamoDB,
+              OpenSearch, S3, CloudWatch, SSM, Route 53.
             </p>
           </div>
         </div>
@@ -1359,9 +1377,13 @@ flowchart TD
         </div>
 
         <div class="callout">
-          <strong>Editar só <code>prototype/</code> não dispara workflow nenhum.</strong>
-          O mockup — que é a parte mais visível do produto — não tem cobertura automatizada de
-          espécie alguma. A verificação ali é visual e manual.
+          <strong>O mockup agora tem cobertura automatizada.</strong>
+          <code>tools/check-prototype.mjs</code> carrega a classe <code>Component</code> fora
+          do navegador e roda quatro verificações — consistência dos cenários, execução do
+          motor nos dois caminhos de decisão, conferência do template contra os dados, e
+          sincronia do espelho <code>export/</code>. É Node puro, sem
+          <code>package.json</code>, e roda no CI a cada push que toque
+          <code>prototype/</code> ou <code>tools/</code>.
         </div>
 
         <div class="stack-s">
@@ -1405,7 +1427,7 @@ flowchart TD
           <div class="gl-item"><span class="term">AIOps</span> — Inteligência artificial aplicada à operação de TI: detectar anomalias, diagnosticar causas, remediar automaticamente.</div>
           <div class="gl-item"><span class="term">Ambiente virtual (venv)</span> — Instalação isolada do Python para um projeto, na pasta <code>.venv/</code>. Impede que as dependências de projetos diferentes colidam.</div>
           <div class="gl-item"><span class="term">ASG (Auto Scaling Group)</span> — Serviço AWS que mantém um número desejado de instâncias EC2, adicionando ou removendo conforme a demanda.</div>
-          <div class="gl-item"><span class="term">Bedrock</span> — Serviço AWS de modelos de linguagem gerenciados (Claude, Titan), sem gerenciar GPU.</div>
+          <div class="gl-item"><span class="term">Bedrock</span> — Serviço AWS de modelos de linguagem gerenciados (Claude, Titan), sem gerenciar GPU. No EasyRun os agentes não o acessam diretamente: toda chamada de LLM sai pelo MCP do IARA.</div>
           <div class="gl-item"><span class="term">Bounded context</span> — Fronteira dentro da qual cada termo do domínio tem um significado único. Conceito central do DDD.</div>
           <div class="gl-item"><span class="term">Bytecode</span> — Forma compilada intermediária de um <code>.py</code>, guardada em <code>__pycache__/</code>. Só acelera a carga.</div>
           <div class="gl-item"><span class="term">Cache-Control</span> — Cabeçalho HTTP sobre armazenar ou não a resposta. O <code>serve.py</code> envia <code>no-store</code> para que edições apareçam sem F5 forçado.</div>
@@ -1430,6 +1452,7 @@ flowchart TD
           <div class="gl-item"><span class="term">Hardening</span> — Medidas que tornam um sistema apto a produção: versionamento de schema, circuit breakers, auditoria imutável, sanitização.</div>
           <div class="gl-item"><span class="term">Hexagonal (ports and adapters)</span> — Arquitetura que isola o domínio das tecnologias externas por trás de interfaces.</div>
           <div class="gl-item"><span class="term">HITL (Human-In-The-Loop)</span> — Humano no circuito: a execução automática para e aguarda decisão humana. O mecanismo central de segurança do EasyRun.</div>
+          <div class="gl-item"><span class="term">IARA</span> — Time (e solução interna) que governa o acesso e o custo de LLMs na empresa. Expõe um gateway MCP pelo qual os agentes fazem toda requisição de inferência — nenhum agente fala direto com provedor de modelo.</div>
           <div class="gl-item"><span class="term">Idempotente</span> — Operação que, executada duas vezes, produz o mesmo resultado que uma. Requisito para remediação automática segura.</div>
           <div class="gl-item"><span class="term">Injeção de prompt</span> — Ataque em que texto de fonte não confiável contém instruções que o modelo obedece.</div>
           <div class="gl-item"><span class="term">interrupt()</span> — Função do LangGraph que suspende o grafo, persiste o estado e devolve o controle. O mecanismo do gate HITL.</div>
@@ -1469,6 +1492,7 @@ flowchart TD
           <div class="gl-item"><span class="term">Trigger</span> — Gatilho que aciona a squad: alarme, deploy, varredura agendada ou pedido humano.</div>
           <div class="gl-item"><span class="term">TypedDict</span> — Dicionário com contrato de chaves declarado. Em runtime é um <code>dict</code> comum; a verificação é estática.</div>
           <div class="gl-item"><span class="term">VRAM</span> — Memória da placa de vídeo. Determina se um modelo cabe localmente: 24 GB para o 32B, 8 GB para o 7B.</div>
+          <div class="gl-item"><span class="term">Watchdog (Datadog)</span> — Detecção por IA do Datadog: encontra anomalias em métricas que nenhum monitor cobre, sem configuração prévia. Origem do cenário ANM-2150.</div>
           <div class="gl-item"><span class="term">Workflow</span> — Arquivo YAML que descreve um processo automatizado no GitHub Actions.</div>
           <div class="gl-item"><span class="term">Artífice</span> — Agente responsável pelo ramo de código: clona o repositório, delega a correção ao Devin e abre o pull request. No grafo, um nó adaptador.</div>
           <div class="gl-item"><span class="term">CI (Configuration Item)</span> — Item de configuração: como a CMDB inventaria cada serviço. É o CI que diz qual time é dono e qual repositório sustenta o serviço.</div>
@@ -1575,13 +1599,19 @@ flowchart TD
                 <tr><td><code>serve.py</code></td><td><span class="badge b-risk">Não</span></td></tr>
                 <tr><td><code>graph.build_graph()</code> e <code>CheckpointStore</code></td><td><span class="badge b-risk">Não</span></td></tr>
                 <tr><td><code>validate_zip.py</code> — inclusive o código de segurança</td><td><span class="badge b-risk">Não</span></td></tr>
-                <tr><td>Todo o <code>prototype/</code></td><td><span class="badge b-risk">Não</span></td></tr>
+                <tr><td>Todo o <code>prototype/</code></td><td><span class="badge b-ok">Sim</span> — <code>tools/check-prototype.mjs</code>, fora do pytest</td></tr>
               </tbody>
             </table>
           </div>
           <p class="fine">
             O caso mais notável é <code>is_safe_member</code>, a defesa contra zip-slip: se
             alguém “simplificar” a condição e deixar passar <code>..</code>, nada acusa.
+          </p>
+          <p class="fine">
+            As verificações do protótipo já pagaram o próprio custo: acharam dois passos de
+            plano que ficavam sem resolução no caminho de rejeição e oito
+            <code>hint-placeholder-count</code> desatualizados. Nada disso quebrava a tela, e
+            nada disso seria notado numa revisão visual.
           </p>
         </div>
 
