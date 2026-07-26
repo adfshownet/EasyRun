@@ -17,6 +17,7 @@ escreve, o que é automático e onde a decisão continua sendo humana**.
 
 | Plataforma | Papel na empresa | Papel para o EasyRun |
 |---|---|---|
+| **IARA** | Governança de acesso e custo de LLMs | Gateway MCP por onde sai **toda** chamada de modelo |
 | **ServiceNow** | ITSM: processos, CMDB, gestão de mudança, incidentes | Sistema de registro — entrada e saída |
 | **Datadog** | Observabilidade | Principal fonte de gatilhos e de validação |
 | **IUClick** | Kanban do processo ágil | Rastreabilidade do trabalho |
@@ -44,7 +45,7 @@ o caminho da esteira, quais gates são levantados e qual é o artefato final.
 
 | Natureza | O que significa | Quem executa | Desfecho | Cenário |
 |---|---|---|---|---|
-| `INFRA` | Ação em runtime na infraestrutura | Executor ⚡ | Comando aplicado | ANM-2047, 2091, 2118, PRD-2144 |
+| `INFRA` | Ação em runtime na infraestrutura | Executor ⚡ | Comando aplicado | ANM-2047, 2091, 2118, 2150, PRD-2144 |
 | `CODIGO` | Exige mudança no software | Artífice 🛠️ → Devin | **Pull request** | INC-3312 |
 | `CONFIG` | Parâmetro, feature flag ou dado | Executor ⚡ | Mudança sob **GMUD** | INC-3350 |
 | `EXTERNO` | Fora do escopo da squad | Elo 🔗 | **Escalonamento** | INC-3377 |
@@ -102,6 +103,36 @@ a história do caminho tomado sem precisar de legenda.
 No código, esses campos são o bloco de rastreabilidade do
 [`AgentState`](../src/squad_agentica/aiops/state.py) — a razão pela qual `schema_version`
 subiu de 1 para 2.
+
+---
+
+## IARA
+
+**Papel:** o time — e a solução interna — que governa o acesso a LLMs na empresa.
+
+| Direção | O quê |
+|---|---|
+| **Lê** | Catálogo de modelos homologados · quotas e orçamento de tokens por agente |
+| **Escreve** | Requisições de inferência dos agentes · telemetria de custo por execução |
+
+Qualquer acesso a LLM na empresa é gerenciado por integração com o IARA. Na prática, para
+o EasyRun: quando um agente precisa de uma inferência (o Diagnosta formulando a causa raiz,
+o Maestro decompondo tarefas, o Auditor avaliando a execução), ele **não chama o provedor**
+— faz uma requisição ao **MCP do IARA**, que resolve o modelo homologado, aplica quota e
+devolve a resposta.
+
+Três consequências práticas:
+
+1. **Credencial é problema do IARA, não da squad.** O EasyRun guarda credenciais das
+   integrações corporativas no Secrets Manager, mas não guarda chave de provedor de LLM —
+   essa fronteira é do gateway.
+2. **O custo é governado fora da squad.** Quotas de tokens por agente e chargeback por
+   centro de custo são aplicados no gateway; a aba FinOps do protótipo mostra o consumo,
+   mas a política vem do IARA.
+3. **Trocar de modelo não é decisão unilateral.** O catálogo de modelos homologados
+   (Claude Sonnet, Claude Haiku, Titan Embeddings) é do IARA — inclusive uma eventual
+   opção local via Ollama teria que entrar nessa governança (ver
+   [09 #13](09-lacunas-e-riscos.md#13-dois-cenários-de-deployment-de-modelo-não-reconciliados)).
 
 ---
 
@@ -171,6 +202,12 @@ entendimento:
 1. **Detecção** — o monitor dispara e abre a anomalia.
 2. **Diagnóstico** — o Diagnosta consulta traces e logs para correlacionar com deploys.
 3. **Validação** — a Sentinela confirma que a métrica voltou ao normal e sustentou.
+
+Na detecção há dois caminhos, e o cenário `anm2150` existe para mostrar o segundo: o
+**monitor** (limiar que alguém configurou) e o **Watchdog** — a detecção por IA do
+Datadog, que encontra anomalias em métricas que ninguém instrumentou. O insight do
+Watchdog é normalizado no mesmo evento de anomalia e entra na esteira como qualquer outro
+gatilho; o desfecho do cenário fecha o ciclo criando o monitor permanente que faltava.
 
 O terceiro é o mais frequentemente esquecido em automações caseiras: sem ele, o sistema
 fecharia incidentes que "corrigiu" sem corrigir.
@@ -266,7 +303,7 @@ que continuem assim.
 
 | Camada | Serviços |
 |---|---|
-| Agentes e modelos | Bedrock |
+| Agentes e modelos | LLMs via MCP do IARA (gateway corporativo) |
 | Orquestração macro | Step Functions |
 | Ações | Lambda, SSM, ASG, Route 53, EC2/EBS |
 | Eventos | EventBridge, API Gateway |

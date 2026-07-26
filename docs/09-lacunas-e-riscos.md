@@ -13,13 +13,14 @@ problema que só aparece quando alguém edita a coisa errada seis meses depois.
 
 **Prioridade sugerida:** 1, 4, 15 (armadilhas silenciosas, quebram sem avisar) → 5, 14, 16
 (falsa sensação de cobertura ou de segurança) → 2, 3 (portabilidade) → 6, 11, 13 (higiene)
-→ 7, 8, 9, 10, 12 (informativos).
+→ 8, 9, 10, 12 (informativos). O item 7 está resolvido e fica no documento como registro.
 
 ### Resolvido nesta rodada
 
 | Antes | Agora |
 |---|---|
-| **#7 — `export/` era espelho manual** | Passou a ser regenerado por script a partir da fonte canônica, e há uma verificação que compara os dois. Ainda não roda no CI — ver o item 7. |
+| **#7 — `export/` era espelho manual** | Passou a ser gerado por [`tools/sync-export.mjs`](../tools/sync-export.mjs), e a sincronia é verificada no CI. |
+| **O protótipo não tinha cobertura automatizada** | [`tools/check-prototype.mjs`](../tools/check-prototype.mjs) roda quatro verificações a cada push que toque `prototype/` ou `tools/`. |
 | **`schema_version` era só documentação** | Subiu de 1 para 2 ao ganhar o bloco de rastreabilidade. O campo saiu de "boa prática documentada" para "usado de verdade". |
 | **Guardrails do console eram HTML estático** | Agora renderizam a lista real e refletem os toggles da tela de Configuração. |
 
@@ -180,13 +181,15 @@ caminho do `<script src>` e por um `<template>` de thumbnail. A sincronização 
 **Por que importa.** Duas cópias de 96 KB mantidas à mão divergem no primeiro esquecimento
 — e a divergência é silenciosa: nenhum teste, lint ou CI compara os arquivos.
 
-**Estado atual:** nesta rodada o espelho passou a ser **gerado por script** a partir da
-fonte canônica (substituição do caminho do `<script src>` + reinserção do `<template>` de
-thumbnail), e a sincronia foi verificada. O risco residual é que a geração é manual: nada
-impede alguém de editar só a fonte e esquecer de regerar.
+**Resolvido.** O espelho agora é gerado por
+[`tools/sync-export.mjs`](../tools/sync-export.mjs), e a quarta verificação de
+[`tools/check-prototype.mjs`](../tools/check-prototype.mjs) falha se os dois divergirem —
+com a mensagem dizendo exatamente qual comando rodar. O CI executa isso a cada push que
+toque `prototype/`.
 
-**Sugestão.** Versionar esse script no repositório e rodá-lo no CI em modo verificação
-(falha se os arquivos divergirem). Ou eliminar o `export/` se ele não tiver consumidor
+**Risco residual:** regenerar continua sendo um passo manual depois de editar a fonte. A
+diferença é que agora esquecer **falha visivelmente** em vez de passar despercebido. Segue
+valendo a alternativa mais radical: eliminar o `export/` se ele não tiver consumidor
 identificado.
 
 ---
@@ -290,16 +293,19 @@ vive) antes de escrever `build_graph()`.
 
 | Onde | Modelos |
 |---|---|
-| Cards dos agentes (Console/Configuração) | **Claude Sonnet / Haiku e Titan, via AWS Bedrock** |
+| Cards dos agentes (Console/Configuração) | **Claude Sonnet / Haiku e Titan, servidos pelo gateway MCP do IARA** |
 | Aba FinOps e [`governance.py`](../src/squad_agentica/aiops/governance.py) | **Qwen 2.5-coder:32b e Qwen 2.5:7b, local via Ollama** |
 
-**Por que importa.** São dois modelos de operação legítimos — nuvem gerenciada e
-local/soberano — com implicações opostas de custo, latência e conformidade. Numa
-apresentação, a pergunta "afinal, roda na AWS ou na minha GPU?" não tem resposta no
-material atual.
+**Por que importa.** São dois modelos de operação legítimos — via gateway corporativo
+(IARA) e local/soberano — com implicações opostas de custo, latência e conformidade. Numa
+apresentação, a pergunta "afinal, roda pelo IARA ou na minha GPU?" não tem resposta no
+material atual. E há uma restrição a mais: como o acesso a LLMs é governado pelo time
+IARA, a opção local via Ollama só existe se entrar no catálogo do próprio IARA — não é uma
+decisão que a squad toma sozinha.
 
 **Sugestão.** Assumir explicitamente que são dois cenários de deployment e rotulá-los como
-tal na aba FinOps ("Opção A: Bedrock gerenciado · Opção B: Ollama local"), ou escolher um.
+tal na aba FinOps ("Opção A: modelos gerenciados via IARA · Opção B: Ollama local, sujeito
+à governança do IARA"), ou escolher um.
 
 ---
 
@@ -411,19 +417,21 @@ Para evitar que alguém "corrija" o que está certo:
 | `serve.py` | ❌ |
 | `checkpoint.Checkpoint` / `CheckpointStore` | ❌ |
 | `validate_zip.py` (incluindo `is_safe_member`, que é código de segurança) | ❌ |
-| Todo o `prototype/` | ❌ na suíte do repositório |
+| Todo o `prototype/` | ✅ por [`tools/check-prototype.mjs`](../tools/check-prototype.mjs), fora do pytest |
 
 O caso mais notável é o `validate_zip.py`: `is_safe_member` implementa uma defesa contra
 zip-slip e não tem um único teste. Se alguém "simplificar" a condição e deixar passar `..`,
 nada acusa. São três casos de teste que valeriam a pena caso o script continue no repositório.
 
-Sobre o protótipo: nesta rodada ele foi validado por três verificadores escritos em Node —
-consistência dos 123 passos dos cenários, execução do motor nos dois caminhos de cada um, e
-conferência de que toda propriedade `{{ alias.prop }}` do template existe nos dados. Eles
-acharam defeitos reais (dois passos de plano que ficavam sem resolução no caminho de
-rejeição), mas **não estão versionados nem rodam no CI** — foram ferramentas de
-desenvolvimento. Versioná-los seria a forma mais barata de dar cobertura automatizada ao
-mockup.
+Sobre o protótipo: ele agora tem cobertura automatizada em
+[`tools/check-prototype.mjs`](../tools/check-prototype.mjs), versionado e rodando no CI.
+São quatro verificações — consistência dos cenários, execução do motor nos dois caminhos,
+conferência do template contra os dados, e sincronia do espelho. Detalhe em
+[`tools/README.md`](../tools/README.md).
+
+Vale registrar que elas já pagaram o custo: acharam **dois passos de plano que ficavam sem
+resolução no caminho de rejeição** e **oito `hint-placeholder-count` desatualizados** — nada
+disso quebrava a tela, e nada disso seria notado numa revisão visual.
 
 ---
 

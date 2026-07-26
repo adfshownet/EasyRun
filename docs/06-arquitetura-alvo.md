@@ -165,9 +165,9 @@ declara tipos como contrato.
 **Arquitetura hexagonal** (ou *ports and adapters*) — organiza o código em três anéis: o
 domínio no centro (as regras do negócio, sem saber nada de banco ou HTTP), *portas* ao
 redor (interfaces do que o domínio precisa) e *adaptadores* na borda (as implementações
-concretas: PostgreSQL, Bedrock, CloudWatch). O ganho prático aqui é direto: testar a
-lógica de decisão de remediação sem subir AWS nenhuma, e trocar Bedrock por outro provedor
-de LLM sem reescrever o domínio.
+concretas: PostgreSQL, o MCP do IARA, CloudWatch). O ganho prático aqui é direto: testar a
+lógica de decisão de remediação sem subir AWS nenhuma — e o adaptador de LLM é um só, o do
+IARA: se o time IARA trocar o provedor por trás do gateway, o domínio nem fica sabendo.
 
 **DDD** (*Domain-Driven Design*) — abordagem que modela o software na linguagem do negócio.
 **Bounded context** é seu conceito central: uma fronteira dentro da qual cada termo tem um
@@ -218,11 +218,26 @@ Langfuse e LangSmith se sobrepõem em traces; a divisão adotada é **Langfuse p
 (o que aconteceu numa execução) e **LangSmith para avaliação** (experimentos e comparação
 entre versões). Detalhe em [11 — MLOps e LLMOps](11-mlops-llmops.md).
 
+### Acesso a LLMs — o gateway IARA
+
+Nenhum agente chama provedor de LLM diretamente. Todo acesso a modelo passa pelo **MCP do
+IARA** — a solução interna, governada pelo time IARA, que gerencia o acesso e o custo do
+uso de LLMs na empresa. Na prática:
+
+| Aspecto | Como funciona |
+|---|---|
+| **Protocolo** | Os agentes fazem requisições MCP ao gateway; o IARA resolve o modelo e devolve a inferência |
+| **Catálogo** | Modelos homologados pelo time IARA (Claude Sonnet, Claude Haiku, Titan Embeddings) |
+| **Custo** | Quotas de tokens por agente e chargeback por centro de custo, aplicados no gateway |
+| **Quem usa** | Diagnosta, Maestro, Auditor, Sentinela e Contexto (os papéis de raciocínio e embeddings) |
+
+Para a squad, isso simplifica: credencial, limite e catálogo são problema do IARA; o
+domínio só conhece a porta "inferência".
+
 ### Infraestrutura — AWS
 
 | Serviço | Papel | Agente |
 |---|---|---|
-| **Bedrock** | Modelos de linguagem gerenciados (Claude, Titan) | Diagnosta, Maestro, Auditor |
 | **Step Functions** | Máquina de estados / orquestração | Maestro |
 | **Lambda** | Execução de código sem servidor | Executor |
 | **EventBridge** | Barramento de eventos | Sentinela |
@@ -249,26 +264,27 @@ que um sistema agêntico maduro precisa ter:
 
 | # | Pilar | O que significa | AWS | Onde aparece no protótipo |
 |---|---|---|---|---|
-| 1 | 🧠 **Context** | Montagem do contexto do incidente: métricas, logs, deploys, topologia | OpenSearch, Bedrock KB | Painel "Contexto & Memória" |
+| 1 | 🧠 **Context** | Montagem do contexto do incidente: métricas, logs, deploys, topologia | OpenSearch, Datadog | Painel "Contexto & Memória" |
 | 2 | 📚 **Memory** | Memória episódica (incidentes) e semântica (runbooks vetorizados), com aprendizado contínuo | DynamoDB, OpenSearch | Cards INC / APR no console |
-| 3 | 🎯 **Planning** | Diagnóstico de causa raiz e plano em passos verificáveis | Bedrock | Painel "Plano de ação" |
+| 3 | 🎯 **Planning** | Diagnóstico de causa raiz e plano em passos verificáveis | IARA MCP, LangGraph | Painel "Plano de ação" |
 | 4 | ⚡ **Action** | Execução de mutações de forma idempotente e auditável | Lambda | Agente Executor |
 | 5 | 🔧 **Tools & APIs** | Ferramentas tipadas expostas aos agentes: rollback, escala, runbooks | SSM, API Gateway | Skills por agente (Configuração) |
-| 6 | 🤝 **Multi-Agent** | Seis agentes especializados com papéis e contratos explícitos | Bedrock Agents | Coluna "Agentes" do console |
-| 7 | 🛡️ **Guardrails** | Políticas que limitam autonomia: escopo, quotas, aprovação humana | Bedrock Guardrails, IAM | Configuração + evento G-02 |
+| 6 | 🤝 **Multi-Agent** | Seis agentes especializados com papéis e contratos explícitos | LangGraph, IARA MCP | Coluna "Agentes" do console |
+| 7 | 🛡️ **Guardrails** | Políticas que limitam autonomia: escopo, quotas, aprovação humana — quotas de modelo no gateway do IARA | Políticas IARA, IAM | Configuração + evento G-02 |
 | 8 | 📦 **Skills** | Capacidades versionadas e testáveis por agente | Lambda Layers | Chips de skills (Configuração) |
 | 9 | ⚡ **Triggers** | Gatilhos: alarmes, deploys, agenda, pedidos humanos | EventBridge, CloudWatch | Lista de triggers (Configuração) |
 | 10 | 🎼 **Orchestration** | Máquina de estados que coordena o fluxo, com pausa para HITL | Step Functions | Fluxo central do console |
 | 11 | 📊 **Evaluation** | MTTR, precisão, scores por agente, pós-mortems automáticos | CloudWatch, S3 | Aba "Avaliação" |
-| 12 | 🔎 **Detecção & Severidade** | Motores Basic/Agile/Robust classificam em Crítico/Alerta/Preditivo | CloudWatch, Lookout for Metrics | Log da Sentinela, por cenário |
-| 13 | 🔗 **Interoperabilidade** | MCP padroniza acesso a ferramentas; A2A coordena agentes entre frameworks | Bedrock AgentCore | Ferramentas do Diagnosta e do Contexto |
+| 12 | 🔎 **Detecção & Severidade** | Motores Basic/Agile/Robust classificam em Crítico/Alerta/Preditivo; o Watchdog detecta por IA o que nenhum monitor cobre | Datadog (Watchdog), CloudWatch | Log da Sentinela, por cenário |
+| 13 | 🔗 **Interoperabilidade** | MCP padroniza acesso a LLMs (IARA) e ferramentas; A2A coordena agentes entre frameworks | MCP, A2A | Ferramentas do Diagnosta e do Contexto |
 
 Alguns termos do pilar 13 e do 4 merecem definição:
 
 **MCP** (*Model Context Protocol*) — protocolo aberto que padroniza como um modelo acessa
 ferramentas e fontes de dados externas (logs, arquivos, bancos). Sem padrão, cada
 integração é código sob medida; com ele, uma ferramenta escrita uma vez serve a qualquer
-agente compatível. É citado no docstring do `Explainer`.
+agente compatível. É citado no docstring do `Explainer` — e é também o protocolo pelo qual
+os agentes consomem LLMs: o gateway do IARA expõe a inferência como um servidor MCP.
 
 **A2A** (*Agent-to-Agent*) — protocolo para agentes construídos em frameworks diferentes
 descobrirem e conversarem entre si, via um *Agent Card* publicado em
@@ -295,9 +311,9 @@ Os 5 cards da aba FinOps, que espelham as constantes de
 | 🎟️ **Orçamento de tokens** | Gateways de inferência com limites estritos por agente, evitando estouro de custo por execução |
 
 Vale notar a tensão entre este quadro e a coluna "modelo" dos agentes no mockup: a aba
-FinOps fala em **Qwen local via Ollama**, enquanto os agentes exibem **Claude via Bedrock**.
-São dois cenários de deployment distintos — local/soberano e gerenciado na nuvem — que
-coexistem no material sem estarem reconciliados. Ver
+FinOps fala em **Qwen local via Ollama**, enquanto os agentes exibem **Claude servido pelo
+gateway do IARA**. São dois cenários de deployment distintos — local/soberano e gerenciado
+via gateway corporativo — que coexistem no material sem estarem reconciliados. Ver
 [09 #13](09-lacunas-e-riscos.md#13-dois-cenários-de-deployment-de-modelo-não-reconciliados).
 
 **Tool calling**, o critério central da escolha de modelo, é a capacidade de emitir uma

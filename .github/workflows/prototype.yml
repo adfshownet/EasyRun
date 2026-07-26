@@ -1,0 +1,30 @@
+name: Prototype
+
+on:
+  push:
+    paths:
+      - 'prototype/**'
+      - 'tools/**'
+      - '.github/workflows/prototype.yml'
+  pull_request:
+    paths:
+      - 'prototype/**'
+      - 'tools/**'
+      - '.github/workflows/prototype.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Sem dependências: o verificador usa só a biblioteca padrão do Node.
+      - name: Check prototype
+        run: node tools/check-prototype.mjs

@@ -12,10 +12,10 @@
 
 ```
 prototype/
-├── EasyRun.dc.html            96 KB · 1163 linhas · ← A FONTE CANÔNICA
+├── EasyRun.dc.html           178 KB · 1760 linhas · ← A FONTE CANÔNICA
 ├── support.js                 66 KB · 1768 linhas · runtime gerado, não editar
 ├── export/
-│   └── EasyRun-src.dc.html    97 KB · 1169 linhas · espelho manual
+│   └── EasyRun-src.dc.html   178 KB · 1766 linhas · espelho (regerado por tools/)
 ├── EasyRun - Standalone.html 381 KB ·  210 linhas · ⚠️ DESATUALIZADO
 └── thumbnail.webp              9 KB · imagem órfã, sem referências
 ```
@@ -35,9 +35,9 @@ espelhada. A diferença é de exatamente duas linhas:
 ```
 
 Ou seja: o caminho do script (porque está um nível abaixo) e um `<template>` com um SVG de
-miniatura. Todo o resto é byte a byte idêntico. ⚠️ Não há automação: qualquer edição na
-fonte canônica precisa ser replicada aqui à mão. Ver
-[09 — Lacunas #7](09-lacunas-e-riscos.md#7-o-export-é-espelho-manual).
+miniatura. Todo o resto é byte a byte idêntico. Após editar a fonte canônica, rode
+`node tools/sync-export.mjs` para regerar o espelho — e `node tools/check-prototype.mjs`
+verifica se ele está em dia (ver [`tools/README.md`](../tools/README.md)).
 
 **`EasyRun - Standalone.html`** — ⚠️ **não use.** É um bundle autocontido: 381 KB com os
 recursos embutidos em base64, um indicador de "Unpacking…" e um script que desempacota
@@ -214,14 +214,19 @@ aparecem no fluxo:
 
 | Agente | Papel | Cor | Plataformas | Modelo | Skills |
 |---|---|---|---|---|---|
-| 🎼 **Maestro** | Orquestrador | `#B48CFF` | Step Functions, LangGraph | Bedrock · Claude Sonnet | `decompor-tarefas`, `rotear-por-natureza`, `consolidar-resultado` |
-| 🛰️ **Sentinela** | Detecção & triggers | `#4DD8E6` | Datadog, ServiceNow, EventBridge | Regras + Bedrock Haiku | `detectar-anomalia`, `classificar-severidade`, `monitorar-recuperacao` |
-| 🔗 **Elo** | Rastreabilidade corporativa | `#7FD4A8` | ServiceNow, IUClick | Determinístico + Haiku | `consultar-cmdb`, `abrir-bug`, `iniciar-gmud`, `mover-kanban`, `escalar-time` |
-| 🧠 **Contexto** | Contexto & memória | `#5BA8FF` | OpenSearch, DynamoDB | Bedrock · Titan Embeddings | `buscar-runbooks`, `recuperar-incidentes`, `gravar-aprendizado` |
-| 🔬 **Diagnosta** | Causa raiz & natureza | `#FFC24B` | Bedrock, Datadog | Bedrock · Claude Sonnet | `correlacionar-sinais`, `hipoteses-causa-raiz`, `classificar-natureza` |
-| 🛠️ **Artífice** | Código · Devin · PR | `#E8A87C` | Devin, GitHub org | Devin + Bedrock Sonnet | `clonar-repositorio`, `analisar-codigo`, `delegar-devin`, `abrir-pr` |
+| 🎼 **Maestro** | Orquestrador | `#B48CFF` | Step Functions, LangGraph | IARA MCP · Claude Sonnet | `decompor-tarefas`, `rotear-por-natureza`, `consolidar-resultado` |
+| 🛰️ **Sentinela** | Detecção & triggers | `#4DD8E6` | Datadog, ServiceNow, EventBridge | Regras + IARA MCP · Haiku | `detectar-anomalia`, `classificar-severidade`, `monitorar-recuperacao` |
+| 🔗 **Elo** | Rastreabilidade corporativa | `#7FD4A8` | ServiceNow, IUClick | Determinístico + IARA · Haiku | `consultar-cmdb`, `abrir-bug`, `iniciar-gmud`, `mover-kanban`, `escalar-time` |
+| 🧠 **Contexto** | Contexto & memória | `#5BA8FF` | OpenSearch, DynamoDB | IARA MCP · Titan Embeddings | `buscar-runbooks`, `recuperar-incidentes`, `gravar-aprendizado` |
+| 🔬 **Diagnosta** | Causa raiz & natureza | `#FFC24B` | IARA MCP, Datadog | IARA MCP · Claude Sonnet | `correlacionar-sinais`, `hipoteses-causa-raiz`, `classificar-natureza` |
+| 🛠️ **Artífice** | Código · Devin · PR | `#E8A87C` | Devin, GitHub org | Devin + IARA MCP · Sonnet | `clonar-repositorio`, `analisar-codigo`, `delegar-devin`, `abrir-pr` |
 | ⚡ **Executor** | Ações de infra | `#3DDC84` | Lambda, SSM | **Determinístico** | `rollback-deploy`, `escalar-recursos`, `executar-runbook` |
-| 🛡️ **Auditor** | Guardrails & avaliação | `#FF8FAB` | S3, Langfuse, Datadog | Bedrock · Claude Haiku | `validar-guardrails`, `avaliar-execucao`, `pos-mortem` |
+| 🛡️ **Auditor** | Guardrails & avaliação | `#FF8FAB` | S3, Langfuse, Datadog | IARA MCP · Claude Haiku | `validar-guardrails`, `avaliar-execucao`, `pos-mortem` |
+
+Na coluna "Modelo", `IARA MCP` indica que o agente **não chama o provedor de LLM
+diretamente**: toda inferência sai como requisição ao MCP do IARA — o gateway corporativo,
+governado pelo time IARA, que gerencia acesso, catálogo de modelos homologados, quotas e
+custo. O modelo após o `·` é o que o IARA serve para aquele papel.
 
 Três escolhas de design valem ser notadas, porque revelam pensamento arquitetural real:
 
@@ -265,7 +270,7 @@ metáfora é a de um plantão: alguém sempre de olho, o resto em espera.
 
 ---
 
-## Os 7 cenários
+## Os 8 cenários
 
 | ID | Título | Severidade · Algoritmo | Origem | Natureza | Gates HITL | Passos |
 |---|---|---|---|---|---|---|
@@ -276,13 +281,15 @@ metáfora é a de um plantão: alguém sempre de olho, o resto em espera.
 | `inc3312` | 🧬 **Erro no cálculo de frete** | Crítico · Robust | Datadog + ServiceNow | **`CODIGO`** | **APR-03 (PR) + APR-04 (GMUD)** | 23 |
 | `inc3350` | 💼 **Faturamento não conciliado** | Crítico · Agile | **ServiceNow** | **`CONFIG`** | APR-05 (GMUD) | 18 |
 | `inc3377` | ⛔ **Gateway de pagamento degradado** | Alerta · Agile | Datadog | **`EXTERNO`** | APR-06 (ação) | 16 |
+| `anm2150` | 🐕 **Watchdog: erros notificacoes-svc** | Alerta · **Watchdog** | **Datadog Watchdog** | `INFRA` | — autônomo | 17 |
 
-123 passos no total. A seleção do cenário só é permitida com a simulação parada
+140 passos no total. A seleção do cenário só é permitida com a simulação parada
 (`escolherCenario` retorna imediatamente se `this.state.rodando`).
 
-O conjunto cobre os três níveis de severidade, os três algoritmos de detecção, as quatro
-naturezas de remediação, os três tipos de gate e as três origens de estímulo. Os três
-últimos são os que aproximam o protótipo da realidade da empresa:
+O conjunto cobre os três níveis de severidade, os três algoritmos de detecção (mais a
+detecção por IA do Watchdog), as quatro naturezas de remediação, os três tipos de gate e
+as quatro origens de estímulo. Os quatro últimos são os que aproximam o protótipo da
+realidade da empresa:
 
 **`inc3312` é o carro-chefe.** Único cenário que percorre a cadeia de rastreabilidade
 inteira (9 de 9 elos) e o único com **dois gates**: o pull request gerado pelo Devin e a
@@ -297,8 +304,15 @@ para mostrar que a squad trata o que não está na nuvem.
 escala ao fornecedor. Rejeitar é o caminho interessante aqui — mas aprovar também funciona,
 porque o simulador nunca força a mão do operador.
 
+**`anm2150` demonstra o ponto cego.** Nenhum monitor cobria a métrica: o **Watchdog do
+Datadog** encontra a anomalia por IA (vazamento lento de memória na `notificacoes-svc`) e
+o insight entra na esteira como qualquer outro gatilho. O desfecho fecha o ciclo: além do
+alívio em runtime, a squad **cria o monitor permanente** que faltava e abre card preventivo
+para a causa de fundo — detecção por IA como rede de segurança, não como substituto de
+cobertura.
+
 Análise completa em
-[05 — Processo end-to-end](05-processo-end-to-end.md#comparando-os-7-cenários).
+[05 — Processo end-to-end](05-processo-end-to-end.md#comparando-os-8-cenários).
 
 ---
 
@@ -365,7 +379,7 @@ Cada elemento de `cenario.passos`:
 {
   ag: 'diagnosta',                    // qual agente
   pilar: '🎯 Planning',               // qual dos 13 pilares
-  aws: 'Bedrock',                     // plataforma mostrada no log
+  aws: 'IARA MCP',                    // plataforma mostrada no log
   txt: 'Causa provável: ...',         // texto fixo
   dinamico: { aprovado: '…', rejeitado: '…' },  // OU texto que depende da decisão
   fx: { ... },                        // efeitos colaterais no estado
@@ -482,7 +496,8 @@ testa `includes` numa ordem fixa:
 | `agente`, `squad`, `quem` | Apresenta os 8 agentes |
 | `guardrail`, `segur`, `aprova` | Lista os guardrails ativos, incluindo G-05, G-06 e G-07 |
 | `mttr`, `tempo`, `métri` | Os números da aba Avaliação |
-| `cenário`, `cenario` | Descreve os 7 cenários |
+| `cenário`, `cenario` | Descreve os 8 cenários |
+| `iara`, `modelo`, `llm`, `bedrock` | Explica que toda chamada de LLM sai pelo MCP do IARA |
 | *(nenhuma)* | Menu de fallback |
 
 A ordem importa: a primeira correspondência vence. E há um cuidado de coerência — várias
@@ -539,12 +554,29 @@ Python — a mesma informação em dois lugares que não se sincronizam. Ver
 2. Edite [`prototype/EasyRun.dc.html`](../prototype/EasyRun.dc.html).
 3. Recarregue o navegador — o `Cache-Control: no-store` do
    [`serve.py`](../src/squad_agentica/serve.py) garante que você veja a versão nova.
-4. **Replique a mudança** em
-   [`prototype/export/EasyRun-src.dc.html`](../prototype/export/EasyRun-src.dc.html),
-   preservando o `<script src="../support.js">` e o `<template>` do thumbnail.
-5. Não toque no `support.js`.
+4. Regenere o espelho: `node tools/sync-export.mjs`
+5. Verifique: `node tools/check-prototype.mjs`
+6. Não toque no `support.js`.
 
-Não há testes automatizados cobrindo o protótipo: a verificação é visual.
+### As verificações automatizadas
+
+[`tools/check-prototype.mjs`](../tools/check-prototype.mjs) carrega a classe `Component`
+fora do navegador — com stubs de dez linhas para `React` e `DCLogic` — e roda quatro
+verificações. Não precisa instalar nada: é Node puro, sem `package.json`.
+
+| # | Verificação | Exemplos do que pega |
+|---|---|---|
+| 1 | **Dados** | Passo apontando para agente ou status inexistente; `planoOk` para um id fora do plano; `rastreioSet` com chave desconhecida; gate sem campo obrigatório; id de gate duplicado; cenário sem natureza ou sem `fim` |
+| 2 | **Motor** | Roda os 8 cenários **nos dois caminhos**. Pega simulação que não termina e — o caso que apareceu de verdade — passo do plano que fica em `hitl` ou `pendente` porque só era resolvido ao aprovar |
+| 3 | **Template** | Toda `{{ variavel }}` e `{{ alias.prop }}` existe nos dados, avaliado no estado inicial, em cada gate e no fim de cada cenário; `navItens` bate com o número de telas; `hint-placeholder-count` bate com o tamanho real das listas |
+| 4 | **Espelho** | `export/` sincronizado com a fonte canônica |
+
+Roda no CI a cada push que toque `prototype/` ou `tools/`. Detalhe em
+[`tools/README.md`](../tools/README.md) e em [07 — CI/CD](07-ci-cd-e-git.md#prototypeyml--as-verificações-do-mockup).
+
+Elas não substituem o olho: nenhuma verificação sabe se o painel ficou bonito ou se o texto
+faz sentido. O que elas cobrem é a classe de defeito que uma revisão visual não pega —
+inconsistência entre dados e template, e caminho de rejeição quebrado.
 
 ---
 

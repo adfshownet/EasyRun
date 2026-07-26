@@ -371,7 +371,7 @@ de precedente já é um sinal de que a resposta não será operacional.
 
 ### 8–9 — Diagnóstico e natureza
 
-*Diagnosta 🔬 · Datadog + Bedrock*
+*Diagnosta 🔬 · Datadog + IARA MCP*
 
 > *"Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy
 > v2.14.3. Confiança: 92%. **Natureza da remediação: INFRA** — resolve em runtime, sem
@@ -384,14 +384,14 @@ mas é o primeiro lugar onde qualquer engenheiro experiente olharia.
 
 **A confiança é explícita.** O agente diz *"causa provável, 92%"*, não *"a causa é"*. Isso
 alimenta o campo `confidence` do [`AgentState`](03-arquitetura-do-codigo.md#statepy). Nos
-sete cenários ela varia de **89%** (DNS, sem histórico) a **96%** (terceiro degradado, com
+oito cenários ela varia de **89%** (DNS, sem histórico) a **96%** (terceiro degradado, com
 evidência clara) — o número acompanha a qualidade da evidência.
 
 **A natureza é a bifurcação.** É aqui que o fluxo deixa de ser único:
 
 | Natureza | Quem executa | Artefato final | Cenário |
 |---|---|---|---|
-| `INFRA` | Executor ⚡ | Comando aplicado | ANM-2047, 2091, 2118, PRD-2144 |
+| `INFRA` | Executor ⚡ | Comando aplicado | ANM-2047, 2091, 2118, 2150, PRD-2144 |
 | `CODIGO` | Artífice 🛠️ → Devin | **Pull request** | INC-3312 |
 | `CONFIG` | Executor ⚡ | Mudança sob **GMUD** | INC-3350 |
 | `EXTERNO` | Elo 🔗 | **Escalonamento** | INC-3377 |
@@ -587,33 +587,39 @@ No INC-3312 a comparação é ainda mais forte, porque muda de ordem de grandeza
 
 ---
 
-## Comparando os 7 cenários
+## Comparando os 8 cenários
 
-| | **ANM-2047** 🐢 | **ANM-2091** 📈 | **ANM-2118** 🌐 | **PRD-2144** 🔮 | **INC-3312** 🧬 | **INC-3350** 💼 | **INC-3377** ⛔ |
-|---|---|---|---|---|---|---|---|
-| Origem | Datadog | Datadog | Datadog | Agendado | Datadog + ServiceNow | **ServiceNow** | Datadog |
-| Severidade | Crítico | Alerta | Crítico | Preditivo | Crítico | Crítico | Alerta |
-| Algoritmo | Robust | Agile | Basic | Robust | Robust | Agile | Agile |
-| **Natureza** | `INFRA` | `INFRA` | `INFRA` | `INFRA` | **`CODIGO`** | **`CONFIG`** | **`EXTERNO`** |
-| Confiança | 92% | 95% | 89% | 93% | 94% | 91% | 96% |
-| Memória disponível | INC-1893 | INC-1777 | **nenhuma** | INC-1622 | **nenhuma** | INC-1409 | INC-1988 |
-| Gates HITL | 1 (ação) | 1 (ação) | — | — | **2 (PR + GMUD)** | 1 (GMUD) | 1 (ação) |
-| Onde a ação acontece | AWS | AWS | AWS | AWS | GitHub org | **ERP on-premises** | — (escala) |
-| Elos de rastreio | 5/9 | 5/9 | 5/9 | 5/9 | **9/9** | 6/9 | 5/9 |
-| Desfecho | MTTR 4m 32s | 6m 05s | **2m 18s** | 3m 40s | 18m 40s | 22m 05s | contido em 7m 12s |
+| | **ANM-2047** 🐢 | **ANM-2091** 📈 | **ANM-2118** 🌐 | **PRD-2144** 🔮 | **INC-3312** 🧬 | **INC-3350** 💼 | **INC-3377** ⛔ | **ANM-2150** 🐕 |
+|---|---|---|---|---|---|---|---|---|
+| Origem | Datadog | Datadog | Datadog | Agendado | Datadog + ServiceNow | **ServiceNow** | Datadog | **Datadog Watchdog** |
+| Severidade | Crítico | Alerta | Crítico | Preditivo | Crítico | Crítico | Alerta | Alerta |
+| Algoritmo | Robust | Agile | Basic | Robust | Robust | Agile | Agile | **Watchdog (IA)** |
+| **Natureza** | `INFRA` | `INFRA` | `INFRA` | `INFRA` | **`CODIGO`** | **`CONFIG`** | **`EXTERNO`** | `INFRA` |
+| Confiança | 92% | 95% | 89% | 93% | 94% | 91% | 96% | 90% |
+| Memória disponível | INC-1893 | INC-1777 | **nenhuma** | INC-1622 | **nenhuma** | INC-1409 | INC-1988 | INC-2011 |
+| Gates HITL | 1 (ação) | 1 (ação) | — | — | **2 (PR + GMUD)** | 1 (GMUD) | 1 (ação) | — |
+| Onde a ação acontece | AWS | AWS | AWS | AWS | GitHub org | **ERP on-premises** | — (escala) | AWS + Datadog |
+| Elos de rastreio | 5/9 | 5/9 | 5/9 | 5/9 | **9/9** | 6/9 | 5/9 | 5/9 |
+| Desfecho | MTTR 4m 32s | 6m 05s | **2m 18s** | 3m 40s | 18m 40s | 22m 05s | contido em 7m 12s | 5m 44s + monitor criado |
 
-### Por que dois cenários não têm gate nenhum
+### Por que três cenários não têm gate nenhum
 
 A resposta revela o critério de autonomia do sistema, e ele **não é a severidade**:
 
 **ANM-2118 (DNS) é Crítico e mesmo assim roda sozinho.** O log explica: *"execução
 imediata, sem espera humana (severidade crítica + ação reversível)"*. Um failover de rota
 DNS é trivialmente reversível — basta apontar de volta. Somado à urgência, esperar
-aprovação custaria mais do que o risco de errar. Resultado: o menor MTTR dos sete.
+aprovação custaria mais do que o risco de errar. Resultado: o menor MTTR dos oito.
 
 **PRD-2144 (disco) roda sozinho por motivo oposto.** É preditivo, não há urgência nenhuma —
 e a ação (expandir um volume EBS) é **não-destrutiva**: adiciona capacidade sem remover
 nada.
+
+**ANM-2150 (Watchdog) roda sozinho pelo mesmo critério.** Um rolling restart não muda
+versão nem configuração persistente — é reversível por definição. O que o cenário
+acrescenta está na **detecção**: a anomalia foi encontrada pelo Watchdog do Datadog, por
+IA, sem que nenhum monitor cobrisse a métrica — e o desfecho inclui criar o monitor que
+faltava, para que o ponto cego não dependa do Watchdog na próxima vez.
 
 Os demais param porque suas ações são difíceis de reverter (rollback, merge em produção),
 financeiramente comprometedoras (escalar acima do orçamento, rotear pagamento por um

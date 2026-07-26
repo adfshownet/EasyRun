@@ -89,12 +89,12 @@ O repositório tem três coisas, e elas são bem diferentes entre si:
 
 Um painel web de tela cheia, tema escuro, com 9 telas: console de orquestração, chat com
 a squad, fila de aprovação HITL, avaliação/métricas, configuração, integrações, LLMOps,
-FinOps e arquitetura. Ele simula **7 cenários** de incidente do começo ao fim, com log ao
+FinOps e arquitetura. Ele simula **8 cenários** de incidente do começo ao fim, com log ao
 vivo, plano de ação que avança passo a passo, cadeia de rastreabilidade que se preenche
 elo a elo, e gates de aprovação que realmente pausam a simulação — o cenário de correção
 de código para **duas vezes**, uma para o pull request e outra para a GMUD.
 
-**É um mockup.** Não existe backend. Os 8 agentes, os 7 cenários, as métricas, o texto de
+**É um mockup.** Não existe backend. Os 8 agentes, os 8 cenários, as métricas, o texto de
 cada evento — está tudo escrito literalmente dentro do arquivo HTML. O "chat com a squad"
 responde por correspondência de palavra-chave, não por LLM. Nenhuma chamada de rede sai
 dali além do carregamento do React.

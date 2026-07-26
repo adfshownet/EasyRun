@@ -93,7 +93,7 @@
         <!-- Agentes -->
         <section style="border-right: 1px solid #1E2833; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
           <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">CENÁRIO</div>
-          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="7">
+          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="8">
             <div onClick="{{ cn.aoClicar }}" style="padding: 10px 12px; border-radius: 10px; background: {{ cn.fundo }}; border: 1px solid {{ cn.borda }}; cursor: {{ cn.cursor }}; opacity: {{ cn.opacidade }}; display: flex; flex-direction: column; gap: 4px;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 14px;">{{ cn.icone }}</span>
@@ -106,7 +106,7 @@
             </div>
           </sc-for>
           <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">AGENTES · {{ numAgentes }}</div>
-          <sc-for list="{{ agentesLista }}" as="ag" hint-placeholder-count="6">
+          <sc-for list="{{ agentesLista }}" as="ag" hint-placeholder-count="8">
             <div style="padding: 12px; border-radius: 10px; background: #131A22; border: 1px solid {{ ag.borda }}; display: flex; flex-direction: column; gap: 8px;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ag.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ag.icone }}</div>
@@ -392,7 +392,7 @@
           <div style="padding: 18px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833;">
             <div style="font-size: 13px; font-weight: 600; margin-bottom: 14px;">Qualidade por agente (score de avaliação)</div>
             <div style="display: flex; flex-direction: column; gap: 12px;">
-              <sc-for list="{{ scores }}" as="sc" hint-placeholder-count="6">
+              <sc-for list="{{ scores }}" as="sc" hint-placeholder-count="8">
                 <div style="display: flex; align-items: center; gap: 10px;">
                   <span style="font-size: 13px; width: 20px;">{{ sc.icone }}</span>
                   <span style="font-size: 12.5px; width: 90px; color: #C7D2DC;">{{ sc.nome }}</span>
@@ -455,7 +455,7 @@
         <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start;">
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">📦 AGENTES & SKILLS</div>
-            <sc-for list="{{ agentesConfig }}" as="ac" hint-placeholder-count="6">
+            <sc-for list="{{ agentesConfig }}" as="ac" hint-placeholder-count="8">
               <div style="padding: 14px 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                   <div style="width: 32px; height: 32px; border-radius: 8px; background: {{ ac.fundoIcone }}; display: grid; place-items: center; font-size: 15px;">{{ ac.icone }}</div>
@@ -476,7 +476,7 @@
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🛡️ GUARDRAILS</div>
-              <sc-for list="{{ guardrailsLista }}" as="gr" hint-placeholder-count="4">
+              <sc-for list="{{ guardrailsLista }}" as="gr" hint-placeholder-count="5">
                 <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
                   <div style="flex: 1; min-width: 0;">
                     <div style="font-size: 13px; font-weight: 500;">{{ gr.nome }}</div>
@@ -491,7 +491,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">⚡ TRIGGERS</div>
-              <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="3">
+              <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="6">
                 <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
                   <span style="font-size: 15px;">{{ tg.icone }}</span>
                   <div style="flex: 1;">
@@ -505,7 +505,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
               <div style="font-size: 11px; letter-spacing: .12em; color: #5C6B7A; font-family: 'IBM Plex Mono', monospace;">🗺️ MAPA DE REMEDIAÇÃO</div>
-              <sc-for list="{{ remediacaoLista }}" as="rm" hint-placeholder-count="3">
+              <sc-for list="{{ remediacaoLista }}" as="rm" hint-placeholder-count="7">
                 <div style="padding: 12px 14px; border-radius: 10px; background: #131A22; border: 1px solid #1E2833; display: flex; align-items: center; gap: 12px;">
                   <span style="font-size: 15px;">{{ rm.icone }}</span>
                   <div style="flex: 1;">
@@ -557,7 +557,7 @@
         <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 760px;">O EasyRun não substitui as plataformas que a empresa já usa — ele se encaixa entre elas. Cada linha abaixo mostra o que a squad lê, o que escreve, e onde a decisão continua sendo humana.</p>
 
         <div style="display: flex; flex-direction: column; gap: 12px; max-width: 980px;">
-          <sc-for list="{{ integracoesLista }}" as="ig" hint-placeholder-count="6">
+          <sc-for list="{{ integracoesLista }}" as="ig" hint-placeholder-count="7">
             <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 10px; animation: er-entrar .3s ease;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 15px; background: #0B0F14; border: 1px solid #1E2833;">{{ ig.icone }}</span>
@@ -620,10 +620,10 @@
     <sc-if value="{{ vFinops }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="FinOps — Governança de Modelos" style="flex: 1; overflow-y: auto; padding: 20px 28px; min-width: 0;">
         <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 600;">💰 FinOps &amp; Governança de Modelos</h2>
-        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade para as camadas de LLM: o cenário auto-hospedado (Ollama) avaliado como alternativa ao Bedrock, que hoje sustenta os agentes da squad.</p>
+        <p style="margin: 0 0 18px; font-size: 12.5px; color: #5C6B7A; max-width: 720px;">Política de custo e confiabilidade para as camadas de LLM: todo consumo dos agentes passa pelo IARA — o gateway corporativo que governa acesso e custo de LLMs — e o cenário auto-hospedado (Ollama) é avaliado como alternativa dentro dessa governança.</p>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
-          <sc-for list="{{ finopsCards }}" as="fc" hint-placeholder-count="5">
+          <sc-for list="{{ finopsCards }}" as="fc" hint-placeholder-count="7">
             <div style="padding: 16px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; display: flex; flex-direction: column; gap: 8px;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 16px;">{{ fc.icone }}</span>
@@ -673,7 +673,7 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
               <span style="font-size: 12px; color: #FFC24B; font-family: 'IBM Plex Mono', monospace;">INFRA · AWS</span>
-              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">Bedrock (agentes), Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
+              <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.6;">LLMs consumidas via MCP do IARA — o gateway corporativo que governa acesso, catálogo de modelos e custo; nenhum agente fala direto com o provedor. Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
             </div>
           </div>
         </div>
@@ -704,7 +704,7 @@
         <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">🛡️ Estabilidade &amp; Hardening (SDD/Harness)</div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
-            <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="5">
+            <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="6">
               <div style="display: flex; gap: 8px; align-items: flex-start;">
                 <span style="color: #3DDC84; font-size: 13px; padding-top: 1px;">●</span>
                 <span style="font-size: 12.5px; color: #93A1B0; line-height: 1.55;">{{ hd.texto }}</span>
@@ -715,7 +715,7 @@
 
         <div style="margin-top: 16px; padding: 20px; border-radius: 12px; background: #131A22; border: 1px solid #1E2833; max-width: 980px;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">🔗 Squad EasyRun × papéis LangGraph</div>
-          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
+          <div style="font-size: 12px; color: #5C6B7A; margin-bottom: 12px;">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo via MCP do IARA); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="6">
               <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px;">
@@ -803,14 +803,14 @@ class Component extends DCLogic {
   // ---------- dados estáticos ----------
   agentesDef() {
     return [
-      { id: 'maestro', icone: '🎼', nome: 'Maestro', papel: 'Orquestrador', cor: '#B48CFF', aws: ['Step Functions', 'LangGraph'], modelo: 'Bedrock · Claude Sonnet', skills: ['decompor-tarefas', 'rotear-por-natureza', 'consolidar-resultado'] },
-      { id: 'sentinela', icone: '🛰️', nome: 'Sentinela', papel: 'Detecção & triggers', cor: '#4DD8E6', aws: ['Datadog', 'ServiceNow', 'EventBridge'], modelo: 'Regras + Bedrock Haiku', skills: ['detectar-anomalia', 'classificar-severidade', 'monitorar-recuperacao'] },
-      { id: 'elo', icone: '🔗', nome: 'Elo', papel: 'Rastreabilidade corporativa', cor: '#7FD4A8', aws: ['ServiceNow', 'IUClick'], modelo: 'Determinístico + Haiku', skills: ['consultar-cmdb', 'abrir-bug', 'iniciar-gmud', 'mover-kanban', 'escalar-time'] },
-      { id: 'contexto', icone: '🧠', nome: 'Contexto', papel: 'Contexto & memória', cor: '#5BA8FF', aws: ['OpenSearch', 'DynamoDB'], modelo: 'Bedrock · Titan Embeddings', skills: ['buscar-runbooks', 'recuperar-incidentes', 'gravar-aprendizado'] },
-      { id: 'diagnosta', icone: '🔬', nome: 'Diagnosta', papel: 'Causa raiz & natureza', cor: '#FFC24B', aws: ['Bedrock', 'Datadog'], modelo: 'Bedrock · Claude Sonnet', skills: ['correlacionar-sinais', 'hipoteses-causa-raiz', 'classificar-natureza'] },
-      { id: 'artifice', icone: '🛠️', nome: 'Artífice', papel: 'Código · Devin · PR', cor: '#E8A87C', aws: ['Devin', 'GitHub org'], modelo: 'Devin + Bedrock Sonnet', skills: ['clonar-repositorio', 'analisar-codigo', 'delegar-devin', 'abrir-pr'] },
+      { id: 'maestro', icone: '🎼', nome: 'Maestro', papel: 'Orquestrador', cor: '#B48CFF', aws: ['Step Functions', 'LangGraph'], modelo: 'IARA MCP · Claude Sonnet', skills: ['decompor-tarefas', 'rotear-por-natureza', 'consolidar-resultado'] },
+      { id: 'sentinela', icone: '🛰️', nome: 'Sentinela', papel: 'Detecção & triggers', cor: '#4DD8E6', aws: ['Datadog', 'ServiceNow', 'EventBridge'], modelo: 'Regras + IARA MCP · Haiku', skills: ['detectar-anomalia', 'classificar-severidade', 'monitorar-recuperacao'] },
+      { id: 'elo', icone: '🔗', nome: 'Elo', papel: 'Rastreabilidade corporativa', cor: '#7FD4A8', aws: ['ServiceNow', 'IUClick'], modelo: 'Determinístico + IARA · Haiku', skills: ['consultar-cmdb', 'abrir-bug', 'iniciar-gmud', 'mover-kanban', 'escalar-time'] },
+      { id: 'contexto', icone: '🧠', nome: 'Contexto', papel: 'Contexto & memória', cor: '#5BA8FF', aws: ['OpenSearch', 'DynamoDB'], modelo: 'IARA MCP · Titan Embeddings', skills: ['buscar-runbooks', 'recuperar-incidentes', 'gravar-aprendizado'] },
+      { id: 'diagnosta', icone: '🔬', nome: 'Diagnosta', papel: 'Causa raiz & natureza', cor: '#FFC24B', aws: ['IARA MCP', 'Datadog'], modelo: 'IARA MCP · Claude Sonnet', skills: ['correlacionar-sinais', 'hipoteses-causa-raiz', 'classificar-natureza'] },
+      { id: 'artifice', icone: '🛠️', nome: 'Artífice', papel: 'Código · Devin · PR', cor: '#E8A87C', aws: ['Devin', 'GitHub org'], modelo: 'Devin + IARA MCP · Sonnet', skills: ['clonar-repositorio', 'analisar-codigo', 'delegar-devin', 'abrir-pr'] },
       { id: 'executor', icone: '⚡', nome: 'Executor', papel: 'Ações de infra', cor: '#3DDC84', aws: ['Lambda', 'SSM'], modelo: 'Determinístico', skills: ['rollback-deploy', 'escalar-recursos', 'executar-runbook'] },
-      { id: 'auditor', icone: '🛡️', nome: 'Auditor', papel: 'Guardrails & avaliação', cor: '#FF8FAB', aws: ['S3', 'Langfuse', 'Datadog'], modelo: 'Bedrock · Claude Haiku', skills: ['validar-guardrails', 'avaliar-execucao', 'pos-mortem'] },
+      { id: 'auditor', icone: '🛡️', nome: 'Auditor', papel: 'Guardrails & avaliação', cor: '#FF8FAB', aws: ['S3', 'Langfuse', 'Datadog'], modelo: 'IARA MCP · Claude Haiku', skills: ['validar-guardrails', 'avaliar-execucao', 'pos-mortem'] },
     ];
   }
 
@@ -838,7 +838,7 @@ class Component extends DCLogic {
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: 3 runbooks e 2 incidentes similares recuperados (INC-1893, INC-1544).', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-041', tipo: 'runbook', texto: 'Runbook "Degradação de latência em APIs de checkout" — 7 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1893 teve a mesma assinatura logo após um deploy — resolvido com rollback (eficácia 96%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1893', tipo: 'episódio', texto: 'Mesma assinatura pós-deploy. Rollback resolveu em 6 min. Eficácia 96%.' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando métricas APM, logs e o deploy v2.14.3 (publicado às 14:00, 2 min antes do pico)…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%. Natureza da remediação: INFRA — resolve em runtime, sem alterar código.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Causa provável: esgotamento do pool de conexões RDS por vazamento introduzido no deploy v2.14.3. Confiança: 92%. Natureza da remediação: INFRA — resolve em runtime, sem alterar código.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
             { id: 1, titulo: 'Congelar novos deploys do checkout-api', st: 'ok' },
             { id: 2, titulo: 'Rollback do deploy v2.14.3 → v2.14.2', st: 'hitl' },
@@ -889,7 +889,7 @@ class Component extends DCLogic {
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Escalonamento horizontal sob pico sazonal" e 1 incidente similar recuperados.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-118', tipo: 'runbook', texto: 'Runbook "Escalonamento horizontal sob pico sazonal" — 3 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: pico de Black Friday anterior teve assinatura semelhante — resolvido com escalonamento horizontal (eficácia 98%).', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1777', tipo: 'episódio', texto: 'Pico sazonal (Black Friday) resolvido com ASG. Eficácia 98%.' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando métricas de CPU com o início da campanha "Semana Relâmpago" (tráfego +410%) e o histórico de deploys (nenhum deploy recente)…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: saturação legítima por tráfego, não é vazamento nem regressão. Confiança: 95%. Natureza: INFRA — capacidade, via mapa de remediação (CPU Spike → ASG).', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Conclusão: saturação legítima por tráfego, não é vazamento nem regressão. Confiança: 95%. Natureza: INFRA — capacidade, via mapa de remediação (CPU Spike → ASG).', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano de remediação gerado com 4 passos. Enviando para validação de guardrails…', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar ausência de regressão de deploy', st: 'ok' },
             { id: 2, titulo: 'Escalar ASG catalog-svc (6 → 14 instâncias)', st: 'hitl' },
@@ -940,7 +940,7 @@ class Component extends DCLogic {
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook genérico "Failover de rota Route 53" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-077', tipo: 'runbook', texto: 'Runbook "Failover de rota Route 53" — genérico, sem histórico específico deste endpoint.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: nenhum episódio similar encontrado — endpoint novo, sem incidentes anteriores registrados.', fx: { agStatus: { contexto: 'concluído' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Correlacionando falhas de health check por região: degradação concentrada em sa-east-2, registro backup saudável na região secundária…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Conclusão: degradação regional do resolver, não é erro de aplicação. Confiança: 89%. Natureza: INFRA — failover de rota, ação reversível.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Conclusão: degradação regional do resolver, não é erro de aplicação. Confiança: 89%. Natureza: INFRA — failover de rota, ação reversível.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano autônomo gerado com 4 passos — ação reversível e de baixo risco, sem gate de aprovação humana.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar saúde do registro backup', st: 'ok' },
             { id: 2, titulo: 'Promover failover de rota para região secundária', st: 'pendente' },
@@ -978,7 +978,7 @@ class Component extends DCLogic {
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook "Expansão preventiva de volume EBS" recuperado.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-093', tipo: 'runbook', texto: 'Runbook "Expansão preventiva de volume EBS" — 2 execuções anteriores.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: 2 expansões preventivas anteriores concluídas sem downtime, eficácia 100%.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1622', tipo: 'episódio', texto: 'Expansão preventiva de EBS anterior — zero downtime, eficácia 100%.' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Projetando ponto de saturação (ETA ~2h10min) e confirmando tendência linear estável de crescimento…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Confiança: 93% na projeção. Natureza: INFRA — expansão proativa de volume antes que o limiar crítico seja atingido.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Confiança: 93% na projeção. Natureza: INFRA — expansão proativa de volume antes que o limiar crítico seja atingido.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano preventivo agendado para janela de baixo tráfego — ação reversível e não-destrutiva, sem gate de aprovação humana.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar tendência de crescimento', st: 'ok' },
             { id: 2, titulo: 'Expandir volume EBS em +40% (gp3)', st: 'pendente' },
@@ -1016,7 +1016,7 @@ class Component extends DCLogic {
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica: nenhum runbook cobre esta assinatura. Defeito novo — não há procedimento pronto, o que já indica que a resposta não é operacional.', fx: { agStatus: { contexto: 'buscando' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: nenhum episódio com esta assinatura. Recuperados 2 episódios de "regressão pós-deploy" para orientar a hipótese.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-2044', tipo: 'episódio', texto: 'Regressão pós-deploy anterior — resolvida com correção de código e PR, não com rollback.' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Analisando stack traces agrupados e correlacionando com o histórico de deploys: todas as ocorrências surgem após o deploy de ontem, 18h42.', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: o commit a3f19c7 introduziu cálculo por faixa de CEP sem tratar a faixa 88000-000, recém-criada pelos Correios. Confiança: 94%. Natureza: CÓDIGO — nenhuma ação de runtime corrige isto; o software precisa mudar.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'codigo' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Causa raiz: o commit a3f19c7 introduziu cálculo por faixa de CEP sem tratar a faixa 88000-000, recém-criada pelos Correios. Confiança: 94%. Natureza: CÓDIGO — nenhuma ação de runtime corrige isto; o software precisa mudar.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'codigo' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza CÓDIGO detectada — roteando para o Artífice em vez do Executor. Plano de remediação gerado com 5 passos.', fx: { planoCriar: [
             { id: 1, titulo: 'Congelar deploys do frete-service', st: 'ok' },
             { id: 2, titulo: 'Correção de código via Devin + Pull Request', st: 'pendente' },
@@ -1095,8 +1095,8 @@ class Component extends DCLogic {
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Sistema afetado está fora da AWS — o Executor atuará por API do ERP e não por serviço de nuvem.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica: runbook "Divergência de conciliação contábil" recuperado, com o baseline aprovado dos parâmetros de integração.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-205', tipo: 'runbook', texto: 'Runbook "Divergência de conciliação contábil" — inclui baseline aprovado dos parâmetros.' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1409 teve sintoma idêntico após virada de mês — causa foi centro de custo desativado sem atualizar a integração.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1409', tipo: 'episódio', texto: 'Virada de mês desativou centro de custo; integração ficou apontando para conta inexistente.' } } },
-          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Bedrock', txt: 'Comparando a configuração vigente do ERP contra o baseline aprovado no runbook RB-205…', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: parâmetro CONTA_DESTINO_CONCILIACAO aponta para o centro de custo 4420, desativado na virada do mês. Confiança: 91%. Natureza: CONFIG — parâmetro, não código nem infraestrutura.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'config' } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'IARA MCP', txt: 'Comparando a configuração vigente do ERP contra o baseline aprovado no runbook RB-205…', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Causa raiz: parâmetro CONTA_DESTINO_CONCILIACAO aponta para o centro de custo 4420, desativado na virada do mês. Confiança: 91%. Natureza: CONFIG — parâmetro, não código nem infraestrutura.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'config' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza CONFIG em sistema financeiro: toda alteração de parâmetro aqui exige GMUD. Plano gerado com 4 passos.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar divergência contra o baseline aprovado', st: 'ok' },
             { id: 2, titulo: 'Abrir GMUD para alteração de parâmetro', st: 'pendente' },
@@ -1158,7 +1158,7 @@ class Component extends DCLogic {
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
           { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-1988 teve a mesma assinatura — degradação do mesmo adquirente, resolvida pelo fornecedor em 40 min. Workaround de roteamento foi usado e gerou custo extra de R$ 18k.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-1988', tipo: 'episódio', texto: 'Mesmo adquirente degradado. Workaround de roteamento custou R$ 18k em taxas adicionais.' } } },
           { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Comparando latência interna e externa: nossa aplicação responde em 40ms; o tempo é consumido esperando o gateway do parceiro. Traces confirmam o ponto de falha fora do perímetro.', fx: { agStatus: { diagnosta: 'analisando' } } },
-          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'Bedrock', txt: 'Causa raiz: degradação no gateway do adquirente A, serviço de terceiro. Confiança: 96%. Natureza: EXTERNO — a squad não tem acesso nem autoridade para corrigir a origem.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'externo' } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Causa raiz: degradação no gateway do adquirente A, serviço de terceiro. Confiança: 96%. Natureza: EXTERNO — a squad não tem acesso nem autoridade para corrigir a origem.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'externo' } },
           { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Natureza EXTERNO. Só existe workaround, não correção. Plano gerado com 3 passos — o passo 2 é uma proposta, não uma decisão da squad.', fx: { planoCriar: [
             { id: 1, titulo: 'Confirmar falha fora do nosso perímetro', st: 'ok' },
             { id: 2, titulo: 'Propor roteamento 100% para adquirente B', st: 'hitl' },
@@ -1189,6 +1189,45 @@ class Component extends DCLogic {
             aprovado: 'INC-3377 contido em 7m 12s com workaround autorizado, e escalado ao fornecedor. A causa está fora do nosso alcance — a squad fez o que podia e registrou o resto. Execução encerrada.',
             rejeitado: 'INC-3377 escalado ⚠️ Sem ação executada, por decisão humana. Impacto contido pelo circuit breaker, fornecedor acionado formalmente em 7m 12s. Saber parar é um resultado. Execução encerrada.',
           }, fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
+
+      // ---------- Cenário 8 — Watchdog do Datadog · detecção por IA sem monitor · INFRA · autônomo ----------
+      {
+        id: 'anm2150', titulo: 'ANM-2150 · Watchdog: erros notificacoes-svc', idIncidente: 'ANM-2150',
+        severidade: 'Alerta', algoritmo: 'Watchdog', icone: '🐕', origem: 'Datadog Watchdog',
+        textoProblema: 'Watchdog: taxa de erros anômala na notificacoes-svc',
+        textoConcluido: 'Resolvida · MTTR 5m 44s · monitor criado',
+        chat: {
+          causa: 'O Watchdog do Datadog detectou por IA — sem nenhum monitor configurado — um padrão anômalo de erros na notificacoes-svc. O Diagnosta cruzou o insight com o APM: pressão de memória por vazamento lento introduzido na lib de serialização v3.2.0, com pausas de GC crescendo há 3 dias. Confiança: 90%. Natureza: INFRA — alívio em runtime; a causa de fundo vira card preventivo.',
+          plano: 'O plano tem 4 passos: 1) validar a assinatura contra o runbook RB-077; 2) rolling restart da notificacoes-svc para alívio imediato, sem downtime; 3) criar monitor permanente de heap e GC no Datadog — cobertura explícita para o ponto cego que o Watchdog encontrou; 4) abrir card preventivo para o time investigar o vazamento na lib.',
+          statusAtivo: 'A squad está trabalhando na ANM-2150, detectada pelo Watchdog do Datadog: nenhum monitor cobria essa métrica — a anomalia foi encontrada por IA e entrou na esteira como qualquer outro gatilho.',
+          statusAguardando: 'A execução está pausada aguardando decisão humana na fila HITL. Assim que houver decisão, a squad prossegue.',
+          statusConcluido: 'ANM-2150 foi resolvida ✅ MTTR de 5m 44s. Taxa de erros de volta a 0,3%, monitor permanente de heap criado no Datadog e card preventivo BUG-4634 aberto para a causa de fundo.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog Watchdog', txt: 'Watchdog do Datadog detectou — sem nenhum monitor configurado — um padrão anômalo na notificacoes-svc: taxa de erros subiu de 0,2% para 6,8%, com latência degradando gradualmente há 3 dias. Anomalia ANM-2150 aberta · severidade ALERTA · origem: detecção por IA (Watchdog).', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'ANM-2150', trace: 'dd-wd-77c31b9a' } } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'EventBridge', txt: 'Insight do Watchdog normalizado em evento anomalia.detectada e publicado no barramento — é o caminho que cobre o ponto cego: ninguém tinha escrito monitor para esta métrica. Squad EasyRun acionada.' },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0099588 aberto no ServiceNow. Consulta à CMDB: item de configuração svc-notificacoes, ambiente produção, time dono Squad Engajamento.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0099588', ci: 'svc-notificacoes' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4633 criado no board da squad (coluna "A fazer") e vinculado ao INC-0099588.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4633' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'Execução iniciada no grafo LangGraph. Decompondo em tarefas: recuperar contexto → diagnosticar → classificar natureza → planejar → agir → avaliar.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' } } },
+          { ag: 'contexto', pilar: '🧠 Context', aws: 'OpenSearch', txt: 'Busca semântica concluída: runbook RB-077 "Pressão de memória em serviços JVM" recuperado, com 4 execuções anteriores.', fx: { agStatus: { contexto: 'buscando' }, memoriaAdd: { ref: 'RB-077', tipo: 'runbook', texto: 'Runbook "Pressão de memória em serviços JVM" — rolling restart + monitor de heap.' } } },
+          { ag: 'contexto', pilar: '📚 Memory', aws: 'DynamoDB', txt: 'Memória episódica: INC-2011 teve degradação gradual parecida — vazamento lento de memória; rolling restart aliviou e a correção definitiva veio por card preventivo.', fx: { agStatus: { contexto: 'concluído' }, memoriaAdd: { ref: 'INC-2011', tipo: 'episódio', texto: 'Vazamento lento de memória. Restart aliviou; correção definitiva veio por card preventivo.' } } },
+          { ag: 'diagnosta', pilar: '🧠 Context', aws: 'Datadog', txt: 'Cruzando o insight do Watchdog com o APM: pausas de GC crescendo dia após dia desde a atualização da lib de serialização (v3.2.0); heap satura a cada ~72h.', fx: { agStatus: { diagnosta: 'analisando' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', txt: 'Causa provável: pressão de memória por vazamento lento introduzido na lib de serialização v3.2.0. Confiança: 90%. Natureza: INFRA — alívio em runtime agora; a investigação da lib segue por card preventivo.', fx: { agStatus: { diagnosta: 'concluído' }, naturezaSet: 'infra' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano gerado com 4 passos — ações reversíveis e de baixo risco, sem gate de aprovação humana.', fx: { planoCriar: [
+            { id: 1, titulo: 'Validar assinatura contra o runbook RB-077', st: 'ok' },
+            { id: 2, titulo: 'Rolling restart da notificacoes-svc (alívio imediato)', st: 'pendente' },
+            { id: 3, titulo: 'Criar monitor permanente de heap e GC no Datadog', st: 'pendente' },
+            { id: 4, titulo: 'Abrir card preventivo para investigar a lib v3.2.0', st: 'pendente' },
+          ] } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrails avaliados: rolling restart é reversível, não muda versão nem configuração persistente e está no escopo da squad — dentro da autonomia. Nenhuma aprovação humana necessária.', fx: { agStatus: { auditor: 'monitorando' } } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'SSM', txt: 'Rolling restart em andamento: instâncias recicladas uma a uma atrás do load balancer — zero downtime. Heap de volta a 34%.', fx: { agStatus: { executor: 'executando' }, planoOk: 2 } },
+          { ag: 'sentinela', pilar: '🔧 Tools & APIs', aws: 'Datadog', txt: 'Monitor permanente criado no Datadog: heap acima de 85% por 15 min dispara alerta. O ponto cego que o Watchdog cobriu por IA agora tem cobertura explícita.', fx: { planoOk: 3 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card preventivo BUG-4634 criado para a Squad Engajamento investigar o vazamento da lib v3.2.0 — restart alivia, não corrige a causa de fundo. BUG-4633 movido para "Concluído".', fx: { agStatus: { elo: 'concluído' }, planoOk: 4 } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'Taxa de erros: 6,8% → 0,3%; pausas de GC normalizadas. O Watchdog marcou o próprio insight como resolvido. Janela de validação de 10 min iniciada.' },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem gerado. Aprendizado gravado: todo insight confirmado do Watchdog vira monitor permanente — detecção por IA é rede de segurança, não substituto de cobertura.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2150', tipo: 'aprendizado', texto: 'Insight do Watchdog confirmado vira monitor permanente + card preventivo para a causa de fundo.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2150 resolvida ✅ MTTR: 5m 44s. Detectada por IA, sem monitor configurado — o Watchdog viu o que ninguém tinha instrumentado. Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
     ];
@@ -1359,7 +1398,8 @@ class Component extends DCLogic {
     if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 8 agentes: eu (Maestro, orquestração), Sentinela (detecção via Datadog e ServiceNow), Elo (rastreabilidade — ServiceNow, CMDB, IUClick e GMUD), Contexto (memória), Diagnosta (causa raiz e natureza), Artífice (código, Devin e PR), Executor (ações de infra) e Auditor (guardrails e avaliação).';
     if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige humano (G-02), máximo de 3 ações de escrita por execução, escopo restrito aos ambientes da squad, e redação de segredos antes de enviar código a agente externo (G-05). Somam-se a eles o G-06 (todo PR de agente é revisado) e o G-07 (toda mudança em produção exige GMUD aprovada). Você gerencia na aba Configuração.';
     if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% de resolução autônoma, 96% de acerto na classificação da natureza e 78% dos PRs do Devin aceitos na primeira revisão. A GMUD sai em 48s, contra ~25 min no processo manual. Detalhes na aba Avaliação.';
-    if (t.includes('cenário') || t.includes('cenario')) return 'São 7 cenários no Console (escolha antes de iniciar): quatro de infraestrutura — latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco —, um de defeito de código que termina em PR pelo Devin, um incidente de negócio num sistema fora da AWS, e um de degradação de terceiro que demonstra o caminho de escalonamento.';
+    if (t.includes('cenário') || t.includes('cenario')) return 'São 8 cenários no Console (escolha antes de iniciar): quatro de infraestrutura — latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco —, um de defeito de código que termina em PR pelo Devin, um incidente de negócio num sistema fora da AWS, um de degradação de terceiro que demonstra o caminho de escalonamento, e um detectado pelo Watchdog do Datadog — anomalia encontrada por IA, sem nenhum monitor configurado.';
+    if (t.includes('iara') || t.includes('modelo') || t.includes('llm') || t.includes('bedrock')) return 'Nenhum agente fala direto com provedor de LLM: toda chamada de modelo sai como requisição ao MCP do IARA — o gateway corporativo, governado pelo time IARA, que gerencia acesso, catálogo de modelos homologados, quotas e custo. Para a squad isso é transparente: o Diagnosta pede uma inferência ao IARA e recebe a resposta do modelo homologado (Claude Sonnet, Haiku ou Titan Embeddings). O custo por incidente aparece na aba Avaliação e a política, na aba FinOps.';
     return 'Posso ajudar com: status da anomalia, causa raiz, natureza da remediação, plano de ação, rastreabilidade (ServiceNow, IUClick, Devin, GMUD), memória da squad, guardrails, cenários ou métricas. Sobre o que quer saber?';
   }
 
@@ -1578,7 +1618,7 @@ class Component extends DCLogic {
         { rotulo: 'Acerto da natureza', valor: '96%', cor: '#4DD8E6', delta: '2 roteamentos errados em 48', deltaCor: '#93A1B0' },
         { rotulo: 'PR aceito na 1ª revisão', valor: '78%', cor: '#E8A87C', delta: '7 de 9 PRs do Devin', deltaCor: '#93A1B0' },
         { rotulo: 'Tempo até GMUD aberta', valor: '48s', cor: '#5BA8FF', delta: 'manual: ~25 min', deltaCor: '#3DDC84' },
-        { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'Bedrock · 118k tokens', deltaCor: '#93A1B0' },
+        { rotulo: 'Custo LLM / incidente', valor: 'US$ 0,84', cor: '#B48CFF', delta: 'via IARA · 118k tokens', deltaCor: '#93A1B0' },
       ],
       naturezaResumo: [
         { rotulo: 'INFRA', cor: '#3DDC84', qtd: '31', pct: '65%', larg: '65%', obs: 'resolvidas em runtime' },
@@ -1611,6 +1651,7 @@ class Component extends DCLogic {
       })),
       triggersLista: [
         { icone: '🚨', nome: 'Monitor do Datadog', desc: 'Desvios de latência, erro e saturação; error tracking e monitores sintéticos.', aws: 'Datadog' },
+        { icone: '🐕', nome: 'Watchdog do Datadog', desc: 'Anomalias encontradas por IA, sem monitor configurado — o insight vira gatilho da squad.', aws: 'Datadog Watchdog' },
         { icone: '🎫', nome: 'Incidente no ServiceNow', desc: 'Chamado aberto por pessoa — inclui incidente de negócio sem sintoma técnico.', aws: 'ServiceNow' },
         { icone: '📡', nome: 'Evento de deploy', desc: 'Todo deploy em produção coloca a squad em observação ativa.', aws: 'EventBridge' },
         { icone: '⏰', nome: 'Varredura agendada', desc: 'Auditoria de saúde e forecast a cada 15 minutos.', aws: 'EventBridge' },
@@ -1645,6 +1686,7 @@ class Component extends DCLogic {
 
       // O que o EasyRun troca com cada plataforma do ecossistema
       integracoesLista: [
+        { icone: '🚪', nome: 'IARA', papel: 'Gateway corporativo de LLMs (MCP)', le: 'Catálogo de modelos homologados · quotas e orçamento de tokens por agente', escreve: 'Requisições de inferência dos agentes · telemetria de custo por execução', modo: 'Automático · acesso e custo governados pelo time IARA', cor: '#B48CFF' },
         { icone: '🎫', nome: 'ServiceNow', papel: 'Registro, CMDB e gestão de mudança', le: 'Incidentes abertos · item de configuração · time dono · repositório do serviço', escreve: 'Anomalia correlacionada · GMUD aberta · incidente encerrado ou reatribuído', modo: 'Automático · GMUD aprovada por humano', cor: '#5BA8FF' },
         { icone: '🐶', nome: 'Datadog', papel: 'Observabilidade dos sistemas monitorados', le: 'Métricas, logs, traces, error tracking, monitores e forecast', escreve: 'Evento de anomalia · janela de validação pós-remediação', modo: 'Automático', cor: '#B48CFF' },
         { icone: '📋', nome: 'IUClick', papel: 'Kanban do processo ágil', le: 'Coluna atual do card e histórico de movimentação', escreve: 'Bug criado na abertura · card movido a cada avanço do incidente', modo: 'Automático', cor: '#7FD4A8' },
@@ -1663,7 +1705,7 @@ class Component extends DCLogic {
         { icone: '🔁', titulo: 'Feedback loop do HITL', desc: 'Cada aprovação e cada rejeição — com a justificativa — vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema.' },
         { icone: '📉', titulo: 'Drift em dois níveis', desc: 'Nos baselines de detecção (o que era anômalo deixou de ser) e na precisão do agente ao longo do tempo. O segundo é o que passa despercebido, porque nada quebra — a qualidade só escorrega.' },
         { icone: '🧽', titulo: 'Redação antes da saída', desc: 'Código e logs passam por remoção de segredos e dados pessoais antes de ir a um agente externo. Enviar fonte da empresa para fora é a primeira objeção de segurança — e ela precisa de resposta no contrato, não no adaptador.' },
-        { icone: '🎟️', titulo: 'Orçamento por execução', desc: 'Teto de tokens por agente e por incidente, com corte automático. Um agente em laço não vira uma fatura surpresa no fim do mês.' },
+        { icone: '🎟️', titulo: 'Orçamento por execução', desc: 'Teto de tokens por agente e por incidente, aplicado no gateway do IARA, com corte automático. Um agente em laço não vira uma fatura surpresa no fim do mês.' },
       ],
       llmopsStack: [
         { nome: 'LangGraph', papel: 'Orquestração em grafo de estados, interrupt() para HITL e checkpointing', cor: '#B48CFF' },
@@ -1674,11 +1716,12 @@ class Component extends DCLogic {
       ],
 
       finopsCards: [
+        { icone: '🚪', titulo: 'Acesso via IARA', desc: 'Todo acesso a LLM passa pelo MCP do IARA: catálogo de modelos homologados, quotas por squad e chargeback por centro de custo — governados pelo time IARA, não pela squad.' },
         { icone: '🏆', titulo: 'Padrão-ouro', desc: 'Qwen 2.5-coder:32b — confiabilidade máxima em chamadas de ferramentas (tool calling).' },
         { icone: '🪫', titulo: 'Piso mínimo viável', desc: 'Qwen 2.5:7b — abaixo desse porte, a geração de JSON estruturado tende a falhar.' },
         { icone: '🌡️', titulo: 'Política de temperatura', desc: '0.1 para o Quiz/Validator (consistência analítica) · 0.4 para Coach e Explainer (tom mais informativo).' },
         { icone: '💻', titulo: 'Local (Ollama) vs. Nuvem', desc: 'Local exige 24GB de VRAM para modelos 32B (8GB para 7B), com custo previsível; nuvem oferece maior poder de raciocínio e latência previsível, sem hardware dedicado.' },
-        { icone: '🎟️', titulo: 'Orçamento de tokens', desc: 'Gateways de inferência com limites estritos de tokens por agente, evitando estouro de custo por execução.' },
+        { icone: '🎟️', titulo: 'Orçamento de tokens', desc: 'O gateway do IARA impõe limites estritos de tokens por agente, evitando estouro de custo por execução.' },
         { icone: '🧭', titulo: 'Custo por natureza', desc: 'INFRA custa US$ 0,31 por incidente; CÓDIGO custa US$ 1,12 (sessão do Devin inclusa) — e ainda assim compara com dias de trabalho humano.' },
       ],
 
@@ -1703,17 +1746,17 @@ class Component extends DCLogic {
       pilares: [
         { icone: '🧠', nome: 'Context', desc: 'Montagem do contexto do incidente: métricas e traces do Datadog, item de configuração da CMDB, deploys e topologia.', aws: ['Datadog', 'ServiceNow CMDB', 'OpenSearch'], onde: 'Painel "Contexto & Memória"' },
         { icone: '📚', nome: 'Memory', desc: 'Memória episódica (incidentes) e semântica (runbooks vetorizados) com aprendizado contínuo, alimentando o golden set.', aws: ['DynamoDB', 'OpenSearch'], onde: 'Cards INC / APR no console' },
-        { icone: '🎯', nome: 'Planning', desc: 'Causa raiz, classificação da natureza da remediação e plano em passos verificáveis.', aws: ['Bedrock', 'LangGraph'], onde: 'Painel "Plano de ação" e chip de natureza' },
+        { icone: '🎯', nome: 'Planning', desc: 'Causa raiz, classificação da natureza da remediação e plano em passos verificáveis.', aws: ['IARA MCP', 'LangGraph'], onde: 'Painel "Plano de ação" e chip de natureza' },
         { icone: '⚡', nome: 'Action', desc: 'Execução idempotente e auditável — em runtime na AWS, por API em sistemas fora dela, ou por PR quando a causa é código.', aws: ['Lambda', 'SSM', 'GitHub org'], onde: 'Agentes Executor e Artífice' },
         { icone: '🔧', nome: 'Tools & APIs', desc: 'Ferramentas tipadas expostas aos agentes: rollback, escala, runbooks, CMDB, kanban, clone e pull request.', aws: ['SSM', 'API Gateway', 'Devin'], onde: 'Skills por agente (Configuração)' },
-        { icone: '🤝', nome: 'Multi-Agent', desc: 'Oito agentes especializados com papéis e contratos explícitos — seis de raciocínio, dois adaptadores de plataforma.', aws: ['Bedrock Agents', 'LangGraph'], onde: 'Coluna "Agentes" do console' },
-        { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita, redação antes da saída, revisão de PR e GMUD aprovada.', aws: ['Bedrock Guardrails', 'IAM'], onde: 'Configuração + gates G-02, G-05, G-06 e G-07' },
+        { icone: '🤝', nome: 'Multi-Agent', desc: 'Oito agentes especializados com papéis e contratos explícitos — seis de raciocínio, dois adaptadores de plataforma.', aws: ['LangGraph', 'IARA MCP'], onde: 'Coluna "Agentes" do console' },
+        { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita, redação antes da saída, revisão de PR e GMUD aprovada — mais quotas de modelo aplicadas no gateway do IARA.', aws: ['Políticas IARA', 'IAM'], onde: 'Configuração + gates G-02, G-05, G-06 e G-07' },
         { icone: '📦', nome: 'Skills', desc: 'Capacidades versionadas e testáveis atribuídas a cada agente da squad.', aws: ['Lambda Layers'], onde: 'Chips de skills (Configuração)' },
         { icone: '⚡', nome: 'Triggers', desc: 'Monitores do Datadog, incidentes do ServiceNow (inclusive os de negócio), eventos de deploy, agenda e pedidos humanos.', aws: ['Datadog', 'ServiceNow', 'EventBridge'], onde: 'Lista de triggers (Configuração)' },
         { icone: '🎼', nome: 'Orchestration', desc: 'Grafo de estados com roteamento condicional por natureza da remediação e pausa via interrupt() para HITL.', aws: ['LangGraph', 'Step Functions'], onde: 'Fluxo central do console' },
         { icone: '📊', nome: 'Evaluation', desc: 'MTTR, acerto da natureza, taxa de PR aceito, scores por agente, pós-mortems e avaliação por LLM-as-judge com portão de regressão.', aws: ['Langfuse', 'LangSmith', 'S3'], onde: 'Abas "Avaliação" e "LLMOps"' },
-        { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo.', aws: ['Datadog', 'CloudWatch'], onde: 'Log da Sentinela, por cenário' },
-        { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso às ferramentas corporativas (ServiceNow, IUClick, Devin, GitHub); A2A coordena agentes entre frameworks via Agent Card.', aws: ['Bedrock AgentCore', 'MCP'], onde: 'Agente Elo e aba "Integrações"' },
+        { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo; o Watchdog detecta por IA o que nenhum monitor cobre.', aws: ['Datadog', 'Watchdog', 'CloudWatch'], onde: 'Log da Sentinela, por cenário' },
+        { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso às LLMs (gateway IARA) e às ferramentas corporativas (ServiceNow, IUClick, Devin, GitHub); A2A coordena agentes entre frameworks via Agent Card.', aws: ['MCP', 'IARA', 'A2A'], onde: 'Agente Elo e aba "Integrações"' },
       ],
     };
   }

@@ -63,7 +63,8 @@ para reagir, sem se conhecerem diretamente. No EasyRun, o EventBridge.
 medido. Métricas novas não têm baseline, o que obriga o uso do algoritmo `BASIC`.
 
 **Bedrock** — Serviço AWS de modelos de linguagem gerenciados (Claude, Titan e outros),
-sem necessidade de gerenciar infraestrutura de GPU.
+sem necessidade de gerenciar infraestrutura de GPU. No EasyRun os agentes **não** o acessam
+diretamente: todo consumo de LLM passa pelo MCP do **IARA**.
 
 **Bounded context** — Conceito de DDD: fronteira dentro da qual cada termo do domínio tem
 um significado único. Os quatro propostos: Detecção, Diagnóstico, Execução, Governança.
@@ -243,6 +244,11 @@ decisão humana antes de prosseguir. O mecanismo central de segurança do EasyRu
 → [05](05-processo-end-to-end.md#12--a-fila-hitl)
 
 ## I
+
+**IARA** — Time (e solução interna) que governa o acesso a LLMs na empresa. Expõe um
+gateway **MCP** pelo qual os agentes fazem toda requisição de inferência; gerencia o
+catálogo de modelos homologados, quotas de tokens e o custo (chargeback). Nenhum agente
+fala direto com provedor de LLM. → [06](06-arquitetura-alvo.md#acesso-a-llms--o-gateway-iara)
 
 **IUClick** — Ferramenta de Kanban da empresa. Recebe um card de Bug por incidente, movido
 automaticamente conforme a esteira avança. → [10](10-ecossistema-da-empresa.md#iuclick)
@@ -494,6 +500,11 @@ correção sustentou. No ANM-2047, 10 minutos.
 32B, 8 GB para o 7B.
 
 ## W
+
+**Watchdog (Datadog)** — Recurso de detecção por IA do Datadog: encontra anomalias em
+métricas que **nenhum monitor cobre**, sem configuração prévia. No EasyRun é a origem do
+cenário `anm2150` — o insight do Watchdog entra na esteira como qualquer outro gatilho, e o
+desfecho inclui criar o monitor permanente que faltava.
 
 **Wheel (.whl)** — Formato binário de distribuição de pacotes Python, sucessor do *egg*.
 

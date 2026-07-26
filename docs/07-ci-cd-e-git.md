@@ -75,8 +75,8 @@ CI e poluiria o histórico com checks irrelevantes.
 Note que `.github/workflows/tests.yml` está na própria lista: alterar o workflow dispara o
 workflow, para você validar a mudança imediatamente.
 
-⚠️ **Consequência prática:** editar apenas `prototype/` **não dispara nada**. O mockup não
-tem cobertura automatizada de espécie alguma.
+Editar apenas `prototype/` não dispara este workflow — mas dispara o de protótipo,
+descrito logo abaixo.
 
 ```yaml
 jobs:
@@ -145,6 +145,43 @@ vermelho.
 O check do PR fica vermelho, e a aba Actions mostra o log completo com a saída do `pytest`
 — qual teste falhou, em que linha, com que valores. O fluxo é: corrigir localmente, rodar
 `pytest`, e dar push de novo (o mesmo PR reexecuta automaticamente).
+
+---
+
+## `prototype.yml` — as verificações do mockup
+
+📄 [`.github/workflows/prototype.yml`](../.github/workflows/prototype.yml)
+
+```yaml
+on:
+  push:
+    paths:
+      - 'prototype/**'
+      - 'tools/**'
+      - '.github/workflows/prototype.yml'
+```
+
+Dispara quando o mockup ou as ferramentas mudam, e roda um comando só:
+
+```yaml
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check prototype
+        run: node tools/check-prototype.mjs
+```
+
+Note o que **não** está lá: nenhum `npm install`. O verificador usa só a biblioteca padrão
+do Node, então não há `package.json`, não há `node_modules`, não há árvore de dependências
+para auditar. É a mesma decisão do lado Python, onde o pacote não tem dependência
+obrigatória.
+
+As quatro verificações estão descritas em [`tools/README.md`](../tools/README.md) e em
+[04 — Como editar o protótipo](04-frontend-prototype.md#como-editar-o-protótipo). Em resumo:
+consistência dos cenários, execução do motor nos dois caminhos de decisão, conferência do
+template contra os dados, e sincronia do espelho `export/`.
 
 ---
 
@@ -236,12 +273,13 @@ confirma: os commits `9fc98a4`, `82ecc63` e `98cc614` são merges de PR.
 
 ### ⚠️ O que ainda não está na `main`
 
-Dois arquivos existem **apenas** em `feature/python-package`:
+Três arquivos existem **apenas** em `feature/python-package`:
 
-| Arquivo | Commit | Consequência de não estar na `main` |
-|---|---|---|
-| [`.github/workflows/tests.yml`](../.github/workflows/tests.yml) | `0d017ac` | **A `main` não roda testes automaticamente.** |
-| [`.vscode/tasks.json`](../.vscode/tasks.json) | `2656b07` | O F5 não funciona para quem clona a `main` — o `launch.json` referencia uma task que não existe. |
+| Arquivo | Consequência de não estar na `main` |
+|---|---|
+| [`.github/workflows/tests.yml`](../.github/workflows/tests.yml) | **A `main` não roda testes automaticamente.** |
+| [`.github/workflows/prototype.yml`](../.github/workflows/prototype.yml) | A `main` não verifica o protótipo nem a sincronia do espelho. |
+| [`.vscode/tasks.json`](../.vscode/tasks.json) | O F5 não funciona para quem clona a `main` — o `launch.json` referencia uma task que não existe. |
 
 Ambos entram na `main` quando esta branch for mesclada. Enquanto isso, quem clonar a
 branch padrão tem uma experiência degradada.
@@ -251,15 +289,15 @@ branch padrão tem uma experiência degradada.
 ## Checklist antes de abrir um PR
 
 1. `pytest` passa localmente (25 testes).
-2. `git status` não mostra `.venv/`, `__pycache__/` ou `*.egg-info/`.
-3. Se mexeu em `prototype/EasyRun.dc.html`, replicou a mudança em
-   `prototype/export/EasyRun-src.dc.html`.
+2. Se mexeu em `prototype/`, rodou `node tools/sync-export.mjs` e
+   `node tools/check-prototype.mjs`.
+3. `git status` não mostra `.venv/`, `__pycache__/` ou `*.egg-info/`.
 4. Se mexeu no `print()` do [`serve.py`](../src/squad_agentica/serve.py), testou o **F5**
    no VS Code — o `problemMatcher` depende do texto exato
    ([09 #4](09-lacunas-e-riscos.md#4-o-problemmatcher-está-acoplado-ao-texto-do-print)).
 5. Se alterou algo documentado em `docs/`, atualizou o documento no mesmo commit.
-6. Se mexeu **só** em `prototype/` ou em `docs/`, lembre que **nenhum workflow vai rodar** —
-   a verificação é sua.
+6. Se mexeu **só** em `docs/`, lembre que **nenhum workflow vai rodar** — a verificação é
+   sua.
 
 ---
 
