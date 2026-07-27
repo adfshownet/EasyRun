@@ -237,7 +237,7 @@
   /* ============================================================
      TIPOGRAFIA
      ============================================================ */
-  h1, h2, h3, h4 { color: var(--ink); text-wrap: balance; margin: 0; line-height: 1.2; }
+  h1, h2, h3, h4 { color: var(--ink); margin: 0; line-height: 1.2; }
   h1 { font-size: clamp(30px, 4.2vw, 42px); font-weight: 700; letter-spacing: -.022em; }
   h2 { font-size: clamp(22px, 2.6vw, 27px); font-weight: 650; letter-spacing: -.014em; }
   h3 { font-size: 17px; font-weight: 650; letter-spacing: -.005em; }
@@ -255,6 +255,19 @@
   .stack   { display: flex; flex-direction: column; gap: 18px; }
   .stack-s { display: flex; flex-direction: column; gap: 10px; }
   .stack-l { display: flex; flex-direction: column; gap: 30px; }
+
+  /* utilitários de espaçamento */
+  .mt-4  { margin-top:  4px; }
+  .mt-6  { margin-top:  6px; }
+  .mt-8  { margin-top:  8px; }
+  .mt-10 { margin-top: 10px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-18 { margin-top: 18px; }
+  .mt-26 { margin-top: 26px; }
+  .mt-90 { margin-top: 90px; }
+  .pt-64 { padding-top: 64px; }
+  .dim   { opacity: .6; }
+  .footer-top { padding-top: 22px; border-top: 1px solid var(--line); }
 
   .sec-head {
     display: flex; flex-direction: column; gap: 8px;
@@ -449,7 +462,7 @@
   <main class="main">
 
     <!-- HERO -->
-    <header class="band" style="padding-top:64px;">
+    <header class="band pt-64">
       <div class="stack">
         <p class="eyebrow">Squad agêntica · AIOps · protótipo</p>
         <h1>Como o EasyRun funciona, peça por peça</h1>
@@ -463,14 +476,14 @@
         </p>
       </div>
 
-      <div class="callout" style="margin-top:26px;">
+      <div class="callout mt-26">
         <strong>Antes de tudo:</strong> o EasyRun é um protótipo. O dashboard é um mockup
         estático, o pacote Python é contrato de tipos com implementação vazia, e nada de
         AWS ou LangGraph existe ainda. Cada componente abaixo carrega um selo dizendo em
         que estágio realmente está.
       </div>
 
-      <div class="legend" style="margin-top:18px;">
+      <div class="legend mt-18">
         <span class="badge b-ok">Implementado</span>
         <span class="badge b-stub">Stub / contrato</span>
         <span class="badge b-mock">Mockup</span>
@@ -569,14 +582,14 @@
 
         <div class="card">
           <h3>Uma confusão de nomes que vale resolver logo</h3>
-          <dl class="kv" style="margin-top:10px;">
+          <dl class="kv mt-10">
             <dt>Produto e repositório</dt><dd>EasyRun</dd>
             <dt>Projeto Python</dt><dd><code>squad-agentica</code> (com hífen)</dd>
             <dt>Pacote importável</dt><dd><code>squad_agentica</code> (com underscore)</dd>
             <dt>Comando de terminal</dt><dd><code>squad-agentica-serve</code></dd>
             <dt>Arquivo do dashboard</dt><dd><code>EasyRun.dc.html</code></dd>
           </dl>
-          <p class="fine" style="margin-top:12px;">
+          <p class="fine mt-12">
             O hífen vs. underscore não é descuido: nomes de distribuição usam hífen, nomes de
             pacote usam underscore — porque hífen é operador de subtração em Python.
           </p>
@@ -597,11 +610,11 @@
           <h3>Do zero ao mockup rodando</h3>
           <pre><code>git clone https://github.com/adfshownet/EasyRun.git
 cd EasyRun
-python -m venv .venv                 <span style="opacity:.6"># cria o ambiente virtual</span>
-.venv\Scripts\activate               <span style="opacity:.6"># Windows</span>
-pip install -e ".[dev]"              <span style="opacity:.6"># instala o projeto + pytest</span>
-pytest                               <span style="opacity:.6"># 25 testes devem passar</span>
-squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8080</span></code></pre>
+python -m venv .venv                 <span class="dim"># cria o ambiente virtual</span>
+.venv\Scripts\activate               <span class="dim"># Windows</span>
+pip install -e ".[dev]"              <span class="dim"># instala o projeto + pytest</span>
+pytest                               <span class="dim"># 25 testes devem passar</span>
+squad-agentica-serve                 <span class="dim"># abre localhost:8080</span></code></pre>
         </div>
 
         <div class="grid-2">
@@ -614,13 +627,13 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
               <code>include-system-site-packages = false</code> — que é o que garante o
               isolamento.
             </p>
-            <p class="fine" style="margin-top:10px;">
+            <p class="fine mt-10">
               <strong>Sem ela:</strong> o <code>pip install</code> vai para o Python do
               sistema, e três problemas aparecem — projetos brigando por versões
               incompatíveis da mesma biblioteca, ambiente irreprodutível (“funciona na minha
               máquina”) e poluição global irreversível.
             </p>
-            <p class="fine" style="margin-top:10px;">
+            <p class="fine mt-10">
               <strong>Por que é gitignorada:</strong> é grande, tem caminhos absolutos da
               máquina, e é 100% reconstruível a partir do <code>pyproject.toml</code>. No
               Windows a pasta é <code>Scripts/</code>; no Linux e macOS, <code>bin/</code>.
@@ -633,14 +646,14 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
               Descreve o projeto de forma declarativa: nome, versão, Python mínimo, extras e
               comandos. Substituiu o antigo <code>setup.py</code>, que era código executável.
             </p>
-            <dl class="kv" style="margin-top:12px;">
+            <dl class="kv mt-12">
               <dt>[build-system]</dt><dd>Qual ferramenta constrói o pacote (setuptools, via PEP 517)</dd>
               <dt>[project]</dt><dd>Nome, versão 0.1.0, <code>requires-python = "&gt;=3.10"</code></dd>
               <dt>optional-dependencies</dt><dd>O extra <code>dev</code> = <code>pytest&gt;=8</code></dd>
               <dt>[project.scripts]</dt><dd>Cria o comando <code>squad-agentica-serve</code></dd>
               <dt>packages.find</dt><dd><code>where = ["src"]</code> — o código mora em <code>src/</code></dd>
             </dl>
-            <p class="fine" style="margin-top:12px;">
+            <p class="fine mt-12">
               Note o que <em>não</em> está lá: nenhuma dependência obrigatória. O pacote roda
               só com a biblioteca padrão do Python.
             </p>
@@ -660,12 +673,12 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
           </div>
           <div class="card">
             <h3>Artefatos descartáveis</h3>
-            <dl class="kv" style="margin-top:4px;">
+            <dl class="kv mt-4">
               <dt>egg-info/</dt><dd>Ficha do pacote gerada pelo setuptools a partir do <code>pyproject.toml</code></dd>
               <dt>__pycache__/</dt><dd>Bytecode compilado — só acelera a carga</dd>
               <dt>.pytest_cache/</dt><dd>Resultado da última execução, habilita <code>--last-failed</code></dd>
             </dl>
-            <p class="fine" style="margin-top:12px;">
+            <p class="fine mt-12">
               Todos gitignorados pelo mesmo princípio: são derivados, reaparecem sozinhos, e
               versioná-los criaria uma segunda fonte da mesma informação.
             </p>
@@ -674,10 +687,10 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
 
         <div class="card">
           <h3>O truque do <code>.gitignore</code> que vale conhecer</h3>
-          <pre style="margin-top:10px;"><code>.vscode/*
+          <pre class="mt-10"><code>.vscode/*
 !.vscode/launch.json
 !.vscode/tasks.json</code></pre>
-          <p class="fine" style="margin-top:12px;">
+          <p class="fine mt-12">
             Ignora tudo na pasta e depois <strong>abre exceções</strong> com <code>!</code>.
             A razão: <code>settings.json</code> costuma guardar preferência pessoal e não deve
             ser imposto ao time; já <code>launch.json</code> e <code>tasks.json</code> são
@@ -729,7 +742,7 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
             <strong>pasta local</strong> e nunca testaria o pacote instalado — mascarando
             erros de empacotamento que só apareceriam na máquina do usuário final.
           </p>
-          <p class="fine" style="margin-top:10px;">
+          <p class="fine mt-10">
             Com <code>src/</code>, a única forma de o import funcionar é achando o pacote
             instalado. Consequência intencional: <strong>sem <code>pip install -e</code>, os
             testes nem coletam.</strong> Isso é feature, não bug.
@@ -798,7 +811,7 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
               É o objeto que atravessa todo o fluxo. Três detalhes de design merecem
               atenção:
             </p>
-            <ul class="plain fine" style="margin-top:10px;">
+            <ul class="plain fine mt-10">
               <li><code>confidence</code> guarda a confiança do diagnóstico (0,89 a 0,95 nos cenários) — o agente diz “causa provável”, não “a causa é”.</li>
               <li><code>hitl_approved</code> é <code>Optional[bool]</code> de propósito: <code>None</code> = ainda não perguntamos, <code>False</code> = rejeitado. Um booleano puro confundiria os dois.</li>
               <li><code>schema_version</code> existe porque, durante um deploy gradual, versões antiga e nova do contrato coexistem — e é preciso detectar isso em vez de quebrar com <code>KeyError</code>.</li>
@@ -812,7 +825,7 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
               — o idioma Python para “existe, mas ainda não”. E há um teste que
               <strong>garante que continue assim</strong>.
             </p>
-            <p class="fine" style="margin-top:10px;">
+            <p class="fine mt-10">
               Parece estranho testar que um stub segue stub, mas é intencional: ninguém
               implementa um papel pela metade sem também remover o teste deliberadamente. O
               contrato fica congelado até a decisão consciente de destravá-lo.
@@ -858,11 +871,11 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
             Sobe um servidor HTTP estático apontando para <code>prototype/</code>. Duas
             decisões interessantes num arquivo tão pequeno:
           </p>
-          <ul class="plain fine" style="margin-top:10px;">
+          <ul class="plain fine mt-10">
             <li><code>Cache-Control: no-store</code> em toda resposta — sem isso você editaria o mockup, apertaria F5 e continuaria vendo a versão antiga do cache.</li>
             <li><code>except KeyboardInterrupt: pass</code> — <kbd>Ctrl+C</kbd> encerra em silêncio, sem despejar um traceback de erro para uma saída que é normal.</li>
           </ul>
-          <p class="fine" style="margin-top:10px;">
+          <p class="fine mt-10">
             E uma armadilha: <code>Path(__file__).resolve().parents[2]</code> sobe três níveis
             para achar a raiz do repositório. Funciona no checkout; quebraria se o pacote fosse
             instalado normalmente em <code>site-packages</code>.
@@ -882,7 +895,7 @@ squad-agentica-serve                 <span style="opacity:.6"># abre localhost:8
       <div class="stack-l">
         <div class="callout">
           <strong>Tudo nesta seção é aparência.</strong> Não existe backend, não existe LLM,
-          não existe AWS. Os 8 agentes, os 8 cenários, as métricas e os 140 passos de
+          não existe AWS. Os 8 agentes, os 9 cenários, as métricas e os 156 passos de
           simulação estão escritos como literais dentro de um único arquivo HTML. O “chat com
           a squad” responde por correspondência de palavra-chave — e nenhuma linha de código
           fala com ServiceNow, Datadog, IUClick, Devin ou GitHub.
@@ -1087,7 +1100,7 @@ flowchart TD
                 <h4>A fila HITL — a execução para</h4>
                 <div class="who">decisão humana</div>
                 <p>O card traz quatro informações juntas de propósito: <strong>o quê</strong> (o comando exato), <strong>por quê</strong> (a justificativa com confiança), <strong>com que precedente</strong> (a memória) e <strong>qual o risco</strong>. O humano decide em segundos sem abrir cinco abas.</p>
-                <p style="margin-top:8px;">E rejeitar <strong>não é abortar</strong>: a squad tem um plano B conservador — reciclar as instâncias do pool sem reverter o deploy.</p>
+                <p class="mt-8">E rejeitar <strong>não é abortar</strong>: a squad tem um plano B conservador — reciclar as instâncias do pool sem reverter o deploy.</p>
               </div>
             </div>
             <div class="step">
@@ -1127,7 +1140,7 @@ flowchart TD
         </div>
 
         <div class="stack-s">
-          <h3>Os oito cenários</h3>
+          <h3>Os nove cenários</h3>
           <div class="tw">
             <table>
               <thead>
@@ -1142,18 +1155,19 @@ flowchart TD
                 <tr><td>💼 <strong>INC-3350 · Faturamento não conciliado</strong></td><td><strong>ServiceNow</strong></td><td><span class="badge b-mock">CONFIG</span></td><td>1 · GMUD</td><td class="num">22m 05s</td></tr>
                 <tr><td>⛔ <strong>INC-3377 · Gateway de pagamento</strong></td><td>Datadog</td><td><span class="badge b-plan">EXTERNO</span></td><td>1 · ação</td><td class="num">escalado</td></tr>
                 <tr><td>🐕 <strong>ANM-2150 · Watchdog: erros notificacoes-svc</strong></td><td><strong>Datadog Watchdog</strong></td><td><span class="badge b-ok">INFRA</span></td><td>— autônomo</td><td class="num">5m 44s</td></tr>
+                <tr><td>🧯 <strong>ANM-2210 · Contingência: gateway IARA degradado</strong></td><td>Datadog</td><td><span class="badge b-plan">EXTERNO</span></td><td>1 · ação (contingência)</td><td class="num">22 min · zero bypass</td></tr>
               </tbody>
             </table>
           </div>
 
-          <div class="grid-2" style="margin-top:6px;">
+          <div class="grid-2 mt-6">
             <div class="card">
               <h3>Por que três rodam sozinhos</h3>
               <p class="fine">
                 O critério de autonomia <strong>não é a severidade</strong> — é
                 reversibilidade × custo do erro. O DNS é crítico e mesmo assim autônomo,
                 porque failover de rota é trivialmente reversível e esperar custaria mais
-                que errar; resultado, o menor MTTR dos oito. O disco roda sozinho pelo
+                que errar; resultado, o menor MTTR dos nove. O disco roda sozinho pelo
                 motivo oposto: é preventivo, sem urgência, e expandir volume é
                 não-destrutivo. E o rolling restart do cenário Watchdog não muda versão nem
                 configuração persistente — reversível por definição.
@@ -1197,7 +1211,23 @@ flowchart TD
                 Aprovar um patch e aprovar uma janela de mudança em produção são autoridades
                 diferentes, exercidas por pessoas diferentes. Fundir as duas não sobrevive ao
                 primeiro comitê de mudança. E se o PR é rejeitado, o gate da GMUD nem aparece
-                — não se pede janela para um patch recusado.
+                — não se pede janela para um patch recusado. O número de gates, porém, segue
+                o <strong>nível de risco</strong> da classe de mudança: alto risco = 2 gates;
+                baixo risco = 1 gate consolidado (o APR-05 avalia parâmetro e janela na mesma
+                decisão); histórico comprovado no golden set = promoção até a auto-aprovação
+                — exceto a GMUD, sempre humana.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Por que o cenário-espelho existe</h3>
+              <p class="fine">
+                No ANM-2210, a dependência que falha é o <strong>próprio gateway IARA</strong>
+                — o único caminho de LLM da squad. O circuit breaker abre, os papéis de
+                raciocínio param, e a squad opera em contingência: <strong>zero chamadas de
+                modelo</strong>, só runbooks determinísticos pré-aprovados (gate APR-07,
+                guardrail G-08) e escalonamento humano — nunca bypass para provedor direto.
+                Quem carrega o incidente na janela é o Step Functions, dono do estado
+                durável; o diagnóstico vem a posteriori, quando o circuito fecha.
               </p>
             </div>
           </div>
@@ -1247,6 +1277,41 @@ flowchart TD
         </div>
 
         <div class="stack-s">
+          <h3>O contrato de propriedade do estado</h3>
+          <p class="fine">
+            Step Functions e LangGraph são ambos máquinas de estado — e duas máquinas de
+            estado governando o mesmo fluxo terminam em corrupção de dados ou execuções
+            zumbis na primeira pausa HITL. O contrato que resolve a ambiguidade:
+          </p>
+          <div class="grid-3">
+            <div class="card">
+              <h3>1 · Step Functions é o dono</h3>
+              <p class="fine">
+                Do estado <strong>durável</strong>: lifecycle, retries, integrações e a pausa
+                HITL via <strong>task token</strong> (<code>waitForTaskToken</code>) — o
+                callback humano retoma a máquina do ponto exato, mesmo dias depois.
+              </p>
+            </div>
+            <div class="card">
+              <h3>2 · LangGraph é efêmero</h3>
+              <p class="fine">
+                O grafo nasce e morre dentro de <strong>uma invocação de task</strong>: recebe
+                o estado, raciocina, devolve o <code>AgentState</code> serializado. O
+                checkpointer PostgreSQL protege só o progresso intra-invocação.
+              </p>
+            </div>
+            <div class="card">
+              <h3>3 · Um dono por vez</h3>
+              <p class="fine">
+                Dentro da task, o dono é o grafo; fora dela, o Step Functions.
+                <code>interrupt()</code> <strong>não atravessa</strong> fronteira de
+                invocação — espera longa é sempre task token. Resolve a lacuna #12.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-s">
           <h3>Do agente ao papel do grafo</h3>
           <div class="tw">
             <table>
@@ -1272,7 +1337,8 @@ flowchart TD
             <p class="fine">
               FastAPI com arquitetura hexagonal e quatro <em>bounded contexts</em> DDD:
               Detecção, Diagnóstico, Execução, Governança — que espelham os agentes.
-              Checkpoints em PostgreSQL.
+              O grafo roda efêmero dentro de tasks do Step Functions; o checkpoint
+              PostgreSQL é intra-task.
             </p>
           </div>
           <div class="card">
@@ -1285,8 +1351,10 @@ flowchart TD
           <div class="card">
             <h3>Infraestrutura</h3>
             <p class="fine">
-              LLMs via MCP do IARA, Step Functions, Lambda, EventBridge, DynamoDB,
-              OpenSearch, S3, CloudWatch, SSM, Route 53.
+              LLMs via MCP do IARA, Step Functions (dono do estado durável), Lambda,
+              EventBridge, DynamoDB, OpenSearch, S3, CloudWatch, SSM, Route 53. Se o IARA
+              degradar: circuit breaker + contingência com <strong>zero LLM</strong> —
+              runbooks determinísticos e escalonamento humano, nunca bypass direto.
             </p>
           </div>
         </div>
@@ -1357,7 +1425,7 @@ flowchart TD
               workflow. Monta um Ubuntu limpo, instala Python 3.12, roda
               <code>pip install -e ".[dev]"</code> e <code>pytest</code>.
             </p>
-            <p class="fine" style="margin-top:10px;">
+            <p class="fine mt-10">
               Traz <code>permissions: contents: read</code> — princípio do menor privilégio.
               O job só precisa ler o código, então o token não pode escrever no repositório.
             </p>
@@ -1369,7 +1437,7 @@ flowchart TD
               que essa pasta foi removida do repositório. O filtro nunca casa e, se casasse, o
               script imprimiria “nothing to validate” e retornaria sucesso.
             </p>
-            <p class="fine" style="margin-top:10px;">
+            <p class="fine mt-10">
               É herança de uma fase anterior do projeto, quando havia um protótipo de upload em
               Express. Na aba Actions o repositório aparenta ter duas verificações; tem uma.
             </p>
@@ -1427,6 +1495,7 @@ flowchart TD
           <div class="gl-item"><span class="term">AIOps</span> — Inteligência artificial aplicada à operação de TI: detectar anomalias, diagnosticar causas, remediar automaticamente.</div>
           <div class="gl-item"><span class="term">Ambiente virtual (venv)</span> — Instalação isolada do Python para um projeto, na pasta <code>.venv/</code>. Impede que as dependências de projetos diferentes colidam.</div>
           <div class="gl-item"><span class="term">ASG (Auto Scaling Group)</span> — Serviço AWS que mantém um número desejado de instâncias EC2, adicionando ou removendo conforme a demanda.</div>
+          <div class="gl-item"><span class="term">Autonomia por nível de risco</span> — O número de gates HITL é função do tier de risco da classe de mudança (<code>governance.RiskTier</code>): alto = 2 gates, baixo = 1 consolidado, histórico comprovado = promoção até auto-aprovação — exceto a GMUD, sempre humana.</div>
           <div class="gl-item"><span class="term">Bedrock</span> — Serviço AWS de modelos de linguagem gerenciados (Claude, Titan), sem gerenciar GPU. No EasyRun os agentes não o acessam diretamente: toda chamada de LLM sai pelo MCP do IARA.</div>
           <div class="gl-item"><span class="term">Bounded context</span> — Fronteira dentro da qual cada termo do domínio tem um significado único. Conceito central do DDD.</div>
           <div class="gl-item"><span class="term">Bytecode</span> — Forma compilada intermediária de um <code>.py</code>, guardada em <code>__pycache__/</code>. Só acelera a carga.</div>
@@ -1434,7 +1503,7 @@ flowchart TD
           <div class="gl-item"><span class="term">Callable class</span> — Classe que define <code>__call__</code> e pode ser chamada como função. É como os papéis do grafo são declarados.</div>
           <div class="gl-item"><span class="term">Checkpoint</span> — Fotografia durável do estado, para retomar dali em caso de falha. Crítico quando as ações já executadas são irreversíveis.</div>
           <div class="gl-item"><span class="term">CI/CD</span> — Verificação automática de cada mudança (CI) e publicação automática do que passou (CD). Este projeto tem só CI.</div>
-          <div class="gl-item"><span class="term">Circuit breaker</span> — Interrompe tentativas após N falhas seguidas, evitando <em>retry storms</em> contra um serviço já saturado.</div>
+          <div class="gl-item"><span class="term">Circuit breaker</span> — Interrompe tentativas após N falhas seguidas, evitando <em>retry storms</em> contra um serviço já saturado. O EasyRun mantém um dedicado à saúde do gateway IARA: abri-lo ativa o modo de contingência (cenário ANM-2210).</div>
           <div class="gl-item"><span class="term">Console script</span> — Mecanismo que transforma uma função Python em comando de terminal. Gera o <code>squad-agentica-serve</code>.</div>
           <div class="gl-item"><span class="term">dataclass</span> — Decorador que gera <code>__init__</code>, <code>__repr__</code> e <code>__eq__</code> de uma classe de dados. Com <code>frozen=True</code>, torna-a imutável.</div>
           <div class="gl-item"><span class="term">DDD (Domain-Driven Design)</span> — Modelar o software na linguagem do negócio, organizado em <em>bounded contexts</em>.</div>
@@ -1455,13 +1524,14 @@ flowchart TD
           <div class="gl-item"><span class="term">IARA</span> — Time (e solução interna) que governa o acesso e o custo de LLMs na empresa. Expõe um gateway MCP pelo qual os agentes fazem toda requisição de inferência — nenhum agente fala direto com provedor de modelo.</div>
           <div class="gl-item"><span class="term">Idempotente</span> — Operação que, executada duas vezes, produz o mesmo resultado que uma. Requisito para remediação automática segura.</div>
           <div class="gl-item"><span class="term">Injeção de prompt</span> — Ataque em que texto de fonte não confiável contém instruções que o modelo obedece.</div>
-          <div class="gl-item"><span class="term">interrupt()</span> — Função do LangGraph que suspende o grafo, persiste o estado e devolve o controle. O mecanismo do gate HITL.</div>
+          <div class="gl-item"><span class="term">interrupt()</span> — Função do LangGraph que suspende o grafo, persiste o estado e devolve o controle. No contrato de propriedade do estado, encerra a invocação da task — a espera longa pelo humano é sempre task token do Step Functions.</div>
           <div class="gl-item"><span class="term">LangGraph</span> — Framework que estrutura aplicações com LLM como grafos de estado, com nós, arestas condicionais, <code>interrupt()</code> e checkpointing.</div>
           <div class="gl-item"><span class="term">LLM-as-judge</span> — Técnica em que um modelo julga a qualidade da saída de outro. Necessária quando não há resposta única esperada.</div>
           <div class="gl-item"><span class="term">MCP (Model Context Protocol)</span> — Protocolo aberto que padroniza o acesso de modelos a ferramentas e fontes de dados externas.</div>
           <div class="gl-item"><span class="term">Memória episódica</span> — Registro de incidentes já vividos, com desfecho e eficácia. Fica no DynamoDB.</div>
           <div class="gl-item"><span class="term">Memória semântica</span> — Conhecimento geral vetorizado (runbooks), consultável por significado. Fica no OpenSearch.</div>
           <div class="gl-item"><span class="term">Mockup</span> — Protótipo de aparência, sem funcionamento real por trás. É o que a pasta <code>prototype/</code> é.</div>
+          <div class="gl-item"><span class="term">Modo de contingência</span> — Estado ativado quando o gateway IARA está indisponível: zero chamadas de LLM, só runbooks determinísticos pré-aprovados sob autorização humana, e escalonamento ao plantão. Nunca bypass para provedor direto.</div>
           <div class="gl-item"><span class="term">MTTR (Mean Time To Repair)</span> — Tempo médio de reparo. A métrica-chave: 4m 32s da squad contra 38 min de referência humana.</div>
           <div class="gl-item"><span class="term">NotImplementedError</span> — Exceção que Python usa para marcar código ainda não implementado. É o que todos os papéis levantam.</div>
           <div class="gl-item"><span class="term">Ollama</span> — Ferramenta para rodar modelos de linguagem localmente. Citada na política FinOps como alternativa à nuvem.</div>
@@ -1485,8 +1555,9 @@ flowchart TD
           <div class="gl-item"><span class="term">Skills</span> — Capacidades versionadas atribuídas a cada agente, como <code>rollback-deploy</code> ou <code>buscar-runbooks</code>.</div>
           <div class="gl-item"><span class="term">SRI (Subresource Integrity)</span> — Hash esperado de um script externo; o navegador recusa executar se não bater.</div>
           <div class="gl-item"><span class="term">src-layout</span> — Colocar o código em <code>src/</code> para que os testes rodem contra o pacote instalado, não contra a pasta local.</div>
-          <div class="gl-item"><span class="term">Step Functions</span> — Serviço AWS de máquinas de estado. Representa a orquestração do Maestro.</div>
+          <div class="gl-item"><span class="term">Step Functions</span> — Serviço AWS de máquinas de estado. No contrato de propriedade do estado, é o dono único do estado durável do incidente — lifecycle, retries e espera HITL por task token.</div>
           <div class="gl-item"><span class="term">Stub</span> — Implementação vazia que declara a interface sem o comportamento. Em Python, <code>raise NotImplementedError</code>.</div>
+          <div class="gl-item"><span class="term">Task token (Step Functions)</span> — Espera durável (<code>waitForTaskToken</code>): a máquina pausa emitindo um token que acompanha a solicitação; o callback com o token retoma do ponto exato, mesmo dias depois. É o que carrega a espera HITL — nunca o <code>interrupt()</code> do grafo.</div>
           <div class="gl-item"><span class="term">Temperatura</span> — Controla a aleatoriedade da geração de um LLM. Perto de zero, determinístico. Validator = 0.1; Coach e Explainer = 0.4.</div>
           <div class="gl-item"><span class="term">Tool calling</span> — Capacidade de um modelo emitir uma chamada de ferramenta estruturada em JSON. Critério que define o padrão-ouro de modelo.</div>
           <div class="gl-item"><span class="term">Trigger</span> — Gatilho que aciona a squad: alarme, deploy, varredura agendada ou pedido humano.</div>
@@ -1557,11 +1628,12 @@ flowchart TD
               </p>
             </div>
             <div class="card">
-              <h3><code>export/</code> é espelho manual</h3>
+              <h3><code>export/</code> era espelho manual <span class="badge b-ok">resolvida</span></h3>
               <p class="fine">
-                Duas cópias de 96 KB mantidas à mão divergem no primeiro esquecimento. Nenhum
-                teste, lint ou CI compara os arquivos; depois de divergirem, reconciliar exige
-                um diff de mil linhas.
+                Hoje o espelho é gerado por <code>tools/sync-export.mjs</code> (três
+                diferenças estruturais conhecidas: <code>script src</code>, <code>link</code>
+                do CSS e thumbnail) e o <code>check-prototype.mjs</code> compara os dois no
+                CI a cada push.
               </p>
             </div>
             <div class="card">
@@ -1612,6 +1684,18 @@ flowchart TD
             plano que ficavam sem resolução no caminho de rejeição e oito
             <code>hint-placeholder-count</code> desatualizados. Nada disso quebrava a tela, e
             nada disso seria notado numa revisão visual.
+          </p>
+        </div>
+
+        <div class="stack-s">
+          <h3>Resolvida nesta rodada — #12, o dono do estado</h3>
+          <p class="fine">
+            "Step Functions e LangGraph se sobrepõem" deixou de ser decisão em aberto: o
+            <strong>contrato de propriedade do estado</strong> (seção 06) define que o
+            Step Functions é o dono único do estado durável e da espera HITL (task token),
+            e o LangGraph roda efêmero dentro de cada task — um único dono do estado por
+            vez. Os docstrings de <code>graph.py</code> e <code>checkpoint.py</code>
+            refletem o contrato.
           </p>
         </div>
 
@@ -1702,6 +1786,7 @@ flowchart LR
             <table>
               <thead><tr><th>Plataforma</th><th>Lê</th><th>Escreve</th><th>Modo</th></tr></thead>
               <tbody>
+                <tr><td>🚪 IARA</td><td>Catálogo de modelos homologados, quotas por agente</td><td>Requisições de inferência, telemetria de custo</td><td>Automático · indisponível: circuit breaker + contingência sem LLM (nunca bypass)</td></tr>
                 <tr><td>🎫 ServiceNow</td><td>Incidentes, item de configuração, time dono, repositório</td><td>Anomalia correlacionada, GMUD, encerramento ou reatribuição</td><td>Automático · GMUD aprovada por humano</td></tr>
                 <tr><td>🐶 Datadog</td><td>Métricas, logs, traces, error tracking, forecast</td><td>Evento de anomalia, janela de validação</td><td>Automático</td></tr>
                 <tr><td>📋 IUClick</td><td>Coluna atual do card</td><td>Bug criado e movido a cada avanço</td><td>Automático</td></tr>
@@ -1739,6 +1824,45 @@ flowchart LR
           <strong>A fronteira que resume o produto:</strong> a squad <em>abre</em> a GMUD
           sozinha, mas nunca a aprova. Gera o pull request, mas nunca faz o merge. O ganho é
           de tempo de preenchimento — 48 segundos contra ~25 minutos —, não de controle.
+        </div>
+
+        <div class="stack-s">
+          <h3>Gates por nível de risco</h3>
+          <p class="fine">
+            Quantos gates uma mudança atravessa é função do <strong>tier de risco da
+            classe</strong> (<code>governance.RiskTier</code>), não uma constante — porque
+            exigir duas aprovações de tudo gera <strong>fadiga de aprovação</strong>: o
+            humano que aprova tudo duas vezes aprende a aprovar sem ler.
+          </p>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Alto risco · 2 gates</h3>
+              <p class="fine">
+                Código em produção para duas vezes (PR e GMUD): conteúdo técnico e janela de
+                risco são <strong>autoridades distintas</strong>. É o INC-3312.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Baixo risco · 1 gate consolidado</h3>
+              <p class="fine">
+                Janela padrão + rollback automático testado: conteúdo e janela avaliados na
+                <strong>mesma decisão</strong>. É o APR-05 do INC-3350.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Histórico comprovado · promoção</h3>
+              <p class="fine">
+                Classe de baixo risco com histórico no golden set sobe por shadow → canário →
+                produção até a auto-aprovação — <strong>exceto a GMUD, sempre
+                humana</strong>.
+              </p>
+            </div>
+          </div>
+          <p class="fine">
+            A calibração é contínua: cada decisão HITL vira dado rotulado e realimenta a
+            revisão dos tiers. No protótipo, cada card da fila exibe o chip
+            <strong>RISCO ALTO / RISCO BAIXO</strong>.
+          </p>
         </div>
 
         <div class="stack-s">
@@ -1798,7 +1922,7 @@ flowchart LR
             <div class="card"><h3>🥇 Golden set de incidentes</h3><p class="fine">Incidentes encerrados do ServiceNow viram casos de avaliação offline. O conjunto cresce sozinho: o que a squad resolve hoje é o teste de regressão de amanhã.</p></div>
             <div class="card"><h3>⚖️ LLM-as-judge com portão</h3><p class="fine">Um modelo julga a qualidade do diagnóstico a temperatura 0.1. Versão candidata só é promovida se não piorar — e errar a natureza da remediação tem limiar próprio, mais rígido.</p></div>
             <div class="card"><h3>👻 Shadow mode e canário</h3><p class="fine">A versão nova roda sobre incidentes reais registrando o que <em>faria</em>, sem agir. Só depois de um histórico comparável assume tráfego. É o que torna autonomia aceitável num ambiente avesso a risco.</p></div>
-            <div class="card"><h3>🔁 Feedback loop do HITL</h3><p class="fine">Cada aprovação e rejeição, com a justificativa, vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema.</p></div>
+            <div class="card"><h3>🔁 Feedback loop do HITL</h3><p class="fine">Cada aprovação e rejeição, com a justificativa, vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema — e o que calibra o nível de risco dos gates: aprovação sem ressalva por meses rebaixa o tier; rejeição é evidência do contrário.</p></div>
             <div class="card"><h3>📉 Drift em dois níveis</h3><p class="fine">Nos baselines de detecção e na precisão do agente ao longo do tempo. O segundo é o perigoso, porque nada quebra — a qualidade só escorrega.</p></div>
             <div class="card"><h3>🧽 Redação antes da saída</h3><p class="fine">Código e logs passam por remoção de segredos e dados pessoais antes de ir a um agente externo. É a primeira objeção de segurança, e precisa de resposta no contrato, não no adaptador.</p></div>
             <div class="card"><h3>🎟️ Orçamento por execução</h3><p class="fine">Teto de tokens por agente e por incidente, com corte automático. Um agente em laço não vira uma fatura surpresa.</p></div>
@@ -1845,7 +1969,7 @@ flowchart TD
       <a class="toplink" href="#llmops">↑ topo da seção</a>
     </section>
 
-    <footer class="band-wide" style="margin-top:90px; padding-top:22px; border-top:1px solid var(--line);">
+    <footer class="band-wide mt-90 footer-top">
       <p class="fine">
         Documentação gerada a partir do código-fonte do repositório EasyRun, branch
         <code>feature/python-package</code>. Todos os valores citados — nomes de modelos,
@@ -1853,7 +1977,7 @@ flowchart TD
         não de memória. Os números de MTTR, custo e precisão vêm do mockup e são
         <strong>fictícios</strong>.
       </p>
-      <p class="fine" style="margin-top:10px;">
+      <p class="fine mt-10">
         Versão completa e versionada em <code>docs/*.md</code>.
       </p>
     </footer>
