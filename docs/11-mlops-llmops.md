@@ -135,8 +135,16 @@ também a **principal fonte de supervisão** do sistema: é gente experiente diz
 caso, se a squad propôs a coisa certa. Jogar esse sinal fora é desperdiçar a parte mais
 cara do processo.
 
-**No protótipo.** O histórico de decisões na tela HITL, com o tipo de gate e o desfecho de
-cada uma.
+É esse sinal que **calibra os guardrails**: o nível de risco de cada classe de mudança
+([`governance.RiskTier`](../src/squad_agentica/aiops/governance.py), ver
+[10 — Gates por nível de risco](10-ecossistema-da-empresa.md#gates-por-nível-de-risco))
+não é fixado uma vez — uma classe que humanos aprovam sem ressalva por meses é evidência
+para rebaixar o tier (menos gates); uma rejeição é evidência para o contrário. Sem essa
+recalibração contínua, o excesso de precaução vira fadiga de aprovação e a governança
+sufoca exatamente a velocidade que a automação prometeu.
+
+**No protótipo.** O histórico de decisões na tela HITL, com o tipo de gate, o chip de
+nível de risco e o desfecho de cada uma.
 
 ### 7. Drift em dois níveis
 

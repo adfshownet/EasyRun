@@ -129,11 +129,14 @@ function checarDados() {
       if (p.gate) {
         gates.push(p.gate);
         idsDeGate.push(p.gate.id);
-        for (const campo of ['id', 'tipo', 'titulo', 'descricao', 'risco', 'guardrail',
-          'detalhe', 'mensagemAprovado', 'mensagemRejeitado', 'mensagemAutoAprovado']) {
+        for (const campo of ['id', 'tipo', 'titulo', 'descricao', 'risco', 'nivelRisco',
+          'guardrail', 'detalhe', 'mensagemAprovado', 'mensagemRejeitado', 'mensagemAutoAprovado']) {
           if (!p.gate[campo]) falha(`${onde}: gate sem o campo "${campo}"`);
         }
         if (!TIPOS_GATE.has(p.gate.tipo)) falha(`${onde}: gate.tipo inválido "${p.gate.tipo}"`);
+        if (p.gate.nivelRisco && !['alto', 'baixo'].includes(p.gate.nivelRisco)) {
+          falha(`${onde}: gate.nivelRisco inválido "${p.gate.nivelRisco}" (esperado alto|baixo)`);
+        }
         if (p.gate.tipo === 'pr') {
           for (const campo of ['repositorio', 'branch', 'arquivos', 'checks']) {
             if (!p.gate[campo]) falha(`${onde}: gate de PR sem o campo "${campo}"`);
@@ -381,10 +384,11 @@ function checarEspelho() {
   }
   const normalizado = espelho
     .replace('<script src="../support.js"></script>', '<script src="./support.js"></script>')
+    .replace('<link rel="stylesheet" href="../EasyRun.dc.css">', '<link rel="stylesheet" href="./EasyRun.dc.css">')
     .replace(/<template id="__bundler_thumbnail"[\s\S]*?<\/template>\n/, '');
 
   if (normalizado === html) {
-    console.log('  export/ idêntico à fonte canônica (fora as 2 diferenças conhecidas)');
+    console.log('  export/ idêntico à fonte canônica (fora as 3 diferenças conhecidas)');
   } else {
     falha('export/EasyRun-src.dc.html divergiu da fonte canônica — rode: node tools/sync-export.mjs');
   }

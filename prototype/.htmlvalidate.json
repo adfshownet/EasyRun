@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "no-inline-style": ["error", {
+      "allowedProperties": [
+        "display",
+        "color",
+        "animation",
+        "--ag-border",
+        "--agent-color",
+        "--avatar-bg",
+        "--bar-color",
+        "--bg-color",
+        "--btn-cor",
+        "--btn-fundo",
+        "--dot-color",
+        "--inc-anim",
+        "--inc-borda",
+        "--inc-cor",
+        "--inc-fundo",
+        "--knob-left",
+        "--nature-bg",
+        "--nv-cor",
+        "--nv-fundo",
+        "--nv-peso",
+        "--ref-border",
+        "--ref-color",
+        "--status-anim",
+        "--status-color",
+        "--status-cor",
+        "--text-color",
+        "--track-color"
+      ]
+    }]
+  }
+}

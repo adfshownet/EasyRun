@@ -8,10 +8,14 @@ from squad_agentica.aiops.evaluation import (
     passes_regression_gate,
 )
 from squad_agentica.aiops.governance import (
+    GATES_POR_TIER,
+    GMUD_SEMPRE_HUMANA,
     GOLD_MODEL,
     MINIMUM_VIABLE_MODEL,
     TEMPERATURE_COACH,
     TEMPERATURE_VALIDATOR,
+    AutonomyLevel,
+    RiskTier,
 )
 from squad_agentica.aiops.integrations import INTEGRATIONS
 from squad_agentica.aiops.observability import (
@@ -148,6 +152,28 @@ def test_governance_constants():
     assert GOLD_MODEL == "qwen2.5-coder:32b"
     assert MINIMUM_VIABLE_MODEL == "qwen2.5:7b"
     assert TEMPERATURE_VALIDATOR < TEMPERATURE_COACH
+
+
+def test_risk_tier_members():
+    assert {t.value for t in RiskTier} == {"alto", "baixo"}
+
+
+def test_gates_por_tier():
+    """High risk always costs more human attention than low risk."""
+    assert GATES_POR_TIER[RiskTier.ALTO] == 2
+    assert GATES_POR_TIER[RiskTier.BAIXO] == 1
+    assert GATES_POR_TIER[RiskTier.ALTO] > GATES_POR_TIER[RiskTier.BAIXO]
+
+
+def test_gmud_never_auto_approved():
+    """Promotion may waive gates, never the change request itself."""
+    assert GMUD_SEMPRE_HUMANA is True
+
+
+def test_autonomy_level_stub():
+    level = AutonomyLevel(tier=RiskTier.BAIXO, rollout=RolloutMode.FULL)
+    with pytest.raises(NotImplementedError):
+        level.gates_required()
 
 
 def test_egress_policy_is_locked_on():

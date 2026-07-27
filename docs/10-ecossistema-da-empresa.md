@@ -121,7 +121,7 @@ o Maestro decompondo tarefas, o Auditor avaliando a execução), ele **não cham
 — faz uma requisição ao **MCP do IARA**, que resolve o modelo homologado, aplica quota e
 devolve a resposta.
 
-Três consequências práticas:
+Quatro consequências práticas:
 
 1. **Credencial é problema do IARA, não da squad.** O EasyRun guarda credenciais das
    integrações corporativas no Secrets Manager, mas não guarda chave de provedor de LLM —
@@ -133,6 +133,13 @@ Três consequências práticas:
    (Claude Sonnet, Claude Haiku, Titan Embeddings) é do IARA — inclusive uma eventual
    opção local via Ollama teria que entrar nessa governança (ver
    [09 #13](09-lacunas-e-riscos.md#13-dois-cenários-de-deployment-de-modelo-não-reconciliados)).
+4. **Indisponibilidade do IARA não vira bypass.** Um gateway no caminho crítico de toda
+   inferência é um ponto único de falha, e a mitigação é interna: circuit breaker dedicado
+   à saúde do gateway e **modo de contingência com zero chamadas de LLM** — só runbooks
+   determinísticos pré-aprovados, com autorização humana, e escalonamento ao plantão para
+   o resto. A regra "nunca falar direto com o provedor" não tem exceção de emergência. O
+   cenário `anm2210` do protótipo demonstra o fluxo; a política completa está em
+   [06 — Acesso a LLMs](06-arquitetura-alvo.md#acesso-a-llms--o-gateway-iara).
 
 ---
 
@@ -264,17 +271,41 @@ processo ágil sob pressão de incidente, e é exatamente quando o board mais im
 7. **Dois gates HITL**: aprovar o PR (guardrail G-06) e aprovar a GMUD (G-07).
 8. Merge, deploy, validação no Datadog, card movido, incidente encerrado.
 
-### Por que dois gates e não um
+### Gates por nível de risco
 
-Aprovar uma mudança de código e aprovar uma janela de mudança em produção são **autoridades
-diferentes**, normalmente exercidas por pessoas diferentes: a primeira é técnica (o patch
-está correto?), a segunda é de risco operacional (agora é hora de mexer em produção?).
-Fundir as duas numa aprovação só é o tipo de simplificação que não sobrevive ao primeiro
-comitê de mudança.
+Quantos gates uma mudança atravessa não é uma constante: é função do **nível de risco da
+classe de mudança** — o contrato está em
+[`governance.py`](../src/squad_agentica/aiops/governance.py) (`RiskTier`,
+`GATES_POR_TIER`, `AutonomyLevel`).
 
-No protótipo isso é literal: o cenário INC-3312 **para duas vezes**. E se o PR for
-rejeitado, o gate da GMUD nem chega a aparecer — não faz sentido pedir janela de mudança
-para um patch recusado.
+**Alto risco = dois gates.** Aprovar uma mudança de código e aprovar uma janela de mudança
+em produção são **autoridades diferentes**, normalmente exercidas por pessoas diferentes:
+a primeira é técnica (o patch está correto?), a segunda é de risco operacional (agora é
+hora de mexer em produção?). Fundir as duas numa aprovação só é o tipo de simplificação
+que não sobrevive ao primeiro comitê de mudança. No protótipo isso é literal: o cenário
+INC-3312 **para duas vezes** — código em produção é sempre classe de alto risco. E se o PR
+for rejeitado, o gate da GMUD nem chega a aparecer — não faz sentido pedir janela de
+mudança para um patch recusado.
+
+**Baixo risco = gate único consolidado.** Exigir duas aprovações separadas de tudo tem um
+custo que não aparece no desenho: **fadiga de aprovação** — o humano que aprova tudo duas
+vezes aprende a aprovar sem ler, e aí o gate protege menos, não mais. Para classes de
+baixo risco (janela padrão, rollback automático testado, raio de impacto contido),
+conteúdo e janela são avaliados **na mesma decisão**: é o caso do INC-3350, cujo gate
+APR-05 consolida parâmetro e janela.
+
+**Histórico comprovado = promoção até a auto-aprovação.** Uma classe de baixo risco cujo
+agente acumulou histórico no golden set pode ser promovida pelos estágios de
+[`evaluation.py`](../src/squad_agentica/aiops/evaluation.py) (shadow → canário → produção)
+até dispensar a pausa — com uma exceção inegociável: **a GMUD é sempre aprovada por um
+humano** (`GMUD_SEMPRE_HUMANA`), nunca por agente. A promoção dispensa gates abaixo dessa
+linha, nunca a linha.
+
+A calibração é contínua: cada decisão HITL vira dado rotulado
+([11 — feedback loop](11-mlops-llmops.md)) e realimenta a revisão dos tiers — classe
+aprovada sem ressalva por meses é evidência para rebaixar o tier; rejeição é evidência do
+contrário. Na fila HITL do protótipo, cada card exibe o chip **RISCO ALTO / RISCO BAIXO**
+da sua classe.
 
 ### A política de código
 

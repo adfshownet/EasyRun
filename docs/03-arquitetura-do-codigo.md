@@ -737,8 +737,11 @@ para uma versão anterior à correta e agrava o incidente.
 A docstring registra exatamente isso: *"em caso de falha, a remediação retoma exatamente
 do último checkpoint salvo em vez de reexecutar ações corretivas já aplicadas."*
 
-O destino planejado é PostgreSQL — banco relacional, transacional, durável. Ver
-[06 — Arquitetura-alvo](06-arquitetura-alvo.md).
+O destino planejado é PostgreSQL — banco relacional, transacional, durável. No contrato de
+propriedade do estado, esse store é **intra-invocação**: protege o raciocínio dentro de uma
+task do Step Functions; a retomada durável entre invocações (incluindo esperas HITL por
+task token) é sempre da máquina de estados. Ver
+[06 — O contrato de propriedade do estado](06-arquitetura-alvo.md#o-contrato-de-propriedade-do-estado).
 
 ### `graph.py`
 
@@ -777,6 +780,12 @@ comitê de mudança. No protótipo isso é literal: o cenário INC-3312 **para d
 final: o bug é aberto no começo, a GMUD no meio, o encerramento no fim. Agrupar tudo no
 final deixaria o incidente invisível para todo mundo fora da ferramenta justamente enquanto
 está sendo trabalhado — que é quando o board mais importa.
+
+O docstring também registra o **contrato de propriedade do estado**: o grafo é efêmero,
+escopado a uma invocação de task do Step Functions — cada `interrupt()` encerra a task, e a
+espera longa pela decisão humana pertence à máquina de estados (task token), nunca ao
+grafo. Ver [06 — O contrato de propriedade do
+estado](06-arquitetura-alvo.md#o-contrato-de-propriedade-do-estado).
 
 E o ponto que já estava lá: **"deliberadamente não importa langgraph"**.
 

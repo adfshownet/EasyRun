@@ -35,7 +35,7 @@ técnico e o processo end-to-end, sem pressupor conhecimento prévio de Python o
 ### `prototype/`
 
 Contém um dashboard estático chamado "EasyRun — Squad Agêntica AIOps" (HTML/JS,
-sem lógica Python), simulando 8 cenários de incidente com 8 agentes, integrado (na
+sem lógica Python), simulando 9 cenários de incidente com 8 agentes, integrado (na
 encenação) a ServiceNow, Datadog, IUClick, Devin, GitHub e ao IARA — o gateway
 corporativo por onde sai toda chamada de LLM. Não é usado
 pelo pacote `squad_agentica` — é só o mockup visual. Pontos a saber:

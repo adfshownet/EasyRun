@@ -13,7 +13,8 @@ problema que só aparece quando alguém edita a coisa errada seis meses depois.
 
 **Prioridade sugerida:** 1, 4, 15 (armadilhas silenciosas, quebram sem avisar) → 5, 14, 16
 (falsa sensação de cobertura ou de segurança) → 2, 3 (portabilidade) → 6, 11, 13 (higiene)
-→ 8, 9, 10, 12 (informativos). O item 7 está resolvido e fica no documento como registro.
+→ 8, 9, 10 (informativos). Os itens 7 e 12 estão resolvidos e ficam no documento como
+registro.
 
 ### Resolvido nesta rodada
 
@@ -23,6 +24,7 @@ problema que só aparece quando alguém edita a coisa errada seis meses depois.
 | **O protótipo não tinha cobertura automatizada** | [`tools/check-prototype.mjs`](../tools/check-prototype.mjs) roda quatro verificações a cada push que toque `prototype/` ou `tools/`. |
 | **`schema_version` era só documentação** | Subiu de 1 para 2 ao ganhar o bloco de rastreabilidade. O campo saiu de "boa prática documentada" para "usado de verdade". |
 | **Guardrails do console eram HTML estático** | Agora renderizam a lista real e refletem os toggles da tela de Configuração. |
+| **#12 — Step Functions × LangGraph sem dono do estado definido** | A divisão está decidida e documentada em [06 — O contrato de propriedade do estado](06-arquitetura-alvo.md#o-contrato-de-propriedade-do-estado): estado durável e espera HITL no Step Functions (task token); LangGraph efêmero por task. |
 
 ---
 
@@ -284,6 +286,13 @@ produz duplicação de estado — exatamente o tipo de coisa difícil de desfaze
 
 **Sugestão.** Registrar a decisão (quem é responsável por quê, e onde o estado autoritativo
 vive) antes de escrever `build_graph()`.
+
+**Status: endereçada.** A decisão está registrada em
+[06 — O contrato de propriedade do estado](06-arquitetura-alvo.md#o-contrato-de-propriedade-do-estado):
+o Step Functions é o dono único do estado durável e da espera HITL (task token); o
+LangGraph roda efêmero dentro de uma task, com checkpoint apenas intra-invocação. Os
+docstrings de [`graph.py`](../src/squad_agentica/aiops/graph.py) e
+[`checkpoint.py`](../src/squad_agentica/aiops/checkpoint.py) refletem o contrato.
 
 ---
 
