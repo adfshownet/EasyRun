@@ -270,7 +270,7 @@ metáfora é a de um plantão: alguém sempre de olho, o resto em espera.
 
 ---
 
-## Os 8 cenários
+## Os 9 cenários
 
 | ID | Título | Severidade · Algoritmo | Origem | Natureza | Gates HITL | Passos |
 |---|---|---|---|---|---|---|
@@ -282,8 +282,9 @@ metáfora é a de um plantão: alguém sempre de olho, o resto em espera.
 | `inc3350` | 💼 **Faturamento não conciliado** | Crítico · Agile | **ServiceNow** | **`CONFIG`** | APR-05 (GMUD) | 18 |
 | `inc3377` | ⛔ **Gateway de pagamento degradado** | Alerta · Agile | Datadog | **`EXTERNO`** | APR-06 (ação) | 16 |
 | `anm2150` | 🐕 **Watchdog: erros notificacoes-svc** | Alerta · **Watchdog** | **Datadog Watchdog** | `INFRA` | — autônomo | 17 |
+| `anm2210` | 🧯 **Contingência: gateway IARA degradado** | Crítico · Robust | Datadog | **`EXTERNO`** | APR-07 (ação) | 16 |
 
-140 passos no total. A seleção do cenário só é permitida com a simulação parada
+156 passos no total. A seleção do cenário só é permitida com a simulação parada
 (`escolherCenario` retorna imediatamente se `this.state.rodando`).
 
 O conjunto cobre os três níveis de severidade, os três algoritmos de detecção (mais a
@@ -311,8 +312,17 @@ alívio em runtime, a squad **cria o monitor permanente** que faltava e abre car
 para a causa de fundo — detecção por IA como rede de segurança, não como substituto de
 cobertura.
 
+**`anm2210` demonstra o modo degradado.** A dependência que falha é o **próprio gateway
+IARA** — o único caminho de LLM da squad. O circuit breaker abre, os papéis de raciocínio
+são suspensos e a squad opera em contingência: zero chamadas de modelo, só runbooks
+determinísticos pré-aprovados (gate APR-07, guardrail G-08) e escalonamento humano —
+**nunca bypass para provedor direto**. Quem carrega o incidente na janela é o Step
+Functions, dono do estado durável; quando o circuito fecha, o diagnóstico é feito a
+posteriori, já com LLM. A natureza é `EXTERNO` por classificação **determinística** via
+CMDB: com o circuito aberto, nem a classificação consulta modelo.
+
 Análise completa em
-[05 — Processo end-to-end](05-processo-end-to-end.md#comparando-os-8-cenários).
+[05 — Processo end-to-end](05-processo-end-to-end.md#comparando-os-9-cenários).
 
 ---
 
@@ -505,7 +515,7 @@ testa `includes` numa ordem fixa:
 | `agente`, `squad`, `quem` | Apresenta os 8 agentes |
 | `guardrail`, `segur`, `aprova` | Lista os guardrails ativos, incluindo G-05, G-06 e G-07 |
 | `mttr`, `tempo`, `métri` | Os números da aba Avaliação |
-| `cenário`, `cenario` | Descreve os 8 cenários |
+| `cenário`, `cenario` | Descreve os 9 cenários |
 | `iara`, `modelo`, `llm`, `bedrock` | Explica que toda chamada de LLM sai pelo MCP do IARA |
 | *(nenhuma)* | Menu de fallback |
 
@@ -576,7 +586,7 @@ verificações. Não precisa instalar nada: é Node puro, sem `package.json`.
 | # | Verificação | Exemplos do que pega |
 |---|---|---|
 | 1 | **Dados** | Passo apontando para agente ou status inexistente; `planoOk` para um id fora do plano; `rastreioSet` com chave desconhecida; gate sem campo obrigatório; id de gate duplicado; cenário sem natureza ou sem `fim` |
-| 2 | **Motor** | Roda os 8 cenários **nos dois caminhos**. Pega simulação que não termina e — o caso que apareceu de verdade — passo do plano que fica em `hitl` ou `pendente` porque só era resolvido ao aprovar |
+| 2 | **Motor** | Roda os 9 cenários **nos dois caminhos**. Pega simulação que não termina e — o caso que apareceu de verdade — passo do plano que fica em `hitl` ou `pendente` porque só era resolvido ao aprovar |
 | 3 | **Template** | Toda `{{ variavel }}` e `{{ alias.prop }}` existe nos dados, avaliado no estado inicial, em cada gate e no fim de cada cenário; `navItens` bate com o número de telas; `hint-placeholder-count` bate com o tamanho real das listas |
 | 4 | **Espelho** | `export/` sincronizado com a fonte canônica |
 

@@ -276,6 +276,25 @@ uso de LLMs na empresa. Na prática:
 Para a squad, isso simplifica: credencial, limite e catálogo são problema do IARA; o
 domínio só conhece a porta "inferência".
 
+**E quando o IARA degrada?** Colocar um gateway no caminho crítico de toda inferência cria
+um ponto único de falha — e a resposta **não é** abrir exceção. A política de contingência:
+
+1. **Circuit breaker dedicado.** Um monitor de saúde do gateway (latência e taxa de erro
+   das inferências) abre o circuito após falhas consecutivas; sondas periódicas o fecham
+   quando o IARA volta.
+2. **Modo degradado = zero LLM.** Com o circuito aberto, a squad não chama modelo nenhum:
+   executa apenas **runbooks determinísticos pré-aprovados** para assinaturas conhecidas
+   (mediante autorização humana — guardrail G-08) e escala ao plantão tudo o que estiver
+   fora do catálogo. **Bypass para provedor direto não existe** — a regra corporativa não
+   tem exceção de emergência, porque exceção de emergência viraria o caminho normal.
+3. **Diagnóstico a posteriori.** Quando o circuito fecha, o raciocínio volta e a janela
+   degradada é revisada com LLM — as ações tomadas às cegas são validadas depois.
+
+O cenário `anm2210` do protótipo demonstra o fluxo completo, incluindo os dois caminhos da
+decisão humana. Note a consequência de arquitetura: durante a contingência, quem carrega o
+incidente é o **Step Functions** (dono do estado durável) — nenhuma task invoca o grafo, e
+é exatamente por isso que a degradação do gateway não derruba a máquina de estados.
+
 ### Infraestrutura — AWS
 
 | Serviço | Papel | Agente |

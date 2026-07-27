@@ -121,7 +121,7 @@ o Maestro decompondo tarefas, o Auditor avaliando a execução), ele **não cham
 — faz uma requisição ao **MCP do IARA**, que resolve o modelo homologado, aplica quota e
 devolve a resposta.
 
-Três consequências práticas:
+Quatro consequências práticas:
 
 1. **Credencial é problema do IARA, não da squad.** O EasyRun guarda credenciais das
    integrações corporativas no Secrets Manager, mas não guarda chave de provedor de LLM —
@@ -133,6 +133,13 @@ Três consequências práticas:
    (Claude Sonnet, Claude Haiku, Titan Embeddings) é do IARA — inclusive uma eventual
    opção local via Ollama teria que entrar nessa governança (ver
    [09 #13](09-lacunas-e-riscos.md#13-dois-cenários-de-deployment-de-modelo-não-reconciliados)).
+4. **Indisponibilidade do IARA não vira bypass.** Um gateway no caminho crítico de toda
+   inferência é um ponto único de falha, e a mitigação é interna: circuit breaker dedicado
+   à saúde do gateway e **modo de contingência com zero chamadas de LLM** — só runbooks
+   determinísticos pré-aprovados, com autorização humana, e escalonamento ao plantão para
+   o resto. A regra "nunca falar direto com o provedor" não tem exceção de emergência. O
+   cenário `anm2210` do protótipo demonstra o fluxo; a política completa está em
+   [06 — Acesso a LLMs](06-arquitetura-alvo.md#acesso-a-llms--o-gateway-iara).
 
 ---
 

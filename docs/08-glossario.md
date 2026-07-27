@@ -49,6 +49,12 @@ instâncias EC2, adicionando ou removendo conforme a demanda. É a ação de rem
 **assert** — Instrução Python que levanta erro se a condição for falsa. É como o `pytest`
 expressa uma verificação de teste.
 
+**Autonomia por nível de risco** — Contrato de governança em que o número de gates HITL é
+função do tier de risco da classe de mudança (`governance.RiskTier`): alto risco = 2 gates,
+baixo risco = 1 gate consolidado, histórico comprovado no golden set = promoção
+(shadow → canário → produção) até a auto-aprovação — exceto a GMUD, sempre humana.
+→ [10](10-ecossistema-da-empresa.md#gates-por-nível-de-risco)
+
 ## B
 
 **Babel** — Compilador JavaScript. O protótipo usa a versão *standalone*, que compila no
@@ -103,6 +109,8 @@ mudança (CI) e publicação automática do que passou (CD). Este projeto tem s�
 
 **Circuit breaker** — Padrão que interrompe as tentativas de chamar um serviço após N
 falhas seguidas, evitando *retry storms* contra um sistema já saturado. Item de hardening.
+O EasyRun mantém um dedicado à saúde do gateway IARA: abri-lo ativa o modo de contingência
+(zero LLM), e sondas periódicas o fecham quando o gateway volta — cenário `anm2210`.
 → [06](06-arquitetura-alvo.md#hardening-para-produção)
 
 **CI (Configuration Item)** — Item de configuração: como a CMDB do ServiceNow inventaria
@@ -314,6 +322,13 @@ significado. Fica no OpenSearch.
 **Mockup** — Protótipo de aparência, sem funcionamento real por trás. É o que a pasta
 `prototype/` é. → [04](04-frontend-prototype.md)
 
+**Modo de contingência (modo degradado)** — Estado operacional ativado quando o gateway
+IARA está indisponível (circuit breaker aberto): zero chamadas de LLM, só runbooks
+determinísticos pré-aprovados sob autorização humana, e escalonamento ao plantão para o
+resto. Nunca bypass para provedor direto — a regra corporativa não tem exceção de
+emergência. Demonstrado no cenário `anm2210`.
+→ [06](06-arquitetura-alvo.md#acesso-a-llms--o-gateway-iara)
+
 **Módulo / Pacote** — Módulo é um arquivo `.py`; pacote é uma pasta de módulos tratada como
 unidade importável. → [03](03-arquitetura-do-codigo.md#conceitos-básicos-módulo-pacote-e-__init__py)
 
@@ -475,6 +490,13 @@ determinístico; mais alto, mais variado. Validator = 0.1, Coach/Explainer = 0.4
 
 **Tipo de gate** — Qual decisão o gate HITL pede: `acao` (infraestrutura), `pr` (pull
 request) ou `gmud` (janela de mudança). Cada tipo mostra campos diferentes.
+
+**Task token (Step Functions)** — Mecanismo de espera durável (`waitForTaskToken`): a
+máquina de estados pausa emitindo um token que acompanha a solicitação (ex.: aprovação
+HITL); o callback com o token retoma a execução do ponto exato, mesmo dias depois. No
+contrato de propriedade do estado, é o task token — nunca o `interrupt()` do grafo — que
+carrega a espera pelo humano.
+→ [06](06-arquitetura-alvo.md#o-contrato-de-propriedade-do-estado)
 
 **Titan Embeddings** — Modelo de embeddings da AWS, usado pelo agente Contexto para busca
 semântica.

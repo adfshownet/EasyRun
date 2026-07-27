@@ -87,7 +87,7 @@
         <!-- Agentes -->
         <section class="er-section">
           <div class="er-section-title">CENÁRIO</div>
-          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="8">
+          <sc-for list="{{ cenariosLista }}" as="cn" hint-placeholder-count="9">
             <div onClick="{{ cn.aoClicar }}"  class="er-console-btn-full {{ cn.classeBtn }}">
               <div class="er-flex-center-8">
                 <span class="er-text-h5">{{ cn.icone }}</span>
@@ -486,7 +486,7 @@
 
             <div class="er-flex-col">
               <div class="er-section-title">⚡ TRIGGERS</div>
-              <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="6">
+              <sc-for list="{{ triggersLista }}" as="tg" hint-placeholder-count="7">
                 <div class="er-chip">
                   <span class="er-text-lg">{{ tg.icone }}</span>
                   <div class="er-flex-1">
@@ -699,7 +699,7 @@
         <div class="er-card-large">
           <div class="er-text-heading">🛡️ Estabilidade &amp; Hardening (SDD/Harness)</div>
           <div  class="er-grid-220-14">
-            <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="6">
+            <sc-for list="{{ hardeningItens }}" as="hd" hint-placeholder-count="7">
               <div  class="er-flex-start-8">
                 <span class="er-text-success-lg">●</span>
                 <span  class="er-text-body-muted">{{ hd.texto }}</span>
@@ -1225,6 +1225,68 @@ class Component extends DCLogic {
           { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'ANM-2150 resolvida ✅ MTTR: 5m 44s. Detectada por IA, sem monitor configurado — o Watchdog viu o que ninguém tinha instrumentado. Execução encerrada.', fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
         ],
       },
+
+      // ---------- Cenário 9 — Contingência do IARA · circuit breaker · zero LLM · EXTERNO · gate APR-07 ----------
+      {
+        id: 'anm2210', titulo: 'ANM-2210 · Contingência: gateway IARA degradado', idIncidente: 'ANM-2210',
+        severidade: 'Crítico', algoritmo: 'Robust', icone: '🧯', origem: 'Datadog',
+        textoProblema: 'Contingência: IARA degradado — squad opera sem LLM',
+        textoConcluido: 'Recuperado · 22 min em contingência · zero bypass',
+        chat: {
+          causa: 'O monitor dedicado à saúde do gateway IARA detectou degradação severa: p99 das inferências saltou de 900 ms para 14 s, com timeout em 38% das chamadas. A causa está no próprio gateway (release com regressão, revertido pelo Time IARA). Natureza: EXTERNO — o CI plataforma-iara pertence ao Time IARA; a classificação foi determinística, pela CMDB, porque com o circuito aberto nenhum modelo é consultado.',
+          plano: 'O plano veio do catálogo (runbook RB-CTG-01), não de um modelo: 1) abrir o circuit breaker e suspender toda chamada ao IARA; 2) operar em contingência — só runbooks determinísticos pré-aprovados para assinaturas conhecidas, com aprovação humana; 3) escalar ao Time IARA e acompanhar a recuperação; 4) fechar o circuito, retomar o raciocínio e diagnosticar a janela a posteriori.',
+          statusAtivo: 'A squad está em modo de contingência: o gateway IARA — o único caminho de LLM da empresa — está degradado. Zero chamadas de modelo até o circuito fechar; nunca bypass para provedor direto. Este cenário demonstra que a dependência mais crítica da squad é o próprio gateway.',
+          statusAguardando: 'A execução está pausada: operar em modo de contingência (runbooks determinísticos sem diagnóstico de IA) exige autorização humana — guardrail G-08. Rejeitar significa observação passiva com escalonamento direto ao plantão.',
+          statusConcluido: 'ANM-2210 encerrada ✅ 22 minutos em contingência, 1 anomalia tratada por runbook determinístico e zero chamadas fora do IARA. O circuito fechou sozinho quando as sondas confirmaram a recuperação, e o diagnóstico completo foi feito a posteriori, já com LLM.',
+        },
+        passos: [
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', txt: 'Monitor dedicado à saúde do gateway IARA disparou: p99 das inferências subiu de 900 ms para 14 s, timeout em 38% das chamadas nos últimos 5 min. Anomalia ANM-2210 aberta · severidade CRÍTICO · a dependência degradada é o próprio caminho de LLM da squad.', fx: { agStatus: { sentinela: 'detectando' }, rastreioSet: { anm: 'ANM-2210', trace: 'dd-iara-4f8a21c0' } } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'Step Functions', txt: 'Circuit breaker do IARA ABERTO após 5 falhas consecutivas. Modo de contingência: ZERO chamadas de LLM — bypass direto ao provedor é proibido por regra corporativa, indisponibilidade não muda isso. Papéis de raciocínio suspensos (Diagnosta, Contexto e Artífice aguardando; a memória semântica também depende de embeddings via IARA).', fx: { agStatus: { auditor: 'monitorando', diagnosta: 'aguardando', contexto: 'aguardando', artifice: 'aguardando' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'Incidente INC-0099761 aberto no ServiceNow. CMDB: item de configuração plataforma-iara, dono Time IARA. O registro corporativo é determinístico — a contingência não afeta o Elo.', fx: { agStatus: { elo: 'consultando' }, rastreioSet: { inc: 'INC-0099761', ci: 'plataforma-iara' } } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', txt: 'Card BUG-4718 criado no board da squad e vinculado ao INC-0099761.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { bug: 'BUG-4718' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', txt: 'O dono do estado durável assume sem o grafo: com o circuito aberto, nenhuma task invoca o LangGraph. Classificação determinística pela CMDB: o CI degradado pertence ao Time IARA. Natureza: EXTERNO.', fx: { agStatus: { maestro: 'orquestrando', elo: 'concluído' }, naturezaSet: 'externo' } },
+          { ag: 'maestro', pilar: '🎯 Planning', aws: 'Step Functions', txt: 'Plano recuperado do catálogo de contingência — runbook RB-CTG-01 "Gateway IARA indisponível". Nenhum passo foi gerado por modelo: em contingência, o plano é determinístico por definição.', fx: { planoCriar: [
+            { id: 1, titulo: 'Abrir circuito e suspender chamadas ao IARA', st: 'ok' },
+            { id: 2, titulo: 'Operar em contingência: runbooks determinísticos', st: 'hitl' },
+            { id: 3, titulo: 'Escalar ao Time IARA e acompanhar recuperação', st: 'pendente' },
+            { id: 4, titulo: 'Fechar circuito e diagnosticar a posteriori', st: 'pendente' },
+          ] } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'INC-0099761 reatribuído ao Time IARA com as métricas do gateway anexadas; plantão do IARA acionado via escalonamento formal.', fx: { agStatus: { elo: 'escalando' }, escalar: true, planoOk: 3 } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-08 interceptou: operar em modo de contingência — executar runbooks sem diagnóstico de IA — excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
+            id: 'APR-07', tipo: 'acao', titulo: 'Autorizar operação em modo de contingência',
+            descricao: 'O gateway IARA está degradado e o circuit breaker abriu. A squad propõe operar sem LLM: apenas runbooks determinísticos pré-aprovados para assinaturas conhecidas, com escalonamento humano para todo o resto. Bypass para provedor direto não é opção — regra corporativa.',
+            risco: 'alto', nivelRisco: 'alto', guardrail: 'G-08 · contingência sem LLM exige supervisão humana', aws: 'Step Functions · SSM',
+            pilarDecisao: '🛡️ Guardrails', plataforma: 'ServiceNow',
+            detalhe: 'Modo: contingência (circuit breaker ABERTO)\nLLM: zero chamadas — bypass direto PROIBIDO\n\nRunbooks permitidos (catálogo pré-aprovado):\n  RB-011 · CPU alta com assinatura conhecida\n  RB-023 · fila represada com DLQ padrão\n  RB-077 · pressão de memória em JVM\n\nFora do catálogo → escala ao plantão humano\nRetomada: automática quando o IARA voltar\n(3 sondas de inferência OK fecham o circuito)',
+            mensagemAprovado: 'Decisão humana: contingência APROVADA. Runbooks determinísticos liberados para assinaturas conhecidas; todo o resto escala ao plantão.',
+            mensagemRejeitado: 'Decisão humana: contingência REJEITADA. Squad em observação passiva — todo incidente novo escala direto ao plantão até o IARA voltar.',
+            mensagemAutoAprovado: 'Aprovação automática habilitada nos ajustes — modo de contingência ativado.',
+          } },
+          { ag: 'sentinela', pilar: '⚡ Triggers', aws: 'Datadog', dinamico: {
+            aprovado: 'Durante a contingência: ANM-2211 detectada — CPU alta na catalog-svc, assinatura idêntica à do runbook RB-011. Roteada ao caminho determinístico autorizado.',
+            rejeitado: 'Durante a contingência: ANM-2211 detectada — CPU alta na catalog-svc. Sem contingência autorizada, escalada direto ao plantão humano, conforme decidido.',
+          }, fx: { agStatus: { sentinela: 'detectando' } } },
+          { ag: 'executor', pilar: '⚡ Action', aws: 'SSM', dinamico: {
+            aprovado: 'RB-011 executado SEM diagnóstico de IA: scale-out da catalog-svc pela regra do runbook (CPU > 90% por 10 min → +2 instâncias). Ação registrada para revisão a posteriori, quando o raciocínio voltar.',
+            rejeitado: 'Nenhuma ação automática executada. O plantão tratou a ANM-2211 manualmente; a squad registrou a ocorrência para o pós-mortem.',
+          }, fx: { agStatus: { executor: 'executando', auditor: 'monitorando' }, planoUpdate: { id: 2, stAprovado: 'ok', stRejeitado: 'rejeitado' } } },
+          { ag: 'sentinela', pilar: '📊 Evaluation', aws: 'Datadog', txt: 'Sinal de recuperação: p99 das inferências do gateway de volta a 1,1 s. O Time IARA aplicou rollback do release do gateway e confirmou a regressão como causa.', fx: { agStatus: { sentinela: 'vigiando' } } },
+          { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'Step Functions', txt: 'Circuito em meia-abertura: 3 sondas de inferência consecutivas OK → circuit breaker FECHADO. Papéis de raciocínio reativados; fim da contingência após 22 minutos.', fx: { agStatus: { auditor: 'monitorando', diagnosta: 'analisando', contexto: 'ocioso', artifice: 'ocioso' } } },
+          { ag: 'diagnosta', pilar: '🎯 Planning', aws: 'IARA MCP', dinamico: {
+            aprovado: 'Diagnóstico completo a posteriori, agora com LLM: janela degradada de 22 min revisada. O RB-011 executado em contingência foi validado como correto — a assinatura batia e o scale-out era a ação prevista. Confiança: 97%.',
+            rejeitado: 'Diagnóstico completo a posteriori, agora com LLM: janela degradada de 22 min revisada, incluindo a fila do plantão. A ANM-2211 tratada manualmente foi validada; nenhuma pendência técnica restou da janela.',
+          }, fx: { agStatus: { diagnosta: 'concluído' }, planoOk: 4 } },
+          { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'IUClick', dinamico: {
+            aprovado: 'BUG-4718 movido para "Concluído" no IUClick; INC-0099761 encerrado no ServiceNow com a linha do tempo da contingência anexada.',
+            rejeitado: 'BUG-4718 movido para "Concluído" no IUClick; INC-0099761 encerrado no ServiceNow, com registro de que a squad operou em observação passiva por decisão humana.',
+          }, fx: { agStatus: { elo: 'concluído' } } },
+          { ag: 'auditor', pilar: '📊 Evaluation', aws: 'S3 · Langfuse', txt: 'Pós-mortem gerado. Aprendizado gravado: a dependência mais crítica da squad é o próprio gateway de LLM — o monitor dedicado e o runbook de contingência RB-CTG-01 foram revisados com os dados da janela.', fx: { agStatus: { auditor: 'concluído' }, memoriaAdd: { ref: 'APR-2210', tipo: 'aprendizado', texto: 'IARA degradado 22 min: contingência sem LLM funcionou, zero bypass. Monitor do gateway e RB-CTG-01 revisados.' } } },
+          { ag: 'maestro', pilar: '🎼 Orchestration', aws: 'Step Functions', dinamico: {
+            aprovado: 'ANM-2210 encerrada ✅ 22 min em contingência, 1 anomalia tratada por runbook determinístico e ZERO chamadas fora do IARA. O estado durável atravessou a degradação intacto — o grafo só voltou quando o circuito fechou. Execução encerrada.',
+            rejeitado: 'ANM-2210 encerrada ✅ 22 min em observação passiva com plantão humano, por decisão na fila HITL — e ZERO chamadas fora do IARA. Saber parar também é contingência. Execução encerrada.',
+          }, fim: true, fx: { agStatus: { maestro: 'concluído', sentinela: 'vigiando', executor: 'concluído' } } },
+        ],
+      },
     ];
   }
 
@@ -1393,8 +1455,8 @@ class Component extends DCLogic {
     if (t.includes('agente') || t.includes('squad') || t.includes('quem')) return 'Somos 8 agentes: eu (Maestro, orquestração), Sentinela (detecção via Datadog e ServiceNow), Elo (rastreabilidade — ServiceNow, CMDB, IUClick e GMUD), Contexto (memória), Diagnosta (causa raiz e natureza), Artífice (código, Devin e PR), Executor (ações de infra) e Auditor (guardrails e avaliação).';
     if (t.includes('guardrail') || t.includes('segur') || t.includes('aprova')) return 'Os guardrails ativos: rollback em produção exige humano (G-02), máximo de 3 ações de escrita por execução, escopo restrito aos ambientes da squad, e redação de segredos antes de enviar código a agente externo (G-05). Somam-se a eles o G-06 (todo PR de agente é revisado) e o G-07 (toda mudança em produção exige GMUD aprovada). Você gerencia na aba Configuração.';
     if (t.includes('mttr') || t.includes('tempo') || t.includes('métri')) return 'Nos últimos 7 dias: MTTR médio de 6m 12s (−71% vs. operação manual), 84% de resolução autônoma, 96% de acerto na classificação da natureza e 78% dos PRs do Devin aceitos na primeira revisão. A GMUD sai em 48s, contra ~25 min no processo manual. Detalhes na aba Avaliação.';
-    if (t.includes('cenário') || t.includes('cenario')) return 'São 8 cenários no Console (escolha antes de iniciar): quatro de infraestrutura — latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco —, um de defeito de código que termina em PR pelo Devin, um incidente de negócio num sistema fora da AWS, um de degradação de terceiro que demonstra o caminho de escalonamento, e um detectado pelo Watchdog do Datadog — anomalia encontrada por IA, sem nenhum monitor configurado.';
-    if (t.includes('iara') || t.includes('modelo') || t.includes('llm') || t.includes('bedrock')) return 'Nenhum agente fala direto com provedor de LLM: toda chamada de modelo sai como requisição ao MCP do IARA — o gateway corporativo, governado pelo time IARA, que gerencia acesso, catálogo de modelos homologados, quotas e custo. Para a squad isso é transparente: o Diagnosta pede uma inferência ao IARA e recebe a resposta do modelo homologado (Claude Sonnet, Haiku ou Titan Embeddings). O custo por incidente aparece na aba Avaliação e a política, na aba FinOps.';
+    if (t.includes('cenário') || t.includes('cenario')) return 'São 9 cenários no Console (escolha antes de iniciar): quatro de infraestrutura — latência por pool RDS, CPU spike sazonal, DNS timeout e previsão de exaustão de disco —, um de defeito de código que termina em PR pelo Devin, um incidente de negócio num sistema fora da AWS, um de degradação de terceiro que demonstra o caminho de escalonamento, um detectado pelo Watchdog do Datadog — anomalia encontrada por IA, sem nenhum monitor configurado — e um de contingência: o próprio gateway IARA degradado, com a squad operando sem LLM por runbooks determinísticos.';
+    if (t.includes('iara') || t.includes('modelo') || t.includes('llm') || t.includes('bedrock')) return 'Nenhum agente fala direto com provedor de LLM: toda chamada de modelo sai como requisição ao MCP do IARA — o gateway corporativo, governado pelo time IARA, que gerencia acesso, catálogo de modelos homologados, quotas e custo. Para a squad isso é transparente: o Diagnosta pede uma inferência ao IARA e recebe a resposta do modelo homologado (Claude Sonnet, Haiku ou Titan Embeddings). E se o IARA degradar? Circuit breaker + modo de contingência: zero chamadas de LLM, só runbooks determinísticos pré-aprovados e escalonamento humano — nunca bypass para provedor direto (veja o cenário ANM-2210). O custo por incidente aparece na aba Avaliação e a política, na aba FinOps.';
     return 'Posso ajudar com: status da anomalia, causa raiz, natureza da remediação, plano de ação, rastreabilidade (ServiceNow, IUClick, Devin, GMUD), memória da squad, guardrails, cenários ou métricas. Sobre o que quer saber?';
   }
 
@@ -1661,6 +1723,7 @@ class Component extends DCLogic {
         { icone: '📡', nome: 'Evento de deploy', desc: 'Todo deploy em produção coloca a squad em observação ativa.', aws: 'EventBridge' },
         { icone: '⏰', nome: 'Varredura agendada', desc: 'Auditoria de saúde e forecast a cada 15 minutos.', aws: 'EventBridge' },
         { icone: '💬', nome: 'Solicitação humana', desc: 'Operador aciona a squad diretamente pelo chat.', aws: 'API Gateway' },
+        { icone: '🧯', nome: 'Saúde do gateway IARA', desc: 'Monitor dedicado à dependência de LLM da squad; degradação abre o circuit breaker e ativa o modo de contingência sem LLM.', aws: 'Datadog · Circuit breaker' },
       ],
 
       remediacaoLista: [
@@ -1691,7 +1754,7 @@ class Component extends DCLogic {
 
       // O que o EasyRun troca com cada plataforma do ecossistema
       integracoesLista: [
-        { icone: '🚪', nome: 'IARA', papel: 'Gateway corporativo de LLMs (MCP)', le: 'Catálogo de modelos homologados · quotas e orçamento de tokens por agente', escreve: 'Requisições de inferência dos agentes · telemetria de custo por execução', modo: 'Automático · acesso e custo governados pelo time IARA', cor: '#B48CFF', classeNome: 'er-ig-iara' },
+        { icone: '🚪', nome: 'IARA', papel: 'Gateway corporativo de LLMs (MCP)', le: 'Catálogo de modelos homologados · quotas e orçamento de tokens por agente', escreve: 'Requisições de inferência dos agentes · telemetria de custo por execução', modo: 'Automático · governado pelo time IARA · indisponível: circuit breaker + contingência sem LLM (nunca bypass)', cor: '#B48CFF', classeNome: 'er-ig-iara' },
         { icone: '🎫', nome: 'ServiceNow', papel: 'Registro, CMDB e gestão de mudança', le: 'Incidentes abertos · item de configuração · time dono · repositório do serviço', escreve: 'Anomalia correlacionada · GMUD aberta · incidente encerrado ou reatribuído', modo: 'Automático · GMUD aprovada por humano', cor: '#5BA8FF', classeNome: 'er-ig-servicenow' },
         { icone: '🐶', nome: 'Datadog', papel: 'Observabilidade dos sistemas monitorados', le: 'Métricas, logs, traces, error tracking, monitores e forecast', escreve: 'Evento de anomalia · janela de validação pós-remediação', modo: 'Automático', cor: '#B48CFF', classeNome: 'er-ig-datadog' },
         { icone: '📋', nome: 'IUClick', papel: 'Kanban do processo ágil', le: 'Coluna atual do card e histórico de movimentação', escreve: 'Bug criado na abertura · card movido a cada avanço do incidente', modo: 'Automático', cor: '#7FD4A8', classeNome: 'er-ig-iuclick' },
@@ -1737,6 +1800,7 @@ class Component extends DCLogic {
         { texto: 'Sanitização de entrada/saída — filtros contra injeção de prompt e vazamento de segredos, obrigatórios antes de qualquer envio a agente externo.' },
         { texto: 'Testes unitários de contrato de estado + avaliação "LLM-as-judge" com portão de regressão antes de promover versão de agente.' },
         { texto: 'Degradação graciosa da CMDB — quando o item de configuração não aponta repositório, a esteira cai para o caminho de escalonamento em vez de falhar.' },
+        { texto: 'Modo de contingência do IARA — com o circuit breaker aberto, zero chamadas de LLM: só runbooks determinísticos pré-aprovados e escalonamento humano. Nunca bypass para provedor direto.' },
       ],
 
       mapaLangGraph: [

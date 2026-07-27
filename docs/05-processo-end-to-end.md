@@ -384,8 +384,9 @@ mas é o primeiro lugar onde qualquer engenheiro experiente olharia.
 
 **A confiança é explícita.** O agente diz *"causa provável, 92%"*, não *"a causa é"*. Isso
 alimenta o campo `confidence` do [`AgentState`](03-arquitetura-do-codigo.md#statepy). Nos
-oito cenários ela varia de **89%** (DNS, sem histórico) a **96%** (terceiro degradado, com
-evidência clara) — o número acompanha a qualidade da evidência.
+nove cenários ela varia de **89%** (DNS, sem histórico) a **97%** (contingência do IARA,
+diagnóstico a posteriori com a janela inteira de evidência) — o número acompanha a
+qualidade da evidência.
 
 **A natureza é a bifurcação.** É aqui que o fluxo deixa de ser único:
 
@@ -587,20 +588,28 @@ No INC-3312 a comparação é ainda mais forte, porque muda de ordem de grandeza
 
 ---
 
-## Comparando os 8 cenários
+## Comparando os 9 cenários
 
-| | **ANM-2047** 🐢 | **ANM-2091** 📈 | **ANM-2118** 🌐 | **PRD-2144** 🔮 | **INC-3312** 🧬 | **INC-3350** 💼 | **INC-3377** ⛔ | **ANM-2150** 🐕 |
-|---|---|---|---|---|---|---|---|---|
-| Origem | Datadog | Datadog | Datadog | Agendado | Datadog + ServiceNow | **ServiceNow** | Datadog | **Datadog Watchdog** |
-| Severidade | Crítico | Alerta | Crítico | Preditivo | Crítico | Crítico | Alerta | Alerta |
-| Algoritmo | Robust | Agile | Basic | Robust | Robust | Agile | Agile | **Watchdog (IA)** |
-| **Natureza** | `INFRA` | `INFRA` | `INFRA` | `INFRA` | **`CODIGO`** | **`CONFIG`** | **`EXTERNO`** | `INFRA` |
-| Confiança | 92% | 95% | 89% | 93% | 94% | 91% | 96% | 90% |
-| Memória disponível | INC-1893 | INC-1777 | **nenhuma** | INC-1622 | **nenhuma** | INC-1409 | INC-1988 | INC-2011 |
-| Gates HITL | 1 (ação) | 1 (ação) | — | — | **2 (PR + GMUD)** | 1 (GMUD) | 1 (ação) | — |
-| Onde a ação acontece | AWS | AWS | AWS | AWS | GitHub org | **ERP on-premises** | — (escala) | AWS + Datadog |
-| Elos de rastreio | 5/9 | 5/9 | 5/9 | 5/9 | **9/9** | 6/9 | 5/9 | 5/9 |
-| Desfecho | MTTR 4m 32s | 6m 05s | **2m 18s** | 3m 40s | 18m 40s | 22m 05s | contido em 7m 12s | 5m 44s + monitor criado |
+| | **ANM-2047** 🐢 | **ANM-2091** 📈 | **ANM-2118** 🌐 | **PRD-2144** 🔮 | **INC-3312** 🧬 | **INC-3350** 💼 | **INC-3377** ⛔ | **ANM-2150** 🐕 | **ANM-2210** 🧯 |
+|---|---|---|---|---|---|---|---|---|---|
+| Origem | Datadog | Datadog | Datadog | Agendado | Datadog + ServiceNow | **ServiceNow** | Datadog | **Datadog Watchdog** | Datadog |
+| Severidade | Crítico | Alerta | Crítico | Preditivo | Crítico | Crítico | Alerta | Alerta | Crítico |
+| Algoritmo | Robust | Agile | Basic | Robust | Robust | Agile | Agile | **Watchdog (IA)** | Robust |
+| **Natureza** | `INFRA` | `INFRA` | `INFRA` | `INFRA` | **`CODIGO`** | **`CONFIG`** | **`EXTERNO`** | `INFRA` | **`EXTERNO`** (via CMDB, **sem LLM**) |
+| Confiança | 92% | 95% | 89% | 93% | 94% | 91% | 96% | 90% | 97% (a posteriori) |
+| Memória disponível | INC-1893 | INC-1777 | **nenhuma** | INC-1622 | **nenhuma** | INC-1409 | INC-1988 | INC-2011 | **suspensa** (embeddings via IARA) |
+| Gates HITL | 1 (ação) | 1 (ação) | — | — | **2 (PR + GMUD)** | 1 (GMUD) | 1 (ação) | — | 1 (ação · contingência) |
+| Onde a ação acontece | AWS | AWS | AWS | AWS | GitHub org | **ERP on-premises** | — (escala) | AWS + Datadog | AWS (runbook, **sem LLM**) |
+| Elos de rastreio | 5/9 | 5/9 | 5/9 | 5/9 | **9/9** | 6/9 | 5/9 | 5/9 | 5/9 |
+| Desfecho | MTTR 4m 32s | 6m 05s | **2m 18s** | 3m 40s | 18m 40s | 22m 05s | contido em 7m 12s | 5m 44s + monitor criado | 22 min em contingência · zero bypass |
+
+**ANM-2210 é o cenário-espelho.** Todos os outros usam a esteira; ele testa o que acontece
+quando a peça central da esteira — o gateway IARA, único caminho de LLM — degrada. O
+circuit breaker abre, os papéis de raciocínio param (inclusive a memória semântica, que
+depende de embeddings servidos pelo IARA), e o que sobra é exatamente o que o desenho
+promete: o Step Functions carregando o estado durável, runbooks determinísticos sob
+aprovação humana (gate APR-07, guardrail G-08) e **zero chamadas fora do IARA** — a regra
+corporativa não ganha exceção de emergência.
 
 ### Por que três cenários não têm gate nenhum
 
