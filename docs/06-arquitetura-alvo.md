@@ -107,6 +107,11 @@ grafo está configurado, ele **não mescla**: o retorno substitui. O nó seguint
 estado sem `incident_id`, sem `root_cause`, sem `remediation_plan`, e falha com um erro que
 aponta para o lugar errado. Daí o aviso em maiúsculas dentro do código.
 
+No desenho-alvo, há um limite adicional: o `interrupt()` **encerra a invocação da task** em
+que o grafo roda. A espera pela decisão humana — que pode levar horas ou dias — não é do
+grafo: pertence ao Step Functions, via task token (ver
+[O contrato de propriedade do estado](#o-contrato-de-propriedade-do-estado)).
+
 ### O mapeamento agente → papel
 
 O protótipo exibe esta tabela na aba Arquitetura (`mapaLangGraph`):
@@ -138,9 +143,46 @@ ninguém "conserte" um em nome do outro.
 
 `Checkpoint` e `CheckpointStore` em
 [`checkpoint.py`](../src/squad_agentica/aiops/checkpoint.py) são o stub dessa persistência,
-com PostgreSQL como destino. O motivo pelo qual isso é crítico neste domínio —
-ações com efeito colateral irreversível — está detalhado em
-[03 — checkpoint.py](03-arquitetura-do-codigo.md#checkpointpy).
+com PostgreSQL como destino. No contrato de propriedade do estado (seção seguinte), esse
+checkpointer é um mecanismo **intra-invocação**: protege o raciocínio dentro de uma task;
+a retomada entre invocações é sempre pelo estado da máquina Step Functions. O motivo pelo
+qual persistência é crítica neste domínio — ações com efeito colateral irreversível — está
+detalhado em [03 — checkpoint.py](03-arquitetura-do-codigo.md#checkpointpy).
+
+---
+
+## O contrato de propriedade do estado
+
+Step Functions e LangGraph são ambos máquinas de estado — e duas máquinas de estado
+governando o mesmo fluxo é uma armadilha clássica: durante uma pausa HITL, ambas tentariam
+congelar e retomar a execução, e arquiteturas ambíguas sobre "quem é o dono do estado"
+terminam em corrupção de dados ou execuções zumbis. O EasyRun resolve a ambiguidade com um
+contrato explícito de composição:
+
+**1. O Step Functions é o dono único do estado durável do incidente.** O ciclo de vida
+(disparo, diagnóstico, execução, validação, encerramento), as retentativas, as integrações
+com serviços AWS e — o ponto crítico — a **pausa HITL** vivem na máquina de estados. A
+pausa usa o padrão *task token* (`waitForTaskToken`): o token segue junto com a
+solicitação de aprovação; quando o humano decide, o callback com o token retoma a máquina
+do ponto exato — mesmo que a decisão leve dias e que todo processo da squad tenha morrido
+no intervalo. Se a infraestrutura falhar, é o provedor de nuvem que retém o estado.
+
+**2. O LangGraph é raciocínio efêmero dentro de uma task.** O grafo nasce e morre dentro
+de uma única invocação: recebe o estado do incidente como entrada, raciocina (Planner →
+Explainer → …), e devolve o `AgentState` serializado na saída da task. O checkpointer
+PostgreSQL protege o progresso *dentro* dessa invocação; ele **não** é o ponto de retomada
+entre invocações.
+
+**3. Um único dono do estado por vez.** Enquanto a task roda, o dono é o grafo; fora dela,
+é sempre o Step Functions. Corolário: `interrupt()` **não atravessa fronteira de
+invocação** — quando o grafo precisa de um humano, ele encerra a task devolvendo o estado
+com a pendência marcada, e a espera longa é modelada como task token na máquina. Nenhum
+dos dois orquestradores jamais espera "por dentro" do outro.
+
+O custo do contrato é o acoplamento na fronteira (serializar o `AgentState` a cada
+travessia); o ganho é que cada ferramenta faz só o que faz melhor — resiliência e espera
+durável na nuvem, raciocínio multi-agente no grafo — sem disputa de propriedade. Este
+contrato resolve a lacuna [09 #12](09-lacunas-e-riscos.md#12-step-functions-e-langgraph-se-sobrepõem).
 
 ---
 
@@ -152,9 +194,9 @@ Da aba Arquitetura do protótipo, três camadas:
 
 > FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao,
 > Governanca. Orquestração dos 4 papéis (Planner/Explainer/Validator/Coach) como grafo de
-> estados LangGraph, com contrato tipado `AgentState` (TypedDict) e pausas via
-> `interrupt()` para HITL. Checkpoints em PostgreSQL permitem retomar a remediação do ponto
-> exato de interrupção.
+> estados LangGraph, com contrato tipado `AgentState` (TypedDict). O grafo roda efêmero
+> dentro de tasks do Step Functions: o checkpoint interno (PostgreSQL) protege o raciocínio
+> intra-task e o estado é serializado de volta à máquina durável ao fim de cada task.
 
 Traduzindo os termos:
 
@@ -249,10 +291,11 @@ domínio só conhece a porta "inferência".
 | **Route 53** | DNS e failover de rota | Executor |
 | **EC2 Auto Scaling** | Escalonamento horizontal | Executor |
 
-Há uma sobreposição a resolver: **Step Functions e LangGraph são ambos orquestradores de
-estado**. A stack-alvo cita os dois. Provavelmente Step Functions coordenaria o fluxo macro
-(disparo, retentativas, integração com serviços AWS) e o LangGraph o raciocínio dentro de
-uma execução — mas a divisão não está documentada e é uma decisão em aberto. Ver
+A sobreposição entre Step Functions e LangGraph — os dois são orquestradores de estado —
+deixou de ser uma decisão em aberto: a divisão está definida em
+[O contrato de propriedade do estado](#o-contrato-de-propriedade-do-estado) (Step Functions
+dono do estado durável e da espera HITL; LangGraph raciocínio efêmero por task). O
+histórico da lacuna está em
 [09 #12](09-lacunas-e-riscos.md#12-step-functions-e-langgraph-se-sobrepõem).
 
 ---
@@ -273,7 +316,7 @@ que um sistema agêntico maduro precisa ter:
 | 7 | 🛡️ **Guardrails** | Políticas que limitam autonomia: escopo, quotas, aprovação humana — quotas de modelo no gateway do IARA | Políticas IARA, IAM | Configuração + evento G-02 |
 | 8 | 📦 **Skills** | Capacidades versionadas e testáveis por agente | Lambda Layers | Chips de skills (Configuração) |
 | 9 | ⚡ **Triggers** | Gatilhos: alarmes, deploys, agenda, pedidos humanos | EventBridge, CloudWatch | Lista de triggers (Configuração) |
-| 10 | 🎼 **Orchestration** | Máquina de estados que coordena o fluxo, com pausa para HITL | Step Functions | Fluxo central do console |
+| 10 | 🎼 **Orchestration** | Step Functions dono do estado durável (lifecycle, retries, pausa HITL por task token); LangGraph raciocina efêmero dentro de cada task | Step Functions, LangGraph | Fluxo central do console |
 | 11 | 📊 **Evaluation** | MTTR, precisão, scores por agente, pós-mortems automáticos | CloudWatch, S3 | Aba "Avaliação" |
 | 12 | 🔎 **Detecção & Severidade** | Motores Basic/Agile/Robust classificam em Crítico/Alerta/Preditivo; o Watchdog detecta por IA o que nenhum monitor cobre | Datadog (Watchdog), CloudWatch | Log da Sentinela, por cenário |
 | 13 | 🔗 **Interoperabilidade** | MCP padroniza acesso a LLMs (IARA) e ferramentas; A2A coordena agentes entre frameworks | MCP, A2A | Ferramentas do Diagnosta e do Contexto |

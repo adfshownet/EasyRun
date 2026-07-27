@@ -17,6 +17,12 @@ class CheckpointStore:
 
     On failure, remediation resumes exactly from the last saved checkpoint
     instead of re-running already-applied corrective actions.
+
+    Scope (docs/06, "O contrato de propriedade do estado"): this store is an
+    **intra-invocation** mechanism — it protects reasoning progress inside a
+    single Step Functions task. The durable resume point between invocations
+    (including HITL waits via task token) is always the Step Functions state
+    machine, never this store.
     """
 
     def save(self, checkpoint: Checkpoint) -> None:

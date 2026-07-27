@@ -30,6 +30,17 @@ Two engineering notes worth keeping in front of whoever implements this:
   the closure at the end. Batching them all to the end would leave the incident
   invisible to everyone outside this tool while it is being worked on.
 
+State ownership (docs/06, "O contrato de propriedade do estado"):
+
+* The graph built here is **ephemeral, scoped to one Step Functions task
+  invocation**. It receives the incident state as input, reasons, and returns
+  the serialized AgentState as the task output. There is no graph checkpoint
+  that survives across invocations.
+* Every `interrupt()` above ends the current task invocation. The long wait for
+  the human decision belongs to Step Functions (task token /
+  ``waitForTaskToken``), never to the graph. Step Functions is the single owner
+  of the durable incident state; the graph owns it only while its task runs.
+
 Deliberately does not import langgraph — this module only documents the shape
 for a future real implementation, and keeps the package dependency-free.
 """

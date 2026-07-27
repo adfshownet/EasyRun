@@ -659,7 +659,7 @@
           <div  class="er-grid-3col">
             <div class="er-flex-col-6">
               <span  class="er-mono-12-success">BACKEND · PYTHON</span>
-              <span class="er-text-main">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração em LangGraph com roteamento condicional por natureza da remediação, contrato tipado AgentState (TypedDict, schema versionado) e pausas via interrupt() para HITL — duas no ramo de código. LangChain para ferramentas e retrievers; checkpoints em PostgreSQL permitem retomar do ponto exato de interrupção.</span>
+              <span class="er-text-main">FastAPI + arquitetura hexagonal. Bounded contexts DDD: Deteccao, Diagnostico, Execucao, Governanca. Orquestração em LangGraph com roteamento condicional por natureza da remediação e contrato tipado AgentState (TypedDict, schema versionado). O grafo roda efêmero dentro de tasks do Step Functions: cada interrupt() encerra a task — duas vezes no ramo de código — e o checkpoint interno (PostgreSQL) protege só o raciocínio intra-task; o estado é serializado de volta à máquina durável ao fim de cada task. LangChain para ferramentas e retrievers.</span>
             </div>
             <div class="er-flex-col-6">
               <span  class="er-mono-12-blue">FRONTEND · ANGULAR</span>
@@ -667,7 +667,7 @@
             </div>
             <div class="er-flex-col-6">
               <span class="er-mono-amber">INFRA · AWS</span>
-              <span class="er-text-main">LLMs consumidas via MCP do IARA — o gateway corporativo que governa acesso, catálogo de modelos e custo; nenhum agente fala direto com o provedor. Step Functions (orquestração macro), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
+              <span class="er-text-main">LLMs consumidas via MCP do IARA — o gateway corporativo que governa acesso, catálogo de modelos e custo; nenhum agente fala direto com o provedor. Step Functions (dono do estado durável: lifecycle, retries e espera HITL por task token), Lambda (ações), EventBridge (triggers), DynamoDB + OpenSearch (memória), S3 (pós-mortems), Secrets Manager (credenciais das integrações), CloudWatch. Observabilidade da esteira em Langfuse e LangSmith, correlacionada no Datadog.</span>
             </div>
           </div>
         </div>
@@ -709,7 +709,7 @@
 
         <div class="er-card-large">
           <div class="er-subtitle">🔗 Squad EasyRun × papéis LangGraph</div>
-          <div class="er-text-hint-12">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo via MCP do IARA); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa.</div>
+          <div class="er-text-hint-12">Como os 8 agentes desta squad mapeiam para o grafo de estados. Os quatro primeiros são papéis de raciocínio (chamam modelo via MCP do IARA); Elo e Artífice são nós adaptadores que usam ferramentas. Na tela são agentes porque é assim que a squad se apresenta; no grafo, a distinção importa. O grafo é efêmero: vive dentro de uma tarefa do Step Functions, que é o dono do estado durável e da pausa HITL (task token).</div>
           <div class="er-flex-col-8">
             <sc-for list="{{ mapaLangGraph }}" as="lg" hint-placeholder-count="6">
               <div  class="er-flex-center-label">
@@ -1753,7 +1753,7 @@ class Component extends DCLogic {
         { icone: '🛡️', nome: 'Guardrails', desc: 'Políticas que limitam autonomia: escopo, quotas de escrita, redação antes da saída, revisão de PR e GMUD aprovada — mais quotas de modelo aplicadas no gateway do IARA.', aws: ['Políticas IARA', 'IAM'], onde: 'Configuração + gates G-02, G-05, G-06 e G-07' },
         { icone: '📦', nome: 'Skills', desc: 'Capacidades versionadas e testáveis atribuídas a cada agente da squad.', aws: ['Lambda Layers'], onde: 'Chips de skills (Configuração)' },
         { icone: '⚡', nome: 'Triggers', desc: 'Monitores do Datadog, incidentes do ServiceNow (inclusive os de negócio), eventos de deploy, agenda e pedidos humanos.', aws: ['Datadog', 'ServiceNow', 'EventBridge'], onde: 'Lista de triggers (Configuração)' },
-        { icone: '🎼', nome: 'Orchestration', desc: 'Grafo de estados com roteamento condicional por natureza da remediação e pausa via interrupt() para HITL.', aws: ['LangGraph', 'Step Functions'], onde: 'Fluxo central do console' },
+        { icone: '🎼', nome: 'Orchestration', desc: 'Step Functions é o dono do estado durável — lifecycle, retries e pausa HITL por task token; o LangGraph raciocina efêmero dentro de cada task e devolve o estado ao fim. Um único dono do estado por vez.', aws: ['Step Functions', 'LangGraph'], onde: 'Fluxo central do console' },
         { icone: '📊', nome: 'Evaluation', desc: 'MTTR, acerto da natureza, taxa de PR aceito, scores por agente, pós-mortems e avaliação por LLM-as-judge com portão de regressão.', aws: ['Langfuse', 'LangSmith', 'S3'], onde: 'Abas "Avaliação" e "LLMOps"' },
         { icone: '🔎', nome: 'Detecção & Severidade', desc: 'Motores Basic (métricas novas), Agile (sazonais) e Robust (estáveis) classificam anomalias em Crítico, Alerta ou Preditivo; o Watchdog detecta por IA o que nenhum monitor cobre.', aws: ['Datadog', 'Watchdog', 'CloudWatch'], onde: 'Log da Sentinela, por cenário' },
         { icone: '🔗', nome: 'Interoperabilidade', desc: 'MCP padroniza o acesso às LLMs (gateway IARA) e às ferramentas corporativas (ServiceNow, IUClick, Devin, GitHub); A2A coordena agentes entre frameworks via Agent Card.', aws: ['MCP', 'IARA', 'A2A'], onde: 'Agente Elo e aba "Integrações"' },
