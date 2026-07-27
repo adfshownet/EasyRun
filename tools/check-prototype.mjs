@@ -129,11 +129,14 @@ function checarDados() {
       if (p.gate) {
         gates.push(p.gate);
         idsDeGate.push(p.gate.id);
-        for (const campo of ['id', 'tipo', 'titulo', 'descricao', 'risco', 'guardrail',
-          'detalhe', 'mensagemAprovado', 'mensagemRejeitado', 'mensagemAutoAprovado']) {
+        for (const campo of ['id', 'tipo', 'titulo', 'descricao', 'risco', 'nivelRisco',
+          'guardrail', 'detalhe', 'mensagemAprovado', 'mensagemRejeitado', 'mensagemAutoAprovado']) {
           if (!p.gate[campo]) falha(`${onde}: gate sem o campo "${campo}"`);
         }
         if (!TIPOS_GATE.has(p.gate.tipo)) falha(`${onde}: gate.tipo inválido "${p.gate.tipo}"`);
+        if (p.gate.nivelRisco && !['alto', 'baixo'].includes(p.gate.nivelRisco)) {
+          falha(`${onde}: gate.nivelRisco inválido "${p.gate.nivelRisco}" (esperado alto|baixo)`);
+        }
         if (p.gate.tipo === 'pr') {
           for (const campo of ['repositorio', 'branch', 'arquivos', 'checks']) {
             if (!p.gate[campo]) falha(`${onde}: gate de PR sem o campo "${campo}"`);

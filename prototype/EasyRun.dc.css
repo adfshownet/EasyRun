@@ -2251,6 +2251,8 @@
 .er-tag-tipo-pr   { color: #E8A87C; border-color: #3A2E1E; background: #1E1608; }
 .er-tag-tipo-gmud { color: #5BA8FF; border-color: #1E2E42; background: #101A26; }
 .er-tag-tipo-acao { color: #B48CFF; border-color: #2E1E42; background: #1A1026; }
+.er-nivel-alto  { color: #FF6B6B; border-color: #4A1E26; background: #241014; }
+.er-nivel-baixo { color: #3DDC84; border-color: #1C3A28; background: #0E1A13; }
 
 /* Decisão HITL */
 .er-decisao-ok  { color: #3DDC84; }

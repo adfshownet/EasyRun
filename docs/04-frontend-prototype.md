@@ -430,7 +430,8 @@ gate: {
   tipo: 'acao',                       // 'acao' | 'pr' | 'gmud'
   titulo: 'Rollback de deploy em produção',
   descricao: '...',
-  risco: 'médio',
+  risco: 'médio',                     // rótulo de impacto exibido no card
+  nivelRisco: 'alto',                 // 'alto' | 'baixo' — tier de governança
   guardrail: 'G-02 · rollback exige humano',
   aws: 'Lambda · CodeDeploy',
   detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api ...',
@@ -439,6 +440,14 @@ gate: {
   mensagemAutoAprovado: '...',
 }
 ```
+
+`risco` e `nivelRisco` são coisas diferentes de propósito: o primeiro é o **rótulo de
+impacto** daquela ação específica (baixo/médio/alto, informativo); o segundo é o **tier de
+governança** da classe de mudança (`governance.RiskTier` — só `alto` ou `baixo`), que
+decide quantos gates a mudança atravessa (alto = 2, baixo = 1 consolidado) e aparece no
+card como o chip **RISCO ALTO / RISCO BAIXO**. Ver
+[10 — Gates por nível de risco](10-ecossistema-da-empresa.md#gates-por-nível-de-risco).
+O `check-prototype.mjs` exige os dois campos em todo gate.
 
 **Os três tipos de gate** têm campos próprios, renderizados por `sc-if` no template:
 

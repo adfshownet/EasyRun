@@ -81,7 +81,7 @@ está fora da ferramenta justamente enquanto ele está sendo trabalhado.
 
 **O ramo `CODIGO` interrompe duas vezes.** Aprovar um patch e aprovar uma janela de mudança
 em produção são autoridades distintas — ver
-[10 — Por que dois gates](10-ecossistema-da-empresa.md#por-que-dois-gates-e-não-um).
+[10 — Gates por nível de risco](10-ecossistema-da-empresa.md#gates-por-nível-de-risco).
 
 ### O gate HITL e o `interrupt()`
 

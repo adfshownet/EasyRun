@@ -274,7 +274,7 @@
     <sc-if value="{{ vHitl }}" hint-placeholder-val="{{ false }}">
       <main data-screen-label="Fila de aprovação HITL" class="er-flex-scroll">
         <h2 class="er-title-1">✋ Fila de aprovação humana</h2>
-        <p class="er-text-muted">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador. Há três tipos de gate — ação de infraestrutura, pull request e GMUD —, e cada um mostra o que aquela decisão específica exige.</p>
+        <p class="er-text-muted">Revisão assíncrona: ações que excedem a autonomia da squad ficam retidas aqui até decisão de um operador. Há três tipos de gate — ação de infraestrutura, pull request e GMUD —, e cada um mostra o que aquela decisão específica exige. O número de gates segue o nível de risco: alto risco para duas vezes (conteúdo e janela são autoridades distintas); baixo risco usa gate único consolidado; classes com histórico comprovado no golden set são promovidas (shadow → canário → produção) até a auto-aprovação — exceto a GMUD, sempre humana.</p>
 
         <sc-if value="{{ hitlVazia }}" hint-placeholder-val="{{ true }}">
           <div class="er-empty-state">Nenhuma aprovação pendente. Quando um guardrail interceptar uma ação crítica, ela aparecerá aqui.</div>
@@ -287,6 +287,7 @@
                 <span class="er-dot-pulse-amber"></span>
                 <span  class="er-mono-12-amber">{{ hp.id }}</span>
                 <span  class="er-type-tag-dyn {{ hp.tipoClasse }}">{{ hp.tipoRotulo }}</span>
+                <span  class="er-type-tag-dyn {{ hp.classeNivel }}">{{ hp.nivelRotulo }}</span>
                 <span  class="er-title-14">{{ hp.titulo }}</span>
                 <span class="er-flex-1"></span>
                 <span class="er-section-event-count">{{ hp.hora }}</span>
@@ -842,7 +843,7 @@ class Component extends DCLogic {
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-02 interceptou o passo 2: "rollback em produção" excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
             id: 'APR-01', tipo: 'acao', titulo: 'Rollback de deploy em produção',
             descricao: 'O plano da squad propõe reverter o checkout-api de v2.14.3 para v2.14.2. Ação classificada como crítica pelo guardrail G-02 (mudança em produção).',
-            risco: 'médio', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
+            risco: 'médio', nivelRisco: 'alto', guardrail: 'G-02 · rollback exige humano', aws: 'Lambda · CodeDeploy',
             pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
             detalhe: '$ easyrun executar rollback \\\n    --servico checkout-api \\\n    --de v2.14.3 --para v2.14.2 \\\n    --estrategia blue-green\n\nJustificativa do Diagnosta: vazamento de conexões\nintroduzido em v2.14.3 (confiança 92%).\nMemória: INC-1893 resolvido com a mesma ação.',
             mensagemAprovado: 'Decisão humana: rollback APROVADO. Executor liberado para agir.',
@@ -892,8 +893,8 @@ class Component extends DCLogic {
           ] } },
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-01 interceptou o passo 2: escalonamento acima do orçamento de instâncias aprovado excede a autonomia da squad. Encaminhado para aprovação humana (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
             id: 'APR-02', tipo: 'acao', titulo: 'Escalonamento acima do orçamento aprovado',
-            descricao: 'O plano da squad propõe elevar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias, acima do teto de 10 aprovado no orçamento de infraestrutura.',
-            risco: 'baixo', guardrail: 'G-01 · escalonamento acima do orçamento exige humano', aws: 'EC2 Auto Scaling',
+            descricao: 'O plano da squad propõe elevar a capacidade desejada do ASG catalog-svc de 6 para 14 instâncias, acima do teto de 10 aprovado no orçamento de infraestrutura. Classe de baixo risco (reversível em minutos): candidata a promoção para auto-aprovação quando acumular histórico no golden set.',
+            risco: 'baixo', nivelRisco: 'baixo', guardrail: 'G-01 · escalonamento acima do orçamento exige humano', aws: 'EC2 Auto Scaling',
             pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
             detalhe: '$ easyrun escalar catalog-svc \\\n    --de 6 --para 14 \\\n    --motivo "campanha Semana Relâmpago"\n\nJustificativa do Diagnosta: saturação legítima por\ntráfego (+410%), confiança 95%.\nMemória: INC-1777 resolvido com a mesma ação.',
             mensagemAprovado: 'Decisão humana: escalonamento APROVADO. Executor liberado para agir.',
@@ -1026,7 +1027,7 @@ class Component extends DCLogic {
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'GitHub org', txt: 'Guardrail G-06 interceptou: nenhum código gerado por agente entra em produção sem revisão humana. PR #217 encaminhado para aprovação (HITL).', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
             id: 'APR-03', tipo: 'pr', titulo: 'Aprovar pull request gerado pelo Devin',
             descricao: 'O Artífice delegou a correção ao Devin e o patch está pronto. Nenhum código gerado por agente é mergeado sem revisão de uma pessoa.',
-            risco: 'médio', guardrail: 'G-06 · código de agente exige revisão humana', aws: 'Devin · GitHub org',
+            risco: 'médio', nivelRisco: 'alto', guardrail: 'G-06 · código de agente exige revisão humana', aws: 'Devin · GitHub org',
             pilarDecisao: '🔧 Tools & APIs', plataforma: 'GitHub org',
             repositorio: 'acme-corp/frete-service', branch: 'fix/faixa-cep-88000', pr: 'PR #217',
             arquivos: '2 arquivos · +38 −4 · 1 teste novo', checks: 'CI verde · cobertura 84% (+1pt)',
@@ -1038,7 +1039,7 @@ class Component extends DCLogic {
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'ServiceNow', pularSeRejeitado: true, txt: 'Segundo gate: a GMUD CHG-0044120 precisa de aprovação da gestão de mudança. Aprovar código e aprovar janela de produção são autoridades distintas.', gate: {
             id: 'APR-04', tipo: 'gmud', titulo: 'Aprovar GMUD CHG-0044120',
             descricao: 'Mudança em produção no serviço svc-frete decorrente do PR #217. A GMUD foi aberta automaticamente pela squad; a aprovação é sempre humana.',
-            risco: 'médio', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow',
+            risco: 'médio', nivelRisco: 'alto', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow',
             pilarDecisao: '🔗 Interoperabilidade', plataforma: 'ServiceNow',
             gmud: 'CHG-0044120', ci: 'svc-frete', janela: 'Hoje, 15:30–16:00 (baixo tráfego)',
             rollback: 'Revert do merge + redeploy da versão anterior (≈4 min)',
@@ -1100,8 +1101,8 @@ class Component extends DCLogic {
           { ag: 'elo', pilar: '🔗 Interoperabilidade', aws: 'ServiceNow', txt: 'GMUD CHG-0044188 aberta automaticamente, categoria "alteração de parâmetro em sistema financeiro", com o diff de configuração anexado.', fx: { agStatus: { elo: 'registrando' }, rastreioSet: { gmud: 'CHG-0044188' }, planoOk: 2 } },
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: 'ServiceNow', txt: 'Guardrail G-07 interceptou: mudança em sistema financeiro de produção exige GMUD aprovada por humano. Encaminhado para a fila HITL.', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
             id: 'APR-05', tipo: 'gmud', titulo: 'Aprovar GMUD CHG-0044188',
-            descricao: 'Restaurar o parâmetro CONTA_DESTINO_CONCILIACAO no ERP de faturamento, do centro de custo 4420 (desativado) para o 4451 (vigente).',
-            risco: 'baixo', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow · ERP on-premises',
+            descricao: 'Restaurar o parâmetro CONTA_DESTINO_CONCILIACAO no ERP de faturamento, do centro de custo 4420 (desativado) para o 4451 (vigente). Gate único consolidado: mudança de baixo risco — parâmetro e janela avaliados na mesma decisão.',
+            risco: 'baixo', nivelRisco: 'baixo', guardrail: 'G-07 · toda mudança em produção exige GMUD aprovada', aws: 'ServiceNow · ERP on-premises',
             pilarDecisao: '🔗 Interoperabilidade', plataforma: 'ServiceNow',
             gmud: 'CHG-0044188', ci: 'erp-faturamento (on-premises)', janela: 'Imediata — impacto financeiro em curso',
             rollback: 'Restaurar o valor anterior do parâmetro (≈30 s, reversível)',
@@ -1161,7 +1162,7 @@ class Component extends DCLogic {
           { ag: 'auditor', pilar: '🛡️ Guardrails', aws: '', txt: 'Guardrail G-03 interceptou: o workaround altera roteamento financeiro e gera custo por transação fora do desenho aprovado. Excede a autonomia da squad — decisão humana obrigatória.', fx: { agStatus: { auditor: 'aguardando', executor: 'aguardando' } }, gate: {
             id: 'APR-06', tipo: 'acao', titulo: 'Workaround: rotear 100% para o adquirente B',
             descricao: 'A squad pode desviar todo o tráfego de pagamento para o adquirente secundário, contornando a degradação. O custo por transação é maior e o desenho aprovado de roteamento seria alterado.',
-            risco: 'alto', guardrail: 'G-03 · escopo de ambiente e impacto financeiro', aws: 'API Gateway · roteamento',
+            risco: 'alto', nivelRisco: 'alto', guardrail: 'G-03 · escopo de ambiente e impacto financeiro', aws: 'API Gateway · roteamento',
             pilarDecisao: '🤝 Multi-Agent', plataforma: 'ServiceNow',
             detalhe: '$ easyrun rotear pagamentos \\\n    --de adquirente-a --para adquirente-b \\\n    --percentual 100\n\nImpacto estimado: +R$ 0,42 por transação\nVolume atual: ~43k transações/h\nMemória: INC-1988 usou este workaround e\n         custou R$ 18k em taxas adicionais.\n\nAlternativa: escalar ao fornecedor e aguardar\n(SLA contratual: 99,9%).',
             mensagemAprovado: 'Decisão humana: workaround APROVADO. Executor redirecionando o tráfego para o adquirente B.',
@@ -1596,6 +1597,10 @@ class Component extends DCLogic {
         tipoCor: h.tipo === 'pr' ? '#E8A87C' : (h.tipo === 'gmud' ? '#5BA8FF' : '#B48CFF'),
         tipoClasse: h.tipo === 'pr' ? 'er-tag-tipo-pr' : (h.tipo === 'gmud' ? 'er-tag-tipo-gmud' : 'er-tag-tipo-acao'),
         rotuloAprovar: h.tipo === 'pr' ? '✓ Aprovar PR' : (h.tipo === 'gmud' ? '✓ Aprovar GMUD' : '✓ Aprovar'),
+        // nível de risco da classe de mudança (governance.RiskTier): decide
+        // quantos gates a mudança atravessa — alto = 2, baixo = 1 consolidado
+        nivelRotulo: h.nivelRisco === 'alto' ? 'RISCO ALTO' : 'RISCO BAIXO',
+        classeNivel: 'er-nivel-' + (h.nivelRisco || 'baixo'),
         aprovar: () => this.decidir(h.id, true),
         rejeitar: () => this.decidir(h.id, false),
       })),
@@ -1702,7 +1707,7 @@ class Component extends DCLogic {
         { icone: '🥇', titulo: 'Golden set de incidentes', desc: 'Incidentes já encerrados no ServiceNow viram casos de avaliação offline. O conjunto cresce sozinho: o que a squad resolve hoje é o teste de regressão de amanhã.' },
         { icone: '⚖️', titulo: 'LLM-as-judge com portão', desc: 'Um modelo julga a qualidade do diagnóstico a temperatura 0.1. Versão candidata só é promovida se não piorar o acerto — errar a natureza da remediação é o erro mais caro e tem limiar próprio.' },
         { icone: '👻', titulo: 'Shadow mode e canário', desc: 'A versão nova roda sobre incidentes reais registrando o que faria, sem agir. Só depois de um histórico comparável assume uma fatia do tráfego. É o que torna autonomia aceitável num ambiente avesso a risco.' },
-        { icone: '🔁', titulo: 'Feedback loop do HITL', desc: 'Cada aprovação e cada rejeição — com a justificativa — vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema.' },
+        { icone: '🔁', titulo: 'Feedback loop do HITL', desc: 'Cada aprovação e cada rejeição — com a justificativa — vira dado rotulado. A fila HITL não é só um portão de segurança: é a principal fonte de supervisão do sistema — e o que calibra o nível de risco dos gates: classe aprovada sem ressalva por meses é candidata a rebaixar de tier; rejeição é evidência do contrário.' },
         { icone: '📉', titulo: 'Drift em dois níveis', desc: 'Nos baselines de detecção (o que era anômalo deixou de ser) e na precisão do agente ao longo do tempo. O segundo é o que passa despercebido, porque nada quebra — a qualidade só escorrega.' },
         { icone: '🧽', titulo: 'Redação antes da saída', desc: 'Código e logs passam por remoção de segredos e dados pessoais antes de ir a um agente externo. Enviar fonte da empresa para fora é a primeira objeção de segurança — e ela precisa de resposta no contrato, não no adaptador.' },
         { icone: '🎟️', titulo: 'Orçamento por execução', desc: 'Teto de tokens por agente e por incidente, aplicado no gateway do IARA, com corte automático. Um agente em laço não vira uma fatura surpresa no fim do mês.' },
