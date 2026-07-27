@@ -425,12 +425,13 @@ Para evitar que alguém "corrija" o que está certo:
 | `squad_agentica.__version__` | ✅ |
 | `serve.py` | ❌ |
 | `checkpoint.Checkpoint` / `CheckpointStore` | ❌ |
-| `validate_zip.py` (incluindo `is_safe_member`, que é código de segurança) | ❌ |
+| `validate_zip.py` (incluindo `is_safe_member`, que é código de segurança) | ✅ por [`tests/test_validate_zip.py`](../tests/test_validate_zip.py) |
 | Todo o `prototype/` | ✅ por [`tools/check-prototype.mjs`](../tools/check-prototype.mjs), fora do pytest |
 
-O caso mais notável é o `validate_zip.py`: `is_safe_member` implementa uma defesa contra
-zip-slip e não tem um único teste. Se alguém "simplificar" a condição e deixar passar `..`,
-nada acusa. São três casos de teste que valeriam a pena caso o script continue no repositório.
+O caso mais notável era o `validate_zip.py`: `is_safe_member` implementava uma defesa
+contra zip-slip sem um único teste. Na rodada de segurança o script foi endurecido
+(caminhos Windows/UNC, symlinks, limites anti zip-bomb) e ganhou os testes — detalhe em
+[12 — Segurança](12-seguranca.md#pontos-de-atenção-encontrados--e-o-que-foi-feito).
 
 Sobre o protótipo: ele agora tem cobertura automatizada em
 [`tools/check-prototype.mjs`](../tools/check-prototype.mjs), versionado e rodando no CI.

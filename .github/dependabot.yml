@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Mantém os pins de SHA das actions atualizados via PR.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # Dependências Python (pyproject.toml).
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly

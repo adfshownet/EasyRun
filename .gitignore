@@ -18,6 +18,14 @@ uploads/*
 
 # Environment
 .env
+.env.*
+
+# Credenciais e chaves — nunca versionar
+*.pem
+*.key
+
+# Logs
+*.log
 
 # OS
 .DS_Store
