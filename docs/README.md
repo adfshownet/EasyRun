@@ -40,6 +40,7 @@ Detalhe completo em [01 — Visão geral](01-visao-geral.md#quadro-de-maturidade
 | 09 | [Lacunas e riscos](09-lacunas-e-riscos.md) | Divergências e armadilhas reais encontradas no repositório |
 | 10 | [Ecossistema da empresa](10-ecossistema-da-empresa.md) | ServiceNow, Datadog, IUClick, Devin, GitHub: o que a squad lê, escreve e onde para |
 | 11 | [MLOps e LLMOps](11-mlops-llmops.md) | Observabilidade da própria esteira, avaliação e rollout seguro de agentes |
+| 12 | [Segurança](12-seguranca.md) | A auditoria feita antes de levar o projeto para a empresa, o que ela achou e como verificar tudo de novo |
 
 ---
 
@@ -76,6 +77,12 @@ for de segurança ("vão mandar nosso código para fora?"), vá direto para
 ### "Só quero rodar isso na minha máquina" (≈ 5 min)
 
 Vá direto para [02 — Ambiente e ferramentas → Receita completa](02-ambiente-e-ferramentas.md#receita-completa-do-zero-ao-mockup-rodando).
+
+### "Posso confiar neste repositório?" (≈ 10 min)
+
+[12 — Segurança](12-seguranca.md) — a auditoria completa (código, histórico, binários,
+dependências, CI), os pontos corrigidos e um checklist para refazer a verificação por
+conta própria, sem confiar no documento.
 
 ### "Não entendi um termo"
 

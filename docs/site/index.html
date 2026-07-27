@@ -1985,6 +1985,17 @@ flowchart TD
   </main>
 </div>
 
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+  mermaid.initialize({
+    startOnLoad: true,
+    securityLevel: 'loose',
+    theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+    fontFamily: 'ui-sans-serif, -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif'
+  });
+</script>
+
 <script>
   (function () {
     // --- destaque da seção ativa na navegação lateral ---
